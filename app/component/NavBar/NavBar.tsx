@@ -12,6 +12,8 @@ import {
   Box
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { jsx } from "@emotion/react";
+import { JSX } from "@emotion/react/jsx-runtime";
 
 export default function Navbar(): JSX.Element {
   return (
