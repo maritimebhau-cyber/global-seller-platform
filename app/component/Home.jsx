@@ -1,351 +1,318 @@
 'use client';
 
-import { Box, Typography, Button, useTheme, useMediaQuery } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
+import { useState, useEffect } from "react";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CircleIcon from '@mui/icons-material/Circle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
 export default function Home() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  // Carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // Carousel images data
+  const carouselImages = [
+    {
+      url: "/images/boatimage.jpeg",
+      alt: "We connect Buyers & Sellers",
+      title: "Premium Construction Materials",
+      subtitle: "MarineMart is India's largest online B2B marketplace, connecting buyers with suppliers."
+    },
+    {
+      url: "/images/connectivity.png",
+      alt: "Industrial equipment",
+      title: "Industrial Equipment & Machinery",
+      subtitle: "State-of-the-art machinery for modern construction"
+    },
+    {
+      url: "/images/homebanner.jpg",
+      alt: "Building solutions",
+      title: "Complete Building Solutions",
+      subtitle: "One-stop shop for all construction requirements"
+    },
+    {
+      url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&h=600&q=80",
+      alt: "Safety equipment",
+      title: "Safety & Protection Gear",
+      subtitle: "Ensuring safety at every construction site"
+    }
+  ];
+
+  // Auto slide functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [carouselImages.length]);
+
+  // Navigation functions
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
 
   return (
     <Box sx={{ width: "100%", bgcolor: "#f5f5f5", minHeight: "100vh" }}>
-
-      {/* Hero Banner - Responsive */}
+      {/* Hero Banner Carousel - Enhanced Big Version */}
       <Box
         sx={{
           width: "100%",
-          height: { xs: 200, sm: 250, md: 300 },
-          bgcolor: "white",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          mb: { xs: 2, sm: 3, md: 4 },
-          px: { xs: 1, sm: 2, md: 0 },
+          height: { xs: "60vh", sm: "70vh", md: "80vh" },
+          position: "relative",
+          overflow: "hidden",
+          bgcolor: "black",
         }}
       >
-        <img
-          src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&h=400&q=80"
-          alt="hero banner"
-          style={{ 
-            width: "100%", 
-            maxWidth: "1200px",
-            height: "100%", 
-            borderRadius: 10,
-            objectFit: "cover"
+        {/* Carousel Container */}
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            position: "relative",
           }}
-        />
-      </Box>
-
-      {/* Buyer Seller Section - Responsive */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: { xs: 2, md: 4 },
-          padding: { xs: 2, sm: 3, md: 4 },
-          bgcolor: "white",
-          mx: "auto",
-        }}
-      >
-        <Box sx={{ width: { xs: "100%", md: "40%" }, textAlign: { xs: "center", md: "left" } }}>
-          <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold" mb={2}>
-            We connect Buyers & Sellers
-          </Typography>
-          <Typography variant="body1" mb={3}>
-            IndiaMART is India's largest online B2B marketplace, connecting buyers with suppliers.
-          </Typography>
-          <Button 
-            variant="contained" 
-            sx={{ 
-              bgcolor: "#1976d2",
-              px: 3,
-              py: 1,
-              fontSize: { xs: 14, sm: 16 }
-            }}
-          >
-            Explore Marketplace
-          </Button>
-        </Box>
-
-        <Box sx={{ width: { xs: "100%", md: "40%" } }}>
-          <img
-            src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&h=400&q=80"
-            alt="buyers sellers illustration"
-            style={{ 
-              width: "100%", 
-              borderRadius: 10,
-              height: isMobile ? "200px" : "300px",
-              objectFit: "cover"
-            }}
-          />
-        </Box>
-      </Box>
-
-      {/* BUILDING CONSTRUCTION SECTION - Responsive */}
-      <Box sx={{ 
-        width: "100%", 
-        padding: { xs: 2, sm: 3, md: 4 }, 
-        bgcolor: "white", 
-        mt: { xs: 2, sm: 3, md: 4 },
-        maxWidth: "1400px",
-        mx: "auto",
-      }}>
-
-        <Typography variant={isMobile ? "h6" : "h5"} fontWeight="bold" mb={3}>
-          Building Construction Material & Equipment
-        </Typography>
-
-        <Box sx={{ 
-          display: "flex", 
-          flexDirection: { xs: "column", md: "row" },
-          gap: 3 
-        }}>
-
-          {/* Left Big Image Box - Responsive */}
+        >
+          {/* Slides Container */}
           <Box
             sx={{
-              width: { xs: "100%", md: "30%" },
-              position: "relative",
-              borderRadius: 2,
-              overflow: "hidden",
-              minHeight: { xs: "300px", md: "600px" },
+              display: "flex",
+              height: "100%",
+              transform: `translateX(-${currentSlide * 100}%)`,
+              transition: "transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            <img
-              src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600&h=800&q=80"
-              alt="Construction equipment"
-              style={{ 
-                width: "100%", 
-                height: "100%",
-                objectFit: "cover"
-              }}
-            />
-
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 20,
-                left: 20,
-                color: "white",
-                fontSize: { xs: 14, sm: 16 },
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                textShadow: "1px 1px 3px rgba(0,0,0,0.7)",
-                width: "90%",
-              }}
-            >
-              <Typography variant="h6" fontWeight="bold" color="white">
-                Construction Essentials
-              </Typography>
-              <div>Prefabricated Houses</div>
-              <div>Scaffolding Planks & Plates</div>
-              <div>Construction Machines</div>
-              <div>Crushing Machines & Plants</div>
-
-              <Button
-                variant="contained"
-                sx={{ 
-                  mt: 2, 
-                  bgcolor: "#00796b", 
-                  width: "120px",
-                  fontSize: { xs: 12, sm: 14 }
-                }}
-              >
-                View All
-              </Button>
-            </Box>
-          </Box>
-
-          {/* Right Grid - Responsive */}
-          <Box
-            sx={{
-              width: { xs: "100%", md: "70%" },
-              display: "grid",
-              gridTemplateColumns: { 
-                xs: "1fr", 
-                sm: "repeat(2, 1fr)", 
-                md: "repeat(3, 1fr)" 
-              },
-              gap: { xs: 2, sm: 2, md: 3 },
-            }}
-          >
-
-            {/* Each Small Card */}
-            {[
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af5b?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Brick Making Machines",
-                list: ["Fly Ash Brick Making Machine", "Clay Brick Making Machine", "Cement Brick Making Machine"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af5c?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Passenger Lifts",
-                list: ["Residential Elevator", "Kone Passenger Lift", "Stair Lift"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af5d?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "TMT Bars",
-                list: ["TMT Steel Bars", "TATA TMT Bars", "Kamdhenu TMT Bars"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af5e?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Plywoods",
-                list: ["Shuttering Plywood", "Laminated Plywood", "Waterproof Plywood"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af5f?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Excavator",
-                list: ["Hitachi Excavator", "Hyundai Excavator", "Komatsu Excavator"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af60?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Emulsion Paints",
-                list: ["Asian Emulsion Paints", "Berger Emulsion Paints", "Nerolac Emulsion Paints"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af61?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Wooden Door",
-                list: ["Designer Wooden Door", "Plywood Door", "Wooden Flush Doors"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af62?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "PVC Pipes",
-                list: ["Finolex Pipes", "Rigid PVC Pipes", "Flexible PVC Pipes"],
-              },
-              {
-                img: "https://images.unsplash.com/photo-1581094794329-c8112a89af63?auto=format&fit=crop&w=400&h=250&q=80",
-                title: "Building Brick",
-                list: ["Red Brick", "Fly Ash Bricks", "Cement Brick"],
-              },
-            ].map((item, index) => (
+            {carouselImages.map((image, index) => (
               <Box
                 key={index}
                 sx={{
-                  border: "1px solid #e0e0e0",
-                  borderRadius: 2,
-                  padding: { xs: 1.5, sm: 2 },
-                  bgcolor: "white",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                  '&:hover': {
-                    transform: "translateY(-4px)",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
-                  },
+                  minWidth: "100%",
                   height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
+                  position: "relative",
                 }}
               >
-                <Box sx={{ 
-                  width: "100%", 
-                  height: { xs: "120px", sm: "140px", md: "150px" },
-                  overflow: "hidden",
-                  borderRadius: 1,
-                  mb: 1,
-                }}>
-                  <img 
-                    src={item.img} 
-                    alt={item.title}
-                    style={{ 
-                      width: "100%", 
-                      height: "100%",
-                      objectFit: "cover",
-                      transition: "transform 0.3s",
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+                {/* Gradient Overlay */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)",
+                  }}
+                />
+                
+                {/* Text Content - Centered and Bigger */}
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: { xs: "20px", sm: "50px", md: "100px" },
+                    transform: "translateY(-50%)",
+                    color: "white",
+                    maxWidth: { xs: "90%", sm: "80%", md: "600px" },
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    variant="h2"
+                    fontWeight="bold"
+                    sx={{ 
+                      mb: 2,
+                      fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
+                      lineHeight: 1.2,
+                      textShadow: "3px 3px 6px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    {image.title}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    sx={{ 
+                      mb: 4,
+                      fontSize: { xs: "1rem", sm: "1.25rem", md: "1.5rem" },
+                      fontWeight: 300,
+                      lineHeight: 1.5,
+                      textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    {image.subtitle}
+                  </Typography>
+                  
+                  {/* Call to Action Button */}
+                  <Box
+                    component="button"
+                    onClick={() => console.log("Explore clicked")}
+                    sx={{
+                      bgcolor: "#1976d2",
+                      color: "white",
+                      border: "none",
+                      padding: { xs: "12px 24px", sm: "16px 32px" },
+                      fontSize: { xs: "1rem", sm: "1.1rem" },
+                      fontWeight: "bold",
+                      borderRadius: "8px",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
                       '&:hover': {
-                        transform: "scale(1.05)",
+                        bgcolor: "#1565c0",
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
+                      },
+                      '&:active': {
+                        transform: "translateY(0)",
                       }
-                    }} 
-                  />
+                    }}
+                  >
+                    Explore Now
+                  </Box>
                 </Box>
-
-                <Typography 
-                  fontWeight="bold" 
-                  sx={{ 
-                    fontSize: { xs: 14, sm: 15, md: 16 },
-                    mb: 1,
-                    flexGrow: 1,
-                  }}
-                >
-                  {item.title}
-                </Typography>
-
-                <Box sx={{ flexGrow: 1 }}>
-                  {item.list.map((l, i) => (
-                    <Typography 
-                      key={i} 
-                      sx={{ 
-                        fontSize: { xs: 12, sm: 13, md: 14 },
-                        color: "#666",
-                        mb: 0.5,
-                      }}
-                    >
-                      {l}
-                    </Typography>
-                  ))}
-                </Box>
-
-                <Button 
-                  variant="outlined" 
-                  size="small"
-                  sx={{ 
-                    mt: 1, 
-                    fontSize: { xs: 11, sm: 12 },
-                    py: 0.5,
-                  }}
-                >
-                  View Products
-                </Button>
               </Box>
             ))}
+          </Box>
 
+          {/* Navigation Buttons - Bigger */}
+          <IconButton
+            onClick={prevSlide}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: { xs: "10px", sm: "20px", md: "30px" },
+              transform: "translateY(-50%)",
+              bgcolor: "rgba(255,255,255,0.9)",
+              width: { xs: "40px", sm: "50px", md: "60px" },
+              height: { xs: "40px", sm: "50px", md: "60px" },
+              '&:hover': {
+                bgcolor: "white",
+                transform: "translateY(-50%) scale(1.1)",
+              },
+            }}
+          >
+            <ChevronLeftIcon sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }} />
+          </IconButton>
+
+          <IconButton
+            onClick={nextSlide}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              right: { xs: "10px", sm: "20px", md: "30px" },
+              transform: "translateY(-50%)",
+              bgcolor: "rgba(255,255,255,0.9)",
+              width: { xs: "40px", sm: "50px", md: "60px" },
+              height: { xs: "40px", sm: "50px", md: "60px" },
+              '&:hover': {
+                bgcolor: "white",
+                transform: "translateY(-50%) scale(1.1)",
+              },
+            }}
+          >
+            <ChevronRightIcon sx={{ fontSize: { xs: "1.5rem", sm: "2rem" } }} />
+          </IconButton>
+
+          {/* Dots Indicator - Enhanced */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: { xs: "20px", sm: "30px", md: "40px" },
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: { xs: 1, sm: 1.5 },
+              alignItems: "center",
+              bgcolor: "rgba(0,0,0,0.4)",
+              padding: { xs: "8px 12px", sm: "10px 16px" },
+              borderRadius: "50px",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            {carouselImages.map((_, index) => (
+              <Box
+                key={index}
+                onClick={() => goToSlide(index)}
+                sx={{ 
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: { xs: "12px", sm: "14px" },
+                  height: { xs: "12px", sm: "14px" },
+                }}
+              >
+                {index === currentSlide ? (
+                  <CircleIcon sx={{ 
+                    fontSize: { xs: "12px", sm: "14px" }, 
+                    color: "#1976d2",
+                    filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                  }} />
+                ) : (
+                  <CircleOutlinedIcon sx={{ 
+                    fontSize: { xs: "12px", sm: "14px" }, 
+                    color: "rgba(255,255,255,0.7)",
+                    transition: "all 0.3s",
+                    '&:hover': {
+                      color: "white",
+                      transform: "scale(1.2)",
+                    }
+                  }} />
+                )}
+              </Box>
+            ))}
+            
+            {/* Slide Counter */}
+            <Typography
+              sx={{
+                color: "white",
+                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                ml: 1,
+                pl: 1,
+                borderLeft: "1px solid rgba(255,255,255,0.3)",
+                fontWeight: "medium",
+              }}
+            >
+              {currentSlide + 1} / {carouselImages.length}
+            </Typography>
+          </Box>
+
+          {/* Progress Bar */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "3px",
+              bgcolor: "rgba(255,255,255,0.2)",
+            }}
+          >
+            <Box
+              sx={{
+                height: "100%",
+                width: `${((currentSlide + 1) / carouselImages.length) * 100}%`,
+                bgcolor: "#1976d2",
+                transition: "width 0.3s ease",
+              }}
+            />
           </Box>
         </Box>
       </Box>
-
-      {/* Additional Responsive Features */}
-      <Box sx={{ 
-        width: "100%", 
-        padding: { xs: 2, sm: 3, md: 4 },
-        bgcolor: "white",
-        mt: { xs: 2, sm: 3, md: 4 },
-        textAlign: "center"
-      }}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>
-          Trusted by Thousands of Businesses
-        </Typography>
-        <Box sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: { xs: 2, sm: 3, md: 4 },
-          mt: 2,
-        }}>
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <Box
-              key={item}
-              sx={{
-                width: { xs: 80, sm: 100, md: 120 },
-                height: { xs: 40, sm: 50, md: 60 },
-                bgcolor: "#f0f0f0",
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: { xs: 12, sm: 14 },
-                fontWeight: "bold",
-                color: "#666",
-              }}
-            >
-              Brand {item}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-
     </Box>
   );
 }
