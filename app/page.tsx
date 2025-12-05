@@ -1,4 +1,4 @@
-import HomeComponent from "./component/Home";
+import HomeComponent from "./component/Home/Home";
 import Navbar from "./component/NavBar/NavBar";
 
 export default function HomePage() {

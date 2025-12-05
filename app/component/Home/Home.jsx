@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, IconButton, Grid } from '@mui/material';
+import { Box, Typography, IconButton, Grid, TextField, Button } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -48,6 +48,8 @@ const categories = [
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRef = useRef(null);
+  const [productName, setProductName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
 
   const carouselItems = [
     {
@@ -56,6 +58,7 @@ export default function Home() {
       alt: 'We connect Buyers & Sellers',
       title: 'Premium Construction Materials',
       subtitle: 'MarineMart is India\'s largest online B2B marketplace, connecting buyers with suppliers.',
+      hasForm: false,
     },
     {
       type: 'image',
@@ -63,13 +66,14 @@ export default function Home() {
       alt: 'Industrial equipment',
       title: 'Industrial Equipment & Machinery',
       subtitle: 'State-of-the-art machinery for modern construction',
+      hasForm: false,
     },
     {
       type: 'image',
       url: '/images/homebanner.jpg',
       alt: 'Building solutions',
-      title: 'Complete Building Solutions',
-      subtitle: 'One-stop shop for all construction requirements',
+     
+      hasForm: true,
     },
   ];
 
@@ -100,6 +104,15 @@ export default function Home() {
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', { productName, mobileNumber });
+    // Here you would typically send the data to your backend
+    alert('Requirement submitted successfully!');
+    setProductName('');
+    setMobileNumber('');
   };
 
   return (
@@ -163,64 +176,215 @@ export default function Home() {
                 <Box sx={{ 
                   position: 'absolute', 
                   inset: 0, 
-                  background: 'linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.1))' 
+                  background: item.hasForm 
+                    ? 'linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.3))' 
+                    : 'linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.1))' 
                 }} />
                 
                 {/* Content */}
                 <Box sx={{ 
                   position: 'absolute', 
                   top: '50%', 
-                  left: { xs: '20px', md: '100px' }, 
+                  left: { xs: '10em', md: '30%' }, 
                   transform: 'translateY(-50%)', 
                   color: 'white', 
-                  maxWidth: { xs: '90%', md: '600px' } 
+                  maxWidth: { xs: '90%', md: item.hasForm ? '800px' : '600px' },
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: { xs: 'column', md: item.hasForm ? 'row' : 'column' },
+                  alignItems: { xs: 'flex-start', md: item.hasForm ? 'flex-start' : 'flex-start' },
+                  gap: { xs: 2, md: item.hasForm ? 6 : 0 }
                 }}>
-                  <Typography 
-                    variant="h2" 
-                    fontWeight="bold" 
-                    sx={{ 
-                      mb: 2, 
-                      fontSize: { xs: '2rem', md: '4rem' }, 
-                      textShadow: '3px 3px 6px #000' 
-                    }}
-                  >
-                    {item.title}
-                  </Typography>
-                  
-                  <Typography 
-                    variant="h5" 
-                    sx={{ 
-                      mb: 4, 
-                      fontSize: { xs: '1rem', md: '1.5rem' }, 
-                      fontWeight: 300, 
-                      textShadow: '2px 2px 4px #000' 
-                    }}
-                  >
-                    {item.subtitle}
-                  </Typography>
-                  
-                  <Box 
-                    component="button" 
-                    onClick={() => console.log('Explore clicked')}
-                    sx={{ 
-                      bgcolor: '#1976d2', 
-                      color: 'white', 
-                      border: 'none', 
-                      p: { xs: '12px 24px', sm: '16px 32px' }, 
-                      fontSize: '1.1rem', 
-                      fontWeight: 'bold', 
-                      borderRadius: '8px', 
-                      cursor: 'pointer', 
-                      transition: 'all 0.3s', 
-                      '&:hover': { 
-                        bgcolor: '#1565c0', 
-                        transform: 'translateY(-2px)', 
-                        boxShadow: '0 6px 20px rgba(0,0,0,0.4)' 
-                      } 
-                    }}
-                  >
-                    Explore Now
+                  {/* Text Content */}
+                  <Box sx={{ 
+                    flex: item.hasForm ? 1 : 'none',
+                    maxWidth: item.hasForm ? '400px' : '100%'
+                  }}>
+                    <Typography 
+                      variant="h2" 
+                      fontWeight="bold" 
+                      sx={{ 
+                        mb: 2, 
+                        fontSize: { xs: '1.8rem', sm: '2.5rem', md: item.hasForm ? '3rem' : '4rem' }, 
+                        textShadow: '3px 3px 6px #000' 
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                    
+                    <Typography 
+                      variant="h5" 
+                      sx={{ 
+                        mb: 4, 
+                        fontSize: { xs: '1rem', sm: '1.2rem', md: item.hasForm ? '1.3rem' : '1.5rem' }, 
+                        fontWeight: 300, 
+                        textShadow: '2px 2px 4px #000' 
+                      }}
+                    >
+                      {item.subtitle}
+                    </Typography>
+                    
+                    {!item.hasForm && (
+                      <Box 
+                        component="button" 
+                        onClick={() => console.log('Explore clicked')}
+                        sx={{ 
+                          bgcolor: '#1976d2', 
+                          color: 'white', 
+                          border: 'none', 
+                          p: { xs: '12px 24px', sm: '16px 32px' }, 
+                          fontSize: '1.1rem', 
+                          fontWeight: 'bold', 
+                          borderRadius: '8px', 
+                          cursor: 'pointer', 
+                          transition: 'all 0.3s', 
+                          '&:hover': { 
+                            bgcolor: '#1565c0', 
+                            transform: 'translateY(-2px)', 
+                            boxShadow: '0 6px 20px rgba(0,0,0,0.4)' 
+                          } 
+                        }}
+                      >
+                        Explore Now
+                      </Box>
+                    )}
                   </Box>
+                  
+                  {/* Form (only for third slide) */}
+                  {item.hasForm && (
+                    <Box 
+                      component="form" 
+                      onSubmit={handleSubmit}
+                      sx={{ 
+                        flex: 1,
+                        maxWidth: '400px',
+                        bgcolor: 'rgba(255, 255, 255, 0.95)',
+                        p: { xs: 2, sm: 3 },
+                        borderRadius: 2,
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                        backdropFilter: 'blur(10px)'
+                      }}
+                    >
+                      <Typography 
+                        variant="h6" 
+                        fontWeight={600} 
+                        color="#1976d2" 
+                        mb={2}
+                        sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem' } }}
+                      >
+                        Submit Your Requirement
+                      </Typography>
+                      
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+                        {/* Product/Service Name Input */}
+                        <Box>
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary" 
+                            display="block" 
+                            mb={0.5}
+                            sx={{ fontSize: '0.8rem', fontWeight: 500 }}
+                          >
+                            Enter Product / Service name
+                          </Typography>
+                          <TextField
+                            fullWidth
+                            placeholder="What are you looking for?"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
+                            required
+                            sx={{
+                              bgcolor: 'white',
+                              borderRadius: 1,
+                              '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                  borderColor: '#e0e0e0',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: '#1976d2',
+                                },
+                                '&.Mui-focused fieldset': {
+                                  borderColor: '#1976d2',
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        {/* Mobile Number Input */}
+                        <Box>
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary" 
+                            display="block" 
+                            mb={0.5}
+                            sx={{ fontSize: '0.8rem', fontWeight: 500 }}
+                          >
+                            Enter your mobile
+                          </Typography>
+                          <TextField
+                            fullWidth
+                            placeholder="Enter your mobile number"
+                            value={mobileNumber}
+                            onChange={(e) => setMobileNumber(e.target.value)}
+                            required
+                            type="tel"
+                            InputProps={{
+                              startAdornment: (
+                                <Box sx={{ 
+                                  display: 'flex', 
+                                  alignItems: 'center', 
+                                  mr: 1,
+                                  color: '#1976d2',
+                                  fontWeight: 500
+                                }}>
+                                  🇮🇳 +91
+                                </Box>
+                              ),
+                            }}
+                            sx={{
+                              bgcolor: 'white',
+                              borderRadius: 1,
+                              '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                  borderColor: '#e0e0e0',
+                                },
+                                '&:hover fieldset': {
+                                  borderColor: '#1976d2',
+                                },
+                                '&.Mui-focused fieldset': {
+                                  borderColor: '#1976d2',
+                                },
+                              },
+                            }}
+                          />
+                        </Box>
+                        
+                        {/* Submit Button */}
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          fullWidth
+                          sx={{
+                            bgcolor: '#1976d2',
+                            color: 'white',
+                            py: 1.5,
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                            borderRadius: '8px',
+                            mt: 1,
+                            '&:hover': {
+                              bgcolor: '#1565c0',
+                              transform: 'translateY(-2px)',
+                              boxShadow: '0 6px 20px rgba(25, 118, 210, 0.4)'
+                            },
+                          }}
+                        >
+                          Submit Requirement
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             ))}
