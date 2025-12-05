@@ -185,7 +185,7 @@ export default function Home() {
                 <Box sx={{ 
                   position: 'absolute', 
                   top: '50%', 
-                  left: { xs: '10em', md: '30%' }, 
+                  left: { xs: '10em', md: '37%' }, 
                   transform: 'translateY(-50%)', 
                   color: 'white', 
                   maxWidth: { xs: '90%', md: item.hasForm ? '800px' : '600px' },
