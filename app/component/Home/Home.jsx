@@ -176,9 +176,7 @@ export default function Home() {
                 <Box sx={{ 
                   position: 'absolute', 
                   inset: 0, 
-                  background: item.hasForm 
-                    ? 'linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.3))' 
-                    : 'linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.1))' 
+                 
                 }} />
                 
                 {/* Content */}
@@ -258,17 +256,17 @@ export default function Home() {
                       sx={{ 
                         flex: 1,
                         maxWidth: '400px',
-                        bgcolor: 'rgba(255, 255, 255, 0.95)',
+                        // bgcolor: 'rgba(255, 255, 255, 0.95)',
                         p: { xs: 2, sm: 3 },
                         borderRadius: 2,
-                        boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                       
                         backdropFilter: 'blur(10px)'
                       }}
                     >
                       <Typography 
                         variant="h6" 
                         fontWeight={600} 
-                        color="#1976d2" 
+                        color="#007a6e" 
                         mb={2}
                         sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem' } }}
                       >
@@ -335,7 +333,7 @@ export default function Home() {
                                   display: 'flex', 
                                   alignItems: 'center', 
                                   mr: 1,
-                                  color: '#1976d2',
+                                  color: '#007a6e',
                                   fontWeight: 500
                                 }}>
                                   🇮🇳 +91
@@ -366,7 +364,7 @@ export default function Home() {
                           variant="contained"
                           fullWidth
                           sx={{
-                            bgcolor: '#1976d2',
+                            bgcolor: '#007a6e',
                             color: 'white',
                             py: 1.5,
                             fontSize: '1rem',
@@ -374,7 +372,7 @@ export default function Home() {
                             borderRadius: '8px',
                             mt: 1,
                             '&:hover': {
-                              bgcolor: '#1565c0',
+                              bgcolor: '#007a6e',
                               transform: 'translateY(-2px)',
                               boxShadow: '0 6px 20px rgba(25, 118, 210, 0.4)'
                             },
