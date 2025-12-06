@@ -346,7 +346,7 @@ export default function Home() {
                         maxWidth: '400px',
                         p: { xs: 2, sm: 3 },
                         borderRadius: 2,
-                        backdropFilter: 'blur(10px)'
+                        // backdropFilter: 'blur(10px)'
                       }}
                     >
                       <Typography 
