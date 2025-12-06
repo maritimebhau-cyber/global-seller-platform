@@ -17,6 +17,7 @@ import {
   Store,
   HelpOutline,
   Message,
+  Person,
 } from "@mui/icons-material";
 
 export default function Navbar() {
@@ -70,7 +71,7 @@ export default function Navbar() {
         {/* Right Section - Icons and Button */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {/* Icons Section */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             {/* Buy Icon */}
             <IconButton 
               color="inherit" 
@@ -78,12 +79,12 @@ export default function Navbar() {
                 display: "flex", 
                 flexDirection: "column",
                 alignItems: "center",
-                padding: 0.5,
+                padding: 1,
                 "&:hover": { color: "#43a047" }
               }}
             >
-              <ShoppingCart fontSize="small" />
-              <Typography variant="caption" sx={{ fontSize: "0.65rem", textTransform: "uppercase" }}>
+              <ShoppingCart fontSize="medium" />
+              <Typography variant="caption" sx={{ fontSize: "0.75rem", textTransform: "uppercase", mt: 0.5 }}>
                 Buy
               </Typography>
             </IconButton>
@@ -95,12 +96,12 @@ export default function Navbar() {
                 display: "flex", 
                 flexDirection: "column",
                 alignItems: "center",
-                padding: 0.5,
+                padding: 1,
                 "&:hover": { color: "#43a047" }
               }}
             >
-              <Store fontSize="small" />
-              <Typography variant="caption" sx={{ fontSize: "0.65rem", textTransform: "uppercase" }}>
+              <Store fontSize="medium" />
+              <Typography variant="caption" sx={{ fontSize: "0.75rem", textTransform: "uppercase", mt: 0.5 }}>
                 Sell
               </Typography>
             </IconButton>
@@ -112,12 +113,12 @@ export default function Navbar() {
                 display: "flex", 
                 flexDirection: "column",
                 alignItems: "center",
-                padding: 0.5,
+                padding: 1,
                 "&:hover": { color: "#43a047" }
               }}
             >
-              <HelpOutline fontSize="small" />
-              <Typography variant="caption" sx={{ fontSize: "0.65rem", textTransform: "uppercase" }}>
+              <HelpOutline fontSize="medium" />
+              <Typography variant="caption" sx={{ fontSize: "0.75rem", textTransform: "uppercase", mt: 0.5 }}>
                 Help
               </Typography>
             </IconButton>
@@ -129,13 +130,30 @@ export default function Navbar() {
                 display: "flex", 
                 flexDirection: "column",
                 alignItems: "center",
-                padding: 0.5,
+                padding: 1,
                 "&:hover": { color: "#43a047" }
               }}
             >
-              <Message fontSize="small" />
-              <Typography variant="caption" sx={{ fontSize: "0.65rem", textTransform: "uppercase" }}>
+              <Message fontSize="medium" />
+              <Typography variant="caption" sx={{ fontSize: "0.75rem", textTransform: "uppercase", mt: 0.5 }}>
                 Message
+              </Typography>
+            </IconButton>
+
+            {/* Sign In Icon */}
+            <IconButton 
+              color="inherit" 
+              sx={{ 
+                display: "flex", 
+                flexDirection: "column",
+                alignItems: "center",
+                padding: 1,
+                "&:hover": { color: "#43a047" }
+              }}
+            >
+              <Person fontSize="medium" />
+              <Typography variant="caption" sx={{ fontSize: "0.75rem", textTransform: "uppercase", mt: 0.5 }}>
+                Sign In
               </Typography>
             </IconButton>
           </Box>
@@ -147,6 +165,9 @@ export default function Navbar() {
               bgcolor: "#43a047", 
               textTransform: "none", 
               fontWeight: 600,
+              fontSize: "0.9rem",
+              paddingX: 2,
+              paddingY: 1,
               "&:hover": { bgcolor: "#2e7d32" },
               ml: 1
             }}
