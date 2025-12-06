@@ -47,9 +47,12 @@ const categories = [
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(true);
+  const [isUserScrolled, setIsUserScrolled] = useState(false);
   const videoRef = useRef(null);
   const [productName, setProductName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
+  const [transitionSpeed, setTransitionSpeed] = useState(1000); // Default speed
 
   const carouselItems = [
     {
@@ -72,18 +75,74 @@ export default function Home() {
       type: 'image',
       url: '/images/homebanner.jpg',
       alt: 'Building solutions',
-     
       hasForm: true,
     },
   ];
 
-  // Auto-advance slides
+  // Handle scroll detection
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [carouselItems.length]);
+    let lastScrollTop = 0;
+    
+    const handleScroll = () => {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (st > lastScrollTop && st > 100) {
+        // User is scrolling down
+        setIsUserScrolled(true);
+      } else if (st < lastScrollTop && st < 50) {
+        // User is at the top
+        setIsUserScrolled(false);
+      }
+      
+      lastScrollTop = st <= 0 ? 0 : st;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Auto-advance slides with pause on 3rd slide and when user scrolls down
+  useEffect(() => {
+    if (!autoPlayEnabled) return;
+
+    let interval;
+    
+    if (currentSlide === 2) {
+      // Stop at 3rd slide (index 2)
+      setAutoPlayEnabled(false);
+      return;
+    }
+
+    // Only auto-play when user is at the top of the page
+    if (!isUserScrolled) {
+      interval = setInterval(() => {
+        setCurrentSlide((prev) => {
+          if (prev === 1) {
+            // When moving to 3rd slide, slow down
+            setTransitionSpeed(2000); // 2 seconds for transition to 3rd slide
+            return 2;
+          } else {
+            setTransitionSpeed(1000); // Normal speed for other transitions
+            return (prev + 1) % carouselItems.length;
+          }
+        });
+      }, 7000); // 7 seconds interval for auto-play
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [autoPlayEnabled, currentSlide, isUserScrolled, carouselItems.length]);
+
+  // Reset auto-play when user comes back to top and not on 3rd slide
+  useEffect(() => {
+    if (!isUserScrolled && currentSlide !== 2) {
+      setAutoPlayEnabled(true);
+    }
+  }, [isUserScrolled, currentSlide]);
 
   // Handle video play when slide becomes active
   useEffect(() => {
@@ -95,14 +154,44 @@ export default function Home() {
   }, [currentSlide]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+    if (currentSlide === 2) {
+      // If on 3rd slide, go back to first
+      setTransitionSpeed(1000);
+      setCurrentSlide(0);
+      setAutoPlayEnabled(true);
+    } else {
+      // Normal transition
+      setTransitionSpeed(currentSlide === 1 ? 2000 : 1000); // Slow when moving to 3rd slide
+      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+      
+      if (currentSlide + 1 === 2) {
+        // We're moving to 3rd slide
+        setAutoPlayEnabled(false);
+      } else {
+        setAutoPlayEnabled(true);
+      }
+    }
   };
 
   const prevSlide = () => {
+    setTransitionSpeed(1000);
     setCurrentSlide((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
+    
+    if (currentSlide === 2) {
+      // If leaving 3rd slide, re-enable auto-play
+      setAutoPlayEnabled(true);
+    }
   };
 
   const goToSlide = (index) => {
+    setTransitionSpeed(index === 2 ? 2000 : 1000); // Slow when going directly to 3rd slide
+    
+    if (index === 2) {
+      setAutoPlayEnabled(false);
+    } else {
+      setAutoPlayEnabled(true);
+    }
+    
     setCurrentSlide(index);
   };
 
@@ -135,7 +224,7 @@ export default function Home() {
             display: 'flex', 
             height: '100%', 
             transform: `translateX(-${currentSlide * 100}%)`, 
-            transition: 'transform 0.7s ease-in-out' 
+            transition: `transform ${transitionSpeed}ms ease-in-out` 
           }}>
             {carouselItems.map((item, index) => (
               <Box 
@@ -176,7 +265,6 @@ export default function Home() {
                 <Box sx={{ 
                   position: 'absolute', 
                   inset: 0, 
-                 
                 }} />
                 
                 {/* Content */}
@@ -256,10 +344,8 @@ export default function Home() {
                       sx={{ 
                         flex: 1,
                         maxWidth: '400px',
-                        // bgcolor: 'rgba(255, 255, 255, 0.95)',
                         p: { xs: 2, sm: 3 },
                         borderRadius: 2,
-                       
                         backdropFilter: 'blur(10px)'
                       }}
                     >
