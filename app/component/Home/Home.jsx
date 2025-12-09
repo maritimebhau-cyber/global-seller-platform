@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, IconButton, Grid, TextField, Button } from '@mui/material';
+import { Box, Typography, IconButton, Grid, TextField, Button, Card, CardContent, CardMedia } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -25,8 +25,8 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 
-// Category Data
-const categories = [
+// Category Data for Icon Grid
+const iconCategories = [
   { icon: <BuildIcon sx={{ fontSize: 40 }} />, label: 'Repairs & Service' },
   { icon: <LocalShippingIcon sx={{ fontSize: 40 }} />, label: 'Logistics' },
   { icon: <HomeRepairServiceIcon sx={{ fontSize: 40 }} />, label: 'Contractors' },
@@ -73,11 +73,49 @@ export default function Home() {
     },
     {
       type: 'image',
-      url: '/images/homebanner.jpg',
+      url: '/images/homebanner.png',
       alt: 'Building solutions',
       hasForm: true,
     },
   ];
+
+  const productCategories = [
+    {
+      title: 'Brick Making Machines',
+      image: '/images/brick-machines.jpg',
+      items: [
+        'Fly Ash Brick Making Machine',
+        'Clay Brick Making Machine',
+        'Cement Brick Making Machine',
+      ],
+    },
+    {
+      title: 'Plywoods',
+      image: '/images/plywood.jpg',
+      items: [
+        'Shuttering Plywood',
+        'Laminated Plywood',
+        'Waterproof Plywood',
+      ],
+    },
+    {
+      title: 'Wooden Door',
+      image: '/images/wooden-door.jpg',
+      items: [
+        'Designer Wooden Door',
+        'Plywood Door',
+        'Wooden Flush Doors',
+      ],
+    },
+  ];
+
+  const mainServices = [
+    'Prefabricated Houses',
+    'Scaffolding Planks & Plates',
+    'Construction Machines',
+    'Crushing Machines & Plants',
+  ];
+
 
   // Handle scroll detection
   useEffect(() => {
@@ -265,7 +303,7 @@ export default function Home() {
                 <Box sx={{ 
                   position: 'absolute', 
                   inset: 0, 
-                }} />
+                }} /> 
                 
                 {/* Content */}
                 <Box sx={{ 
@@ -602,7 +640,7 @@ export default function Home() {
         </Typography>
         
         <Grid container spacing={3} justifyContent="center">
-          {categories.map((cat, idx) => (
+          {iconCategories.map((cat, idx) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={idx}>
               <Box
                 sx={{
@@ -639,6 +677,152 @@ export default function Home() {
           ))}
         </Grid>
       </Box>
-    </Box>
+      
+    {/* -------------------- 20 CARDS : 2-per-row -------------------- */}
+{/* -------------------- 20 CARDS : 2-per-row (Proper Layout) -------------------- */}
+<Box sx={{ bgcolor: "#f5f5f5", py: 8 }}>
+  <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, md: 4 } }}>
+    <Typography
+      variant="h4"
+      fontWeight={700}
+      color="#1a237e"
+      textAlign="center"
+      mb={6}
+      sx={{
+        position: "relative",
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          bottom: -10,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 80,
+          height: 4,
+          bgcolor: "#1a237e",
+          borderRadius: 2,
+        },
+      }}
+    >
+      Building Construction Material & Equipment
+    </Typography>
+
+    {/* 2 columns per row → 10 rows = 20 big cards */}
+    <Grid container spacing={{ xs: 2, md: 4 }}>
+      {Array.from({ length: 20 }, (_, i) => i).map((index) => (
+        <Grid item xs={12} sm={6} key={index}>
+          {/* Each item is ONE full card pair (big + 3 small) */}
+          <Grid container spacing={{ xs: 1.5, md: 2 }} alignItems="stretch">
+            {/* LEFT: Big Image Card (takes full height) */}
+            <Grid item xs={6}>
+              <Card
+                sx={{
+                  height: "100%",
+                  position: "relative",
+                  backgroundImage: "url(/images/construction-site.jpg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  borderRadius: 3,
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    inset: 0,
+                    bgcolor: "rgba(0,0,0,0.5)",
+                  },
+                }}
+              >
+                <Box sx={{ position: "relative", zIndex: 1, p: 3 }}>
+                  {mainServices.map((service, idx) => (
+                    <Typography
+                      key={idx}
+                      variant="subtitle2"
+                      sx={{
+                        color: idx === 1 ? "#ffd54f" : "#fff",
+                        fontWeight: 600,
+                        mb: 0.8,
+                        textShadow: "1px 1px 3px rgba(0,0,0,0.7)",
+                      }}
+                    >
+                      {service}
+                    </Typography>
+                  ))}
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{
+                      mt: 2,
+                      bgcolor: "#00897b",
+                      "&:hover": { bgcolor: "#00695c" },
+                    }}
+                  >
+                    View All
+                  </Button>
+                </Box>
+              </Card>
+            </Grid>
+
+            {/* RIGHT: 3 Small Vertical Cards */}
+            <Grid item xs={6}>
+              <Grid container direction="column" spacing={{ xs: 1, md: 1.5 }} height="100%">
+                {productCategories.map((cat, catIdx) => (
+                  <Grid item xs={4} key={catIdx}>
+                    <Box
+                      sx={{
+                        height: "100%",
+                        border: "1px solid #e0e0e0",
+                        borderRadius: 2,
+                        overflow: "hidden",
+                        display: "flex",
+                        bgcolor: "#fff",
+                        transition: "all 0.3s",
+                        "&:hover": {
+                          boxShadow: 3,
+                          borderColor: "#1976d2",
+                        },
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        sx={{ width: 80, objectFit: "cover" }}
+                        image={cat.image}
+                        alt={cat.title}
+                      />
+                      <CardContent sx={{ flex: 1, p: { xs: 1.5, md: 2 }, py: 1.5 }}>
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight={600}
+                          gutterBottom
+                          sx={{ fontSize: { xs: "0.85rem", md: "0.95rem" } }}
+                        >
+                          {cat.title}
+                        </Typography>
+                        {cat.items.slice(0, 2).map((item, j) => (
+                          <Typography
+                            key={j}
+                            variant="caption"
+                            display="block"
+                            color="text.secondary"
+                            sx={{ fontSize: "0.75rem", lineHeight: 1.3 }}
+                          >
+                            {item}
+                          </Typography>
+                        ))}
+                      </CardContent>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      ))}
+    </Grid>
+  </Box>
+</Box>
+</Box>
+
   );
 }
