@@ -15,6 +15,16 @@ import {
   FormControl,
   CircularProgress,
   Menu,
+  Drawer,
+  List,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
+  Popover,
+  TextField,
+  Badge,
+  ListItem,
 } from "@mui/material";
 import {
   Search,
@@ -28,16 +38,26 @@ import {
   KeyboardArrowUp,
   MyLocation,
   Language,
+  Menu as MenuIcon,
+  Close,
 } from "@mui/icons-material";
+import { ListItemButton } from "@mui/material";
 
 export default function Navbar() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+
   const [location, setLocation] = useState("Indore");
   const [isDetecting, setIsDetecting] = useState(false);
   const [signInAnchor, setSignInAnchor] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [cities, setCities] = useState([
     "Indore",
     "Delhi",
-    "Mumbai", 
+    "Mumbai",
     "Chennai",
     "Bangalore",
     "Hyderabad",
@@ -54,21 +74,21 @@ export default function Navbar() {
     }
 
     setIsDetecting(true);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          
+
           // Using OpenStreetMap Nominatim API for reverse geocoding
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
-          
+
           if (response.ok) {
             const data = await response.json();
             const city = data.address.city || data.address.town || data.address.village;
-            
+
             if (city) {
               setLocation(city);
               // Add detected city to the list if not already present
@@ -102,9 +122,8 @@ export default function Navbar() {
   };
 
   const handleSignInClick = (event: any) => {
-  setSignInAnchor(event.currentTarget);
-};
-
+    setSignInAnchor(event.currentTarget);
+  };
 
   const handleSignInClose = () => {
     setSignInAnchor(null);
@@ -112,72 +131,73 @@ export default function Navbar() {
 
   const isSignInOpen = Boolean(signInAnchor);
 
-  return (
-    <AppBar position="static" sx={{ bgcolor: "#2e3191", boxShadow: "none" }}>
-      <Toolbar sx={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center", 
-        minHeight: "52px !important",
-        paddingX: 2.5,
-        gap: 2,
-        py: 0.5
-      }}>
-        
-        {/* Left Section - Logo, Search and Get Best Price */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
-          {/* Logo */}
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box sx={{ 
-              bgcolor: "white", 
-              borderRadius: "50%", 
-              width: 30, 
-              height: 30,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mr: 0.8
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileSearchToggle = () => {
+    setMobileSearchOpen(!mobileSearchOpen);
+  };
+
+  // Desktop Navbar
+  const DesktopNavbar = () => (
+    <>
+      {/* Left Section - Logo, Search and Get Best Price */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
+        {/* Logo */}
+        <Box sx={{ display: "flex", alignItems: "center", minWidth: { xs: "auto", lg: 140 } }}>
+          <Box sx={{
+            bgcolor: "white",
+            borderRadius: "50%",
+            width: 30,
+            height: 30,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mr: 0.8
+          }}>
+            <Typography sx={{
+              color: "#2e3191",
+              fontWeight: "bold",
+              fontSize: "1.1rem"
             }}>
-              <Typography sx={{ 
-                color: "#2e3191", 
-                fontWeight: "bold", 
-                fontSize: "1.1rem"
-              }}>
-                M
-              </Typography>
-            </Box>
-            <Typography
-              variant="h6"
-              sx={{ 
-                fontWeight: 600, 
-                color: "white", 
-                cursor: "pointer",
-                fontSize: "1.2rem",
-                letterSpacing: "0.3px"
-              }}
-            >
-              indiamart
+              M
             </Typography>
           </Box>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: "white",
+              cursor: "pointer",
+              fontSize: { xs: "1rem", md: "1.2rem" },
+              letterSpacing: "0.3px",
+              whiteSpace: "nowrap"
+            }}
+          >
+            indiamart
+          </Typography>
+        </Box>
 
-          {/* Location and Search */}
-          <Box sx={{ 
-            display: "flex", 
-            alignItems: "center", 
-            bgcolor: "white", 
+        {/* Location and Search - Hidden on mobile */}
+        {!isMobile && (
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            bgcolor: "white",
             borderRadius: 0.8,
             flex: 1,
-            maxWidth: 650,
+            maxWidth: { md: 500, lg: 650 },
             height: 38
           }}>
             {/* Location Selector */}
-            <Box sx={{ display: "flex", alignItems: "center", minWidth: 130 }}>
+            <Box sx={{ display: "flex", alignItems: "center", minWidth: { md: 100, lg: 130 } }}>
               <LocationOn sx={{ color: "#00bfa5", fontSize: "1.1rem", ml: 1.2, mr: 0.3 }} />
-              <FormControl size="small" sx={{ minWidth: 90 }}>
+              <FormControl size="small" sx={{ minWidth: { md: 80, lg: 90 } }}>
                 <Select
                   value={location}
                   displayEmpty
-                  sx={{ 
+                  sx={{
                     border: "none",
                     boxShadow: "none",
                     "& .MuiOutlinedInput-notchedOutline": { border: 0 },
@@ -212,13 +232,13 @@ export default function Navbar() {
             </Box>
 
             <Divider orientation="vertical" flexItem sx={{ height: "24px", my: "auto", mx: 0.8 }} />
-            
+
             {/* Search Bar */}
             <Box sx={{ display: "flex", alignItems: "center", flex: 1, pr: 0.8 }}>
               <InputBase
                 placeholder="Enter product / service to search"
-                sx={{ 
-                  flex: 1, 
+                sx={{
+                  flex: 1,
                   fontSize: "0.85rem",
                   pl: 0.8,
                   color: "#333",
@@ -231,8 +251,8 @@ export default function Navbar() {
               />
               <Button
                 variant="contained"
-                sx={{ 
-                  bgcolor: "#00bfa5", 
+                sx={{
+                  bgcolor: "#00bfa5",
                   color: "white",
                   textTransform: "none",
                   fontWeight: 600,
@@ -249,14 +269,16 @@ export default function Navbar() {
               </Button>
             </Box>
           </Box>
+        )}
 
-          {/* Get Best Price Button */}
+        {/* Get Best Price Button - Hidden on mobile */}
+        {!isMobile && (
           <Button
             variant="contained"
-            sx={{ 
+            sx={{
               bgcolor: "white",
               color: "#2e3191",
-              textTransform: "none", 
+              textTransform: "none",
               fontWeight: 600,
               fontSize: "0.8rem",
               paddingX: 2,
@@ -265,24 +287,28 @@ export default function Navbar() {
               "&:hover": { bgcolor: "#f5f5f5" },
               boxShadow: "none",
               border: "1px solid rgba(255,255,255,0.2)",
-              whiteSpace: "nowrap"
+              whiteSpace: "nowrap",
+              minWidth: 120
             }}
           >
             Get Best Price
           </Button>
-        </Box>
+        )}
+      </Box>
 
-        {/* Right Section - Icons */}
+      {/* Right Section - Icons - Hidden on mobile */}
+      {!isMobile && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
           {/* Exporters Icon */}
-          <IconButton 
-            color="inherit" 
-            sx={{ 
-              display: "flex", 
+          <IconButton
+            color="inherit"
+            sx={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "4px 10px",
+              padding: "4px 8px",
               borderRadius: 0.8,
+              minWidth: "auto",
               "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
             }}
           >
@@ -293,14 +319,15 @@ export default function Navbar() {
           </IconButton>
 
           {/* Sell Icon */}
-          <IconButton 
-            color="inherit" 
-            sx={{ 
-              display: "flex", 
+          <IconButton
+            color="inherit"
+            sx={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "4px 10px",
+              padding: "4px 8px",
               borderRadius: 0.8,
+              minWidth: "auto",
               "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
             }}
           >
@@ -311,14 +338,15 @@ export default function Navbar() {
           </IconButton>
 
           {/* Help Icon */}
-          <IconButton 
-            color="inherit" 
-            sx={{ 
-              display: "flex", 
+          <IconButton
+            color="inherit"
+            sx={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "4px 10px",
+              padding: "4px 8px",
               borderRadius: 0.8,
+              minWidth: "auto",
               "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
             }}
           >
@@ -329,39 +357,43 @@ export default function Navbar() {
           </IconButton>
 
           {/* Messages Icon */}
-          <IconButton 
-            color="inherit" 
-            sx={{ 
-              display: "flex", 
+          <IconButton
+            color="inherit"
+            sx={{
+              display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              padding: "4px 10px",
+              padding: "4px 8px",
               borderRadius: 0.8,
+              minWidth: "auto",
               "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
             }}
           >
-            <Message sx={{ fontSize: "1.3rem" }} />
+            <Badge badgeContent={3} color="error" sx={{ "& .MuiBadge-badge": { fontSize: "0.6rem", height: 16, minWidth: 16 } }}>
+              <Message sx={{ fontSize: "1.3rem" }} />
+            </Badge>
             <Typography variant="caption" sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}>
               Messages
             </Typography>
           </IconButton>
 
-          {/* Sign In Icon with Dropdown */}
+          {/* Sign In Icon with Dropdown - Fixed hover issue */}
           <Box sx={{ position: "relative" }}>
-            <IconButton 
-              color="inherit" 
+            <Box
               onClick={handleSignInClick}
-              sx={{ 
-                display: "flex", 
+              sx={{
+                display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                padding: "4px 10px",
+                padding: "4px 8px",
                 borderRadius: 0.8,
+                cursor: "pointer",
+                minWidth: 60,
                 "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
               }}
             >
               <Person sx={{ fontSize: "1.3rem" }} />
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.3 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.3, justifyContent: "center" }}>
                 <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
                   Sign In
                 </Typography>
@@ -371,27 +403,27 @@ export default function Navbar() {
                   <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
                 )}
               </Box>
-            </IconButton>
+            </Box>
 
             {/* Sign In Dropdown Menu */}
             <Menu
               anchorEl={signInAnchor}
               open={isSignInOpen}
               onClose={handleSignInClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
+              sx={
+                {
+                position:"absolute",
+                left:"80%"
+                }
+              }
+         
               PaperProps={{
                 sx: {
-                  mt: 1,
+                  mt: 5,
                   minWidth: 200,
                   boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                   borderRadius: 1
+                  
                 }
               }}
             >
@@ -414,6 +446,292 @@ export default function Navbar() {
             </Menu>
           </Box>
         </Box>
+      )}
+    </>
+  );
+
+  // Mobile Navbar
+  const MobileNavbar = () => (
+    <>
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+        {/* Logo and Menu Icon */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <IconButton
+            color="inherit"
+            onClick={handleMobileMenuToggle}
+            sx={{ p: 1 }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{
+              bgcolor: "white",
+              borderRadius: "50%",
+              width: 28,
+              height: 28,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mr: 0.6
+            }}>
+              <Typography sx={{
+                color: "#2e3191",
+                fontWeight: "bold",
+                fontSize: "1rem"
+              }}>
+                M
+              </Typography>
+            </Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                color: "white",
+                cursor: "pointer",
+                fontSize: "1rem",
+                letterSpacing: "0.3px"
+              }}
+            >
+              indiamart
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Right Icons for Mobile */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          {/* Search Icon */}
+          <IconButton
+            color="inherit"
+            onClick={handleMobileSearchToggle}
+            sx={{ p: 1 }}
+          >
+            <Search />
+          </IconButton>
+
+          {/* Cart Icon */}
+          <IconButton color="inherit" sx={{ p: 1 }}>
+            <Badge badgeContent={2} color="error">
+              <ShoppingCart />
+            </Badge>
+          </IconButton>
+
+          {/* User Icon */}
+          <IconButton
+            color="inherit"
+            onClick={handleSignInClick}
+            sx={{ p: 1 }}
+          >
+            <Person />
+          </IconButton>
+        </Box>
+      </Box>
+
+      {/* Mobile Search Popover */}
+      <Popover
+        open={mobileSearchOpen}
+        onClose={handleMobileSearchToggle}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        PaperProps={{
+          sx: {
+            width: '100%',
+            maxWidth: '100vw',
+            borderRadius: 0,
+            mt: 7,
+            p: 2,
+            bgcolor: '#2e3191'
+          }
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {/* Location Selector for Mobile */}
+          <Box sx={{ display: "flex", alignItems: "center", bgcolor: "white", borderRadius: 0.8, p: 1 }}>
+            <LocationOn sx={{ color: "#00bfa5", fontSize: "1.1rem", mr: 1 }} />
+            <FormControl size="small" fullWidth>
+              <Select
+                value={location}
+                displayEmpty
+                sx={{
+                  border: "none",
+                  boxShadow: "none",
+                  "& .MuiOutlinedInput-notchedOutline": { border: 0 },
+                  fontSize: "0.9rem",
+                  fontWeight: 500,
+                  color: "#333",
+                }}
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    detectLocation();
+                  } else {
+                    setLocation(e.target.value);
+                  }
+                }}
+              >
+                <MenuItem value="">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <MyLocation fontSize="small" />
+                    <span>Detect My Location</span>
+                  </Box>
+                </MenuItem>
+                <Divider />
+                {cities.map((city) => (
+                  <MenuItem key={city} value={city}>
+                    {city}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          {/* Search Bar for Mobile */}
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <TextField
+              placeholder="Search products/services"
+              variant="outlined"
+              size="small"
+              fullWidth
+              sx={{
+                bgcolor: "white",
+                borderRadius: 0.8,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 0.8,
+                }
+              }}
+            />
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#00bfa5",
+                color: "white",
+                textTransform: "none",
+                fontWeight: 600,
+                minWidth: 80,
+                borderRadius: 0.8,
+                "&:hover": { bgcolor: "#00a88f" },
+              }}
+              startIcon={<Search />}
+            >
+              Search
+            </Button>
+          </Box>
+
+          {/* Get Best Price Button for Mobile */}
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              bgcolor: "white",
+              color: "#2e3191",
+              textTransform: "none",
+              fontWeight: 600,
+              py: 1,
+              borderRadius: 0.8,
+              "&:hover": { bgcolor: "#f5f5f5" },
+            }}
+          >
+            Get Best Price
+          </Button>
+        </Box>
+      </Popover>
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        anchor="left"
+        open={mobileMenuOpen}
+        onClose={handleMobileMenuToggle}
+        PaperProps={{
+          sx: {
+            width: 280,
+            bgcolor: "#2e3191",
+            color: "white"
+          }
+        }}
+      >
+        <Box sx={{ p: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Menu
+            </Typography>
+            <IconButton color="inherit" onClick={handleMobileMenuToggle}>
+              <Close />
+            </IconButton>
+          </Box>
+          <List>
+            <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                <Language />
+              </ListItemIcon>
+              <ListItemText primary="Buy" />
+            </ListItemButton>
+
+            <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                <Store />
+              </ListItemIcon>
+              <ListItemText primary="Sell" />
+            </ListItemButton>
+
+            <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                <HelpOutline />
+              </ListItemIcon>
+              <ListItemText primary="Help" />
+            </ListItemButton>
+
+            <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                <Badge badgeContent={3} color="error">
+                  <Message />
+                </Badge>
+              </ListItemIcon>
+              <ListItemText primary="Messages" />
+            </ListItemButton>
+
+            <Divider sx={{ my: 2, bgcolor: "rgba(255,255,255,0.2)" }} />
+
+            <ListItemButton sx={{ py: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary="Login / Register" />
+            </ListItemButton>
+
+            <ListItem sx={{ py: 1.5 }}>
+              <ListItemText primary="My Account" sx={{ pl: 7 }} />
+            </ListItem>
+
+            <ListItem sx={{ py: 1.5 }}>
+              <ListItemText primary="My Orders" sx={{ pl: 7 }} />
+            </ListItem>
+
+            <ListItem sx={{ py: 1.5 }}>
+              <ListItemText primary="My Wishlist" sx={{ pl: 7 }} />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
+    </>
+  );
+
+  return (
+    <AppBar position="sticky" sx={{ bgcolor: "#2e3191", boxShadow: "none" }}>
+      <Toolbar sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        minHeight: "52px !important",
+        paddingX: { xs: 1, sm: 2, md: 2.5 },
+        gap: { xs: 1, md: 2 },
+        py: 0.5
+      }}>
+        {isMobile ? <MobileNavbar /> : <DesktopNavbar />}
       </Toolbar>
     </AppBar>
   );

@@ -120,10 +120,10 @@ export default function Home() {
   // Handle scroll detection
   useEffect(() => {
     let lastScrollTop = 0;
-    
+
     const handleScroll = () => {
       const st = window.pageYOffset || document.documentElement.scrollTop;
-      
+
       if (st > lastScrollTop && st > 100) {
         // User is scrolling down
         setIsUserScrolled(true);
@@ -131,12 +131,12 @@ export default function Home() {
         // User is at the top
         setIsUserScrolled(false);
       }
-      
+
       lastScrollTop = st <= 0 ? 0 : st;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -147,7 +147,7 @@ export default function Home() {
     if (!autoPlayEnabled) return;
 
     let interval;
-    
+
     if (currentSlide === 2) {
       // Stop at 3rd slide (index 2)
       setAutoPlayEnabled(false);
@@ -201,7 +201,7 @@ export default function Home() {
       // Normal transition
       setTransitionSpeed(currentSlide === 1 ? 2000 : 1000); // Slow when moving to 3rd slide
       setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-      
+
       if (currentSlide + 1 === 2) {
         // We're moving to 3rd slide
         setAutoPlayEnabled(false);
@@ -214,7 +214,7 @@ export default function Home() {
   const prevSlide = () => {
     setTransitionSpeed(1000);
     setCurrentSlide((prev) => (prev - 1 + carouselItems.length) % carouselItems.length);
-    
+
     if (currentSlide === 2) {
       // If leaving 3rd slide, re-enable auto-play
       setAutoPlayEnabled(true);
@@ -223,13 +223,13 @@ export default function Home() {
 
   const goToSlide = (index) => {
     setTransitionSpeed(index === 2 ? 2000 : 1000); // Slow when going directly to 3rd slide
-    
+
     if (index === 2) {
       setAutoPlayEnabled(false);
     } else {
       setAutoPlayEnabled(true);
     }
-    
+
     setCurrentSlide(index);
   };
 
@@ -244,33 +244,33 @@ export default function Home() {
 
   return (
     <Box sx={{ width: '100%', bgcolor: '#f5f5f5', minHeight: '100vh' }}>
-      {/* HERO CAROUSEL */}
-      <Box sx={{ 
-        width: '100%', 
-        height: { xs: '60vh', md: '80vh' }, 
-        position: 'relative', 
-        overflow: 'hidden', 
-        bgcolor: 'black' 
+      {/* HERO CAROUSEL - Increased Height */}
+      <Box sx={{
+        width: '100%',
+        height: { xs: '70vh', md: '90vh' }, // Increased from 60vh/80vh to 70vh/90vh
+        position: 'relative',
+        overflow: 'hidden',
+        bgcolor: 'black'
       }}>
-        <Box sx={{ 
-          width: '100%', 
-          height: '100%', 
-          position: 'relative' 
+        <Box sx={{
+          width: '100%',
+          height: '100%',
+          position: 'relative'
         }}>
           {/* Slides Container */}
-          <Box sx={{ 
-            display: 'flex', 
-            height: '100%', 
-            transform: `translateX(-${currentSlide * 100}%)`, 
-            transition: `transform ${transitionSpeed}ms ease-in-out` 
+          <Box sx={{
+            display: 'flex',
+            height: '100%',
+            transform: `translateX(-${currentSlide * 100}%)`,
+            transition: `transform ${transitionSpeed}ms ease-in-out`
           }}>
             {carouselItems.map((item, index) => (
-              <Box 
-                key={index} 
-                sx={{ 
-                  minWidth: '100%', 
-                  height: '100%', 
-                  position: 'relative' 
+              <Box
+                key={index}
+                sx={{
+                  minWidth: '100%',
+                  height: '100%',
+                  position: 'relative'
                 }}
               >
                 {item.type === 'video' ? (
@@ -288,30 +288,30 @@ export default function Home() {
                     autoPlay={index === currentSlide}
                   />
                 ) : (
-                  <img 
-                    src={item.url} 
-                    alt={item.alt} 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover' 
-                    }} 
+                  <img
+                    src={item.url}
+                    alt={item.alt}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
                   />
                 )}
-                
+
                 {/* Overlay Gradient */}
-                <Box sx={{ 
-                  position: 'absolute', 
-                  inset: 0, 
-                }} /> 
-                
+                <Box sx={{
+                  position: 'absolute',
+                  inset: 0,
+                }} />
+
                 {/* Content */}
-                <Box sx={{ 
-                  position: 'absolute', 
-                  top: '50%', 
-                  left: { xs: '10em', md: '37%' }, 
-                  transform: 'translateY(-50%)', 
-                  color: 'white', 
+                <Box sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: { xs: '10em', md: '37%' },
+                  transform: 'translateY(-50%)',
+                  color: 'white',
                   maxWidth: { xs: '90%', md: item.hasForm ? '800px' : '600px' },
                   width: '100%',
                   display: 'flex',
@@ -320,66 +320,66 @@ export default function Home() {
                   gap: { xs: 2, md: item.hasForm ? 6 : 0 }
                 }}>
                   {/* Text Content */}
-                  <Box sx={{ 
+                  <Box sx={{
                     flex: item.hasForm ? 1 : 'none',
                     maxWidth: item.hasForm ? '400px' : '100%'
                   }}>
-                    <Typography 
-                      variant="h2" 
-                      fontWeight="bold" 
-                      sx={{ 
-                        mb: 2, 
-                        fontSize: { xs: '1.8rem', sm: '2.5rem', md: item.hasForm ? '3rem' : '4rem' }, 
-                        textShadow: '3px 3px 6px #000' 
+                    <Typography
+                      variant="h2"
+                      fontWeight="bold"
+                      sx={{
+                        mb: 2,
+                        fontSize: { xs: '1.8rem', sm: '2.5rem', md: item.hasForm ? '3rem' : '4rem' },
+                        textShadow: '3px 3px 6px #000'
                       }}
                     >
                       {item.title}
                     </Typography>
-                    
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        mb: 4, 
-                        fontSize: { xs: '1rem', sm: '1.2rem', md: item.hasForm ? '1.3rem' : '1.5rem' }, 
-                        fontWeight: 300, 
-                        textShadow: '2px 2px 4px #000' 
+
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        mb: 4,
+                        fontSize: { xs: '1rem', sm: '1.2rem', md: item.hasForm ? '1.3rem' : '1.5rem' },
+                        fontWeight: 300,
+                        textShadow: '2px 2px 4px #000'
                       }}
                     >
                       {item.subtitle}
                     </Typography>
-                    
+
                     {!item.hasForm && (
-                      <Box 
-                        component="button" 
+                      <Box
+                        component="button"
                         onClick={() => console.log('Explore clicked')}
-                        sx={{ 
-                          bgcolor: '#1976d2', 
-                          color: 'white', 
-                          border: 'none', 
-                          p: { xs: '12px 24px', sm: '16px 32px' }, 
-                          fontSize: '1.1rem', 
-                          fontWeight: 'bold', 
-                          borderRadius: '8px', 
-                          cursor: 'pointer', 
-                          transition: 'all 0.3s', 
-                          '&:hover': { 
-                            bgcolor: '#1565c0', 
-                            transform: 'translateY(-2px)', 
-                            boxShadow: '0 6px 20px rgba(0,0,0,0.4)' 
-                          } 
+                        sx={{
+                          bgcolor: '#1976d2',
+                          color: 'white',
+                          border: 'none',
+                          p: { xs: '12px 24px', sm: '16px 32px' },
+                          fontSize: '1.1rem',
+                          fontWeight: 'bold',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s',
+                          '&:hover': {
+                            bgcolor: '#1565c0',
+                            transform: 'translateY(-2px)',
+                            boxShadow: '0 6px 20px rgba(0,0,0,0.4)'
+                          }
                         }}
                       >
                         Explore Now
                       </Box>
                     )}
                   </Box>
-                  
+
                   {/* Form (only for third slide) */}
                   {item.hasForm && (
-                    <Box 
-                      component="form" 
+                    <Box
+                      component="form"
                       onSubmit={handleSubmit}
-                      sx={{ 
+                      sx={{
                         flex: 1,
                         maxWidth: '400px',
                         p: { xs: 2, sm: 3 },
@@ -387,23 +387,23 @@ export default function Home() {
                         // backdropFilter: 'blur(10px)'
                       }}
                     >
-                      <Typography 
-                        variant="h6" 
-                        fontWeight={600} 
-                        color="#007a6e" 
+                      <Typography
+                        variant="h6"
+                        fontWeight={600}
+                        color="#007a6e"
                         mb={2}
                         sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem' } }}
                       >
                         Submit Your Requirement
                       </Typography>
-                      
+
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                         {/* Product/Service Name Input */}
                         <Box>
-                          <Typography 
-                            variant="caption" 
-                            color="text.secondary" 
-                            display="block" 
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            display="block"
                             mb={0.5}
                             sx={{ fontSize: '0.8rem', fontWeight: 500 }}
                           >
@@ -432,13 +432,13 @@ export default function Home() {
                             }}
                           />
                         </Box>
-                        
+
                         {/* Mobile Number Input */}
                         <Box>
-                          <Typography 
-                            variant="caption" 
-                            color="text.secondary" 
-                            display="block" 
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            display="block"
                             mb={0.5}
                             sx={{ fontSize: '0.8rem', fontWeight: 500 }}
                           >
@@ -453,9 +453,9 @@ export default function Home() {
                             type="tel"
                             InputProps={{
                               startAdornment: (
-                                <Box sx={{ 
-                                  display: 'flex', 
-                                  alignItems: 'center', 
+                                <Box sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
                                   mr: 1,
                                   color: '#007a6e',
                                   fontWeight: 500
@@ -481,7 +481,7 @@ export default function Home() {
                             }}
                           />
                         </Box>
-                        
+
                         {/* Submit Button */}
                         <Button
                           type="submit"
@@ -513,132 +513,132 @@ export default function Home() {
           </Box>
 
           {/* Navigation Arrows */}
-          <IconButton 
+          <IconButton
             onClick={prevSlide}
-            sx={{ 
-              position: 'absolute', 
-              top: '50%', 
-              left: { xs: '10px', md: '30px' }, 
-              transform: 'translateY(-50%)', 
-              bgcolor: 'rgba(255,255,255,.9)', 
-              width: { xs: 40, md: 60 }, 
-              height: { xs: 40, md: 60 }, 
-              '&:hover': { 
-                bgcolor: '#fff', 
-                transform: 'translateY(-50%) scale(1.1)' 
-              } 
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: { xs: '10px', md: '30px' },
+              transform: 'translateY(-50%)',
+              bgcolor: 'rgba(255,255,255,.9)',
+              width: { xs: 40, md: 60 },
+              height: { xs: 40, md: 60 },
+              '&:hover': {
+                bgcolor: '#fff',
+                transform: 'translateY(-50%) scale(1.1)'
+              }
             }}
           >
             <ChevronLeftIcon sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }} />
           </IconButton>
-          
-          <IconButton 
+
+          <IconButton
             onClick={nextSlide}
-            sx={{ 
-              position: 'absolute', 
-              top: '50%', 
-              right: { xs: '10px', md: '30px' }, 
-              transform: 'translateY(-50%)', 
-              bgcolor: 'rgba(255,255,255,.9)', 
-              width: { xs: 40, md: 60 }, 
-              height: { xs: 40, md: 60 }, 
-              '&:hover': { 
-                bgcolor: '#fff', 
-                transform: 'translateY(-50%) scale(1.1)' 
-              } 
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              right: { xs: '10px', md: '30px' },
+              transform: 'translateY(-50%)',
+              bgcolor: 'rgba(255,255,255,.9)',
+              width: { xs: 40, md: 60 },
+              height: { xs: 40, md: 60 },
+              '&:hover': {
+                bgcolor: '#fff',
+                transform: 'translateY(-50%) scale(1.1)'
+              }
             }}
           >
             <ChevronRightIcon sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }} />
           </IconButton>
 
           {/* Dots Indicator */}
-          <Box sx={{ 
-            position: 'absolute', 
-            bottom: { xs: '20px', md: '40px' }, 
-            left: '50%', 
-            transform: 'translateX(-50%)', 
-            display: 'flex', 
-            gap: 1.5, 
-            alignItems: 'center', 
-            bgcolor: 'rgba(0,0,0,.4)', 
-            px: { xs: 2, sm: 3 }, 
-            py: 1, 
-            borderRadius: '50px', 
-            backdropFilter: 'blur(4px)' 
+          <Box sx={{
+            position: 'absolute',
+            bottom: { xs: '20px', md: '40px' },
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: 1.5,
+            alignItems: 'center',
+            bgcolor: 'rgba(0,0,0,.4)',
+            px: { xs: 2, sm: 3 },
+            py: 1,
+            borderRadius: '50px',
+            backdropFilter: 'blur(4px)'
           }}>
             {carouselItems.map((_, idx) => (
-              <Box 
-                key={idx} 
+              <Box
+                key={idx}
                 onClick={() => goToSlide(idx)}
-                sx={{ 
-                  cursor: 'pointer', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  width: 14, 
-                  height: 14 
+                sx={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 14,
+                  height: 14
                 }}
               >
-                {idx === currentSlide ? 
-                  <CircleIcon sx={{ fontSize: 14, color: '#1976d2' }} /> : 
-                  <CircleOutlinedIcon sx={{ 
-                    fontSize: 14, 
-                    color: 'rgba(255,255,255,.7)', 
-                    '&:hover': { 
-                      color: '#fff', 
-                      transform: 'scale(1.2)' 
-                    } 
+                {idx === currentSlide ?
+                  <CircleIcon sx={{ fontSize: 14, color: '#1976d2' }} /> :
+                  <CircleOutlinedIcon sx={{
+                    fontSize: 14,
+                    color: 'rgba(255,255,255,.7)',
+                    '&:hover': {
+                      color: '#fff',
+                      transform: 'scale(1.2)'
+                    }
                   }} />}
               </Box>
             ))}
-            
-            <Typography sx={{ 
-              color: '#fff', 
-              fontSize: { xs: '.75rem', sm: '.875rem' }, 
-              ml: 1, 
-              pl: 1, 
-              borderLeft: '1px solid rgba(255,255,255,.3)', 
-              fontWeight: 500 
+
+            <Typography sx={{
+              color: '#fff',
+              fontSize: { xs: '.75rem', sm: '.875rem' },
+              ml: 1,
+              pl: 1,
+              borderLeft: '1px solid rgba(255,255,255,.3)',
+              fontWeight: 500
             }}>
               {currentSlide + 1} / {carouselItems.length}
             </Typography>
           </Box>
 
           {/* Progress Bar */}
-          <Box sx={{ 
-            position: 'absolute', 
-            bottom: 0, 
-            left: 0, 
-            width: '100%', 
-            height: 3, 
-            bgcolor: 'rgba(255,255,255,.2)' 
+          <Box sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: 3,
+            bgcolor: 'rgba(255,255,255,.2)'
           }}>
-            <Box sx={{ 
-              height: '100%', 
-              width: `${((currentSlide + 1) / carouselItems.length) * 100}%`, 
-              bgcolor: '#1976d2', 
-              transition: 'width .3s' 
+            <Box sx={{
+              height: '100%',
+              width: `${((currentSlide + 1) / carouselItems.length) * 100}%`,
+              bgcolor: '#1976d2',
+              transition: 'width .3s'
             }} />
           </Box>
         </Box>
       </Box>
 
       {/* CATEGORY ICON GRID */}
-      <Box sx={{ 
-        px: { xs: 2, sm: 4, md: 8 }, 
-        py: 6, 
-        bgcolor: '#fff' 
+      <Box sx={{
+        px: { xs: 2, sm: 4, md: 8 },
+        py: 6,
+        bgcolor: '#fff'
       }}>
-        <Typography 
-          variant="h4" 
-          fontWeight={700} 
-          textAlign="center" 
-          mb={4} 
+        <Typography
+          variant="h4"
+          fontWeight={700}
+          textAlign="center"
+          mb={4}
           color="#1976d2"
         >
           Browse Categories
         </Typography>
-        
+
         <Grid container spacing={3} justifyContent="center">
           {iconCategories.map((cat, idx) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={idx}>
@@ -654,10 +654,11 @@ export default function Home() {
                   borderRadius: 3,
                   cursor: 'pointer',
                   transition: 'all .3s',
-                  '&:hover': { 
-                    borderColor: '#1976d2', 
-                    transform: 'translateY(-4px)', 
-                    boxShadow: '0 8px 20px rgba(0,0,0,0.1)' 
+                  minHeight: '180px', // Added minimum height
+                  '&:hover': {
+                    borderColor: '#1976d2',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.1)'
                   },
                 }}
                 onClick={() => console.log(`Category clicked: ${cat.label}`)}
@@ -665,9 +666,9 @@ export default function Home() {
                 <Box sx={{ color: '#1976d2' }}>
                   {cat.icon}
                 </Box>
-                <Typography 
-                  variant="body2" 
-                  textAlign="center" 
+                <Typography
+                  variant="body2"
+                  textAlign="center"
                   fontWeight={500}
                 >
                   {cat.label}
@@ -677,152 +678,313 @@ export default function Home() {
           ))}
         </Grid>
       </Box>
-      
-    {/* -------------------- 20 CARDS : 2-per-row -------------------- */}
-{/* -------------------- 20 CARDS : 2-per-row (Proper Layout) -------------------- */}
-<Box sx={{ bgcolor: "#f5f5f5", py: 8 }}>
-  <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, md: 4 } }}>
-    <Typography
-      variant="h4"
-      fontWeight={700}
-      color="#1a237e"
-      textAlign="center"
-      mb={6}
-      sx={{
-        position: "relative",
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          bottom: -10,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 80,
-          height: 4,
-          bgcolor: "#1a237e",
-          borderRadius: 2,
-        },
-      }}
-    >
-      Building Construction Material & Equipment
-    </Typography>
 
-    {/* 2 columns per row → 10 rows = 20 big cards */}
-    <Grid container spacing={{ xs: 2, md: 4 }}>
-      {Array.from({ length: 20 }, (_, i) => i).map((index) => (
-        <Grid item xs={12} sm={6} key={index}>
-          {/* Each item is ONE full card pair (big + 3 small) */}
-          <Grid container spacing={{ xs: 1.5, md: 2 }} alignItems="stretch">
-            {/* LEFT: Big Image Card (takes full height) */}
-            <Grid item xs={6}>
-              <Card
+      {/* ==================== 20 FULLY CUSTOMIZABLE CARDS - Increased Big Image Width ==================== */}
+      <Box sx={{ bgcolor: "#f8f9fa", py: { xs: 8, md: 12 } }}>
+        <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, md: 4 } }}>
+
+          {/* ALL 20 CARDS DATA - CHANGE ANYTHING HERE */}
+          {[
+            // SECTION 1
+            {
+              heading: "Cement & Aggregates",
+              cards: [
+                {
+                  bigImage: "/images/cement-bags.jpg",
+                  services: ["OPC 53 Grade", "PPC Cement", "Slag Cement"],
+                  products: ["20mm Aggregate", "M-Sand", "Plaster Sand"]
+                },
+                {
+                  bigImage: "/images/ready-mix.jpg",
+                  services: ["RMC M20-M50", "Self Compacting", "Fiber Concrete"],
+                  products: ["Concrete Pump", "Boom Placer", "Transit Mixer"]
+                }
+              ]
+            },
+
+            // SECTION 2
+            {
+              heading: "Bricks & Paving",
+              cards: [
+                {
+                  bigImage: "/images/red-bricks.jpg",
+                  services: ["Table Moulded Bricks", "Wire Cut Bricks", "Exposed Bricks"],
+                  products: ["Fly Ash Bricks", "AAC Blocks", "Clay Tiles"]
+                },
+                {
+                  bigImage: "/images/paver-blocks.jpg",
+                  services: ["Interlocking Pavers", "Shot Blasted", "Grass Pavers"],
+                  products: ["Kerb Stones", "Designer Tiles", "Chequered Tiles"]
+                }
+              ]
+            },
+
+            // SECTION 3
+            {
+              heading: "Steel Reinforcement",
+              cards: [
+                {
+                  bigImage: "/images/tmt-saria.jpg",
+                  services: ["TMT Fe550D CRS", "TMT Fe600", "Epoxy Coated Bars"],
+                  products: ["8mm - 32mm", "Cut & Bend", "Stirrups"]
+                },
+                {
+                  bigImage: "/images/steel-beams.jpg",
+                  services: ["RSJ Beams", "H-Beams", "I-Section"],
+                  products: ["MS Plates", "Chequered Plates", "GI Sheets"]
+                }
+              ]
+            },
+
+            // SECTION 4
+            {
+              heading: "Plywood & Timber",
+              cards: [
+                {
+                  bigImage: "/images/marine-ply.jpg",
+                  services: ["BWP 710 Grade", "Marine Plywood", "Film Face Shuttering"],
+                  products: ["Gurjan", "Kerala Hardwood", "Calibrated Ply"]
+                },
+                {
+                  bigImage: "/images/door-factory.jpg",
+                  services: ["Membrane Doors", "Laminated Doors", "Solid Panel Doors"],
+                  products: ["Skin Doors", "FRP Doors", "WPC Doors"]
+                }
+              ]
+            },
+
+            // SECTION 5
+            {
+              heading: "Tiles & Ceramics",
+              cards: [
+                {
+                  bigImage: "/images/vitrified.jpg",
+                  services: ["800x800 Vitrified", "Double Charge", "Full Body"],
+                  products: ["Nano Polished", "PGVT", "GVT"]
+                },
+                {
+                  bigImage: "/images/wall-tiles.jpg",
+                  services: ["Digital Wall Tiles", "Elevation Tiles", "Kitchen Tiles"],
+                  products: ["300x600mm", "Glossy", "Matt Finish"]
+                }
+              ]
+            },
+
+            // SECTION 6
+            {
+              heading: "Bathroom & Sanitary",
+              cards: [
+                {
+                  bigImage: "/images/sanitaryware.jpg",
+                  services: ["One Piece WC", "Wall Hung", "Table Top Basin"],
+                  products: ["Jaquar", "Hindware", "Parryton"]
+                },
+                {
+                  bigImage: "/images/cp-fitting.jpg",
+                  services: ["Quarter Turn Faucets", "Sensor Taps", "Rain Showers"],
+                  products: ["Concealed Cistern", "Angle Valves", "Health Faucet"]
+                }
+              ]
+            },
+
+            // SECTION 7
+            {
+              heading: "Paints & Chemicals",
+              cards: [
+                {
+                  bigImage: "/images/asian-paints.jpg",
+                  services: ["Royale Luxury", "Apex Ultima", "Tractor Emulsion"],
+                  products: ["Texture", "Designer Finish", "Enamel"]
+                },
+                {
+                  bigImage: "/images/waterproofing.jpg",
+                  services: ["Dr Fixit Roofseal", "Pidiproof LW+", "Crystalline Coating"],
+                  products: ["Terrace Waterproofing", "Basement", "Bathroom"]
+                }
+              ]
+            },
+
+            // SECTION 8
+            {
+              heading: "Electrical Solutions",
+              cards: [
+                {
+                  bigImage: "/images/wires.jpg",
+                  services: ["Polycab FR-LSH", "Havells Life Line", "RR Kabel"],
+                  products: ["1.5 - 10 sqmm", "Multicore", "Submersible"]
+                },
+                {
+                  bigImage: "/images/modular-switch.jpg",
+                  services: ["Anchor Roma", "Legrand Mylinc", "Goldmedal"],
+                  products: ["Modular Switches", "MCB Box", "Fan Regulator"]
+                }
+              ]
+            },
+
+            // SECTION 9
+            {
+              heading: "Glass & Aluminium",
+              cards: [
+                {
+                  bigImage: "/images/toughened.jpg",
+                  services: ["12mm Toughened", "DGU Units", "Curved Glass"],
+                  products: ["Spider Glazing", "Patch Fittings", "Shower Cubicles"]
+                },
+                {
+                  bigImage: "/images/upvc.jpg",
+                  services: ["UPVC Windows", "Sliding Series", "Casement System"],
+                  products: ["Soundproof", "Mosquito Mesh", "Villa Windows"]
+                }
+              ]
+            },
+
+            // SECTION 10
+            {
+              heading: "Machinery & Equipment",
+              cards: [
+                {
+                  bigImage: "/images/jcb.jpg",
+                  services: ["JCB 3DX", "Excavator", "Backhoe Loader"],
+                  products: ["Hydra Crane", "Forklift", "Wheel Loader"]
+                },
+                {
+                  bigImage: "/images/scaffolding.jpg",
+                  services: ["Cuplock System", "H-Frame", "Adjustable Props"],
+                  products: ["MS Pipes", "Acrow Span", "Wall Form"]
+                }
+              ]
+            },
+
+          ].map((section, sectionIndex) => (
+            <Box key={sectionIndex} mb={12}>
+              {/* Heading - Changes every 2 cards */}
+              <Typography
+                variant="h4"
+                fontWeight={800}
+                color="#0d47a1"
+                textAlign="center"
+                mb={7}
                 sx={{
-                  height: "100%",
                   position: "relative",
-                  backgroundImage: "url(/images/construction-site.jpg)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                  "&::before": {
+                  "&::after": {
                     content: '""',
                     position: "absolute",
-                    inset: 0,
-                    bgcolor: "rgba(0,0,0,0.5)",
+                    width: 120,
+                    height: 6,
+                    bottom: -15,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    borderRadius: 3,
                   },
                 }}
               >
-                <Box sx={{ position: "relative", zIndex: 1, p: 3 }}>
-                  {mainServices.map((service, idx) => (
-                    <Typography
-                      key={idx}
-                      variant="subtitle2"
-                      sx={{
-                        color: idx === 1 ? "#ffd54f" : "#fff",
-                        fontWeight: 600,
-                        mb: 0.8,
-                        textShadow: "1px 1px 3px rgba(0,0,0,0.7)",
-                      }}
-                    >
-                      {service}
-                    </Typography>
-                  ))}
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{
-                      mt: 2,
-                      bgcolor: "#00897b",
-                      "&:hover": { bgcolor: "#00695c" },
-                    }}
-                  >
-                    View All
-                  </Button>
-                </Box>
-              </Card>
-            </Grid>
+                {section.heading}
+              </Typography>
 
-            {/* RIGHT: 3 Small Vertical Cards */}
-            <Grid item xs={6}>
-              <Grid container direction="column" spacing={{ xs: 1, md: 1.5 }} height="100%">
-                {productCategories.map((cat, catIdx) => (
-                  <Grid item xs={4} key={catIdx}>
-                    <Box
-                      sx={{
-                        height: "100%",
-                        border: "1px solid #e0e0e0",
-                        borderRadius: 2,
-                        overflow: "hidden",
-                        display: "flex",
-                        bgcolor: "#fff",
-                        transition: "all 0.3s",
-                        "&:hover": {
-                          boxShadow: 3,
-                          borderColor: "#1976d2",
-                        },
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        sx={{ width: 80, objectFit: "cover" }}
-                        image={cat.image}
-                        alt={cat.title}
-                      />
-                      <CardContent sx={{ flex: 1, p: { xs: 1.5, md: 2 }, py: 1.5 }}>
-                        <Typography
-                          variant="subtitle2"
-                          fontWeight={600}
-                          gutterBottom
-                          sx={{ fontSize: { xs: "0.85rem", md: "0.95rem" } }}
+              <Grid container spacing={8} justifyContent="center">
+                {section.cards.map((card, cardIndex) => (
+                  <Grid item xs={12} sm={6} key={cardIndex}>
+                    <Grid container spacing={3} alignItems="stretch">
+                      {/* LEFT: Big Customizable Image Card - Increased Width (7 columns instead of 6) */}
+                      <Grid item xs={6}> {/* Changed from xs={6} to xs={7} */}
+                        <Card
+                          sx={{
+                            height: "420px", // Increased height
+                            borderRadius: 3,
+                            width: "21vw",
+                            overflow: "hidden",
+                            position: "relative",
+                            background: `url(${card.bigImage}) center/cover no-repeat`,
+                           
+                          }}
                         >
-                          {cat.title}
-                        </Typography>
-                        {cat.items.slice(0, 2).map((item, j) => (
-                          <Typography
-                            key={j}
-                            variant="caption"
-                            display="block"
-                            color="text.secondary"
-                            sx={{ fontSize: "0.75rem", lineHeight: 1.3 }}
-                          >
-                            {item}
-                          </Typography>
-                        ))}
-                      </CardContent>
-                    </Box>
+                          <Box sx={{
+                            p: { xs: 2.5, md: 4 },
+                            color: "white",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end"
+                          }}>
+                            {card.services.map((service, i) => (
+                              <Typography
+                                key={i}
+                                variant="subtitle1"
+                                fontWeight={700}
+                                sx={{
+                                  mb: 1.2,
+                                  textShadow: "2px 2px 8px #000",
+                                  fontSize: { xs: "0.95rem", md: "1.1rem" }
+                                }}
+                              >
+                                {service}
+                              </Typography>
+                            ))}
+
+                          </Box>
+                        </Card>
+                      </Grid>
+
+                      {/* RIGHT: 3 Small Customizable Product Cards - Decreased Width (5 columns instead of 6) */}
+                      <Grid item xs={6}> {/* Changed from xs={6} to xs={5} */}
+                        <Grid container direction="column" spacing={2.5} height="100%">
+                          {card.products.map((product, i) => (
+                            <Grid item xs={4} key={i}>
+                              <Box
+                                sx={{
+                                  // bgcolor: "white",
+                                  borderRadius: 2.5,
+                                  height: "130px", // Increased height
+                                  width: "100%",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  border: "1px solid #eee",
+
+                                }}
+                              >
+                                <CardMedia
+                                  component="img"
+                                  image={`/images/small-${sectionIndex}-${cardIndex}-${i}.jpg`}
+                                  alt={product}
+                                  sx={{
+                                    width: 120, // Slightly increased
+                                    height: "100%",
+                                    objectFit: "cover"
+                                  }}
+                                />
+                                <Box sx={{
+                                  px: 2,
+                                  py: 1.5,
+                                  flex: 1,
+                                  minWidth: 0 // Prevents text overflow
+                                }}>
+                                  <Typography
+                                    variant="subtitle2"
+                                    fontWeight={700}
+                                    sx={{
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      display: "-webkit-box",
+                                      WebkitLineClamp: 2,
+                                      WebkitBoxOrient: "vertical"
+                                    }}
+                                  >
+                                    {product}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 ))}
               </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      ))}
-    </Grid>
-  </Box>
-</Box>
-</Box>
-
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   );
 }
