@@ -28,6 +28,7 @@ export default function Footer() {
           justifyContent: "space-between",
           alignItems: "center",
           py: 1,
+          px: 2,
         }}
       >
         {/* Heading */}
@@ -61,10 +62,10 @@ export default function Footer() {
       </Box>
 
       {/* Main Links Area */}
-      <Box maxWidth="lg" sx={{ mx: "auto", mt: 1 }}>
+      <Box maxWidth="lg" sx={{ mx: "auto", mt: 1, px: 2 }}>
         <Grid container spacing={3}>
           {/* Column 1 */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Stack spacing={0.8}>
               <FooterLink text="About Us" />
               <FooterLink text="IndiaMART Export" />
@@ -79,7 +80,7 @@ export default function Footer() {
           </Grid>
 
           {/* Column 2 */}
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Stack spacing={0.8}>
               <FooterLink text="Help" />
               <FooterLink text="Feedback" />
@@ -91,7 +92,7 @@ export default function Footer() {
           </Grid>
 
           {/* Suppliers Tool Kit */}
-          <Grid item xs={12} sm={6} md={2.5}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography fontWeight="bold" mb={1}>
               Suppliers Tool Kit
             </Typography>
@@ -104,7 +105,7 @@ export default function Footer() {
           </Grid>
 
           {/* Buyers Tool Kit */}
-          <Grid item xs={12} sm={6} md={2.5}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography fontWeight="bold" mb={1}>
               Buyers Tool Kit
             </Typography>
