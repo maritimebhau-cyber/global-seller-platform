@@ -24,6 +24,10 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ComputerIcon from '@mui/icons-material/Computer';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
+import Image from 'next/image';
+import Paper from '@mui/material/Paper';
+
+
 
 // Category Data for Icon Grid
 const iconCategories = [
@@ -53,7 +57,47 @@ export default function Home() {
   const [productName, setProductName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [transitionSpeed, setTransitionSpeed] = useState(1000); // Default speed
+  
+   const brands = [
+    "hyundai.png",
+    "sany.png",
+    "atlascopco.png",
+    "canon.png",
+    "jaquar.png",
+    "abb.png",
+    "airtel.png",
+    "bharatbenz.png",
+    "cummins.png",
+    "stanley.png",
+    "bosch.png",
+  ];
 
+  const features = [
+    {
+      icon: "verified.png",
+      title: "Connect with verified sellers",
+      desc: "Tell us your requirement & let our experts find verified sellers for you",
+      btn: "Get Verified Sellers",
+    },
+    {
+      icon: "store.png",
+      title: "Sell on IndiaMART for free",
+      desc: "Reach out to more than 21+ crore buyers. Sell with us.",
+      btn: "Start Selling",
+    },
+    {
+      icon: "mobile.png",
+      title: "Download our App",
+      desc: "Get instant notifications on the go. Download our App Now",
+      btn: "Download Now",
+    },
+    {
+      icon: "tally.png",
+      title: "Tally on Mobile",
+      desc: "With Live Keeping, SMEs can now connect their Tally offline data to mobile app",
+      btn: "Know More",
+    },
+  ];
   const carouselItems = [
     {
       type: 'video',
@@ -679,312 +723,551 @@ export default function Home() {
         </Grid>
       </Box>
 
-      {/* ==================== 20 FULLY CUSTOMIZABLE CARDS - Increased Big Image Width ==================== */}
-      <Box sx={{ bgcolor: "#f8f9fa", py: { xs: 8, md: 12 } }}>
-        <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, md: 4 } }}>
+   {/* ==================== 20 FULLY CUSTOMIZABLE CARDS - Increased Big Image Width ==================== */}
+{/* ==================== 20 FULLY CUSTOMIZABLE CARDS ==================== */}
+<Box sx={{ bgcolor: "#f8f9fa", py: { xs: 8, md: 12 } }}>
+  <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, md: 4 } }}>
 
-          {/* ALL 20 CARDS DATA - CHANGE ANYTHING HERE */}
-          {[
-            // SECTION 1
-            {
-              heading: "Cement & Aggregates",
-              cards: [
-                {
-                  bigImage: "/images/cement-bags.jpg",
-                  services: ["OPC 53 Grade", "PPC Cement", "Slag Cement"],
-                  products: ["20mm Aggregate", "M-Sand", "Plaster Sand"]
-                },
-                {
-                  bigImage: "/images/ready-mix.jpg",
-                  services: ["RMC M20-M50", "Self Compacting", "Fiber Concrete"],
-                  products: ["Concrete Pump", "Boom Placer", "Transit Mixer"]
-                }
-              ]
-            },
+    {/* ALL 20 CARDS DATA */}
+    {[
+      // SECTION 1
+      {
+        leftHeading: "Cement Varieties",
+        rightHeading: "Aggregates & Sand",
+        cards: [
+          {
+            bigImage: "/images/cement-bags.jpg",
+            services: ["OPC 53 Grade", "PPC Cement", "Slag Cement"],
+            products: ["20mm Aggregate", "M-Sand", "Plaster Sand"]
+          },
+          {
+            bigImage: "/images/ready-mix.jpg",
+            services: ["RMC M20-M50", "Self Compacting", "Fiber Concrete"],
+            products: ["Concrete Pump", "Boom Placer", "Transit Mixer"]
+          }
+        ]
+      },
 
-            // SECTION 2
-            {
-              heading: "Bricks & Paving",
-              cards: [
-                {
-                  bigImage: "/images/red-bricks.jpg",
-                  services: ["Table Moulded Bricks", "Wire Cut Bricks", "Exposed Bricks"],
-                  products: ["Fly Ash Bricks", "AAC Blocks", "Clay Tiles"]
-                },
-                {
-                  bigImage: "/images/paver-blocks.jpg",
-                  services: ["Interlocking Pavers", "Shot Blasted", "Grass Pavers"],
-                  products: ["Kerb Stones", "Designer Tiles", "Chequered Tiles"]
-                }
-              ]
-            },
+      // SECTION 2
+      {
+        leftHeading: "Brick Types",
+        rightHeading: "Paving Solutions",
+        cards: [
+          {
+            bigImage: "/images/red-bricks.jpg",
+            services: ["Table Moulded Bricks", "Wire Cut Bricks", "Exposed Bricks"],
+            products: ["Fly Ash Bricks", "AAC Blocks", "Clay Tiles"]
+          },
+          {
+            bigImage: "/images/paver-blocks.jpg",
+            services: ["Interlocking Pavers", "Shot Blasted", "Grass Pavers"],
+            products: ["Kerb Stones", "Designer Tiles", "Chequered Tiles"]
+          }
+        ]
+      },
 
-            // SECTION 3
-            {
-              heading: "Steel Reinforcement",
-              cards: [
-                {
-                  bigImage: "/images/tmt-saria.jpg",
-                  services: ["TMT Fe550D CRS", "TMT Fe600", "Epoxy Coated Bars"],
-                  products: ["8mm - 32mm", "Cut & Bend", "Stirrups"]
-                },
-                {
-                  bigImage: "/images/steel-beams.jpg",
-                  services: ["RSJ Beams", "H-Beams", "I-Section"],
-                  products: ["MS Plates", "Chequered Plates", "GI Sheets"]
-                }
-              ]
-            },
+      // SECTION 3
+      {
+        leftHeading: "TMT Bars",
+        rightHeading: "Steel Sections",
+        cards: [
+          {
+            bigImage: "/images/tmt-saria.jpg",
+            services: ["TMT Fe550D CRS", "TMT Fe600", "Epoxy Coated Bars"],
+            products: ["8mm - 32mm", "Cut & Bend", "Stirrups"]
+          },
+          {
+            bigImage: "/images/steel-beams.jpg",
+            services: ["RSJ Beams", "H-Beams", "I-Section"],
+            products: ["MS Plates", "Chequered Plates", "GI Sheets"]
+          }
+        ]
+      },
 
-            // SECTION 4
-            {
-              heading: "Plywood & Timber",
-              cards: [
-                {
-                  bigImage: "/images/marine-ply.jpg",
-                  services: ["BWP 710 Grade", "Marine Plywood", "Film Face Shuttering"],
-                  products: ["Gurjan", "Kerala Hardwood", "Calibrated Ply"]
-                },
-                {
-                  bigImage: "/images/door-factory.jpg",
-                  services: ["Membrane Doors", "Laminated Doors", "Solid Panel Doors"],
-                  products: ["Skin Doors", "FRP Doors", "WPC Doors"]
-                }
-              ]
-            },
+      // SECTION 4
+      {
+        leftHeading: "Plywood Types",
+        rightHeading: "Door Solutions",
+        cards: [
+          {
+            bigImage: "/images/marine-ply.jpg",
+            services: ["BWP 710 Grade", "Marine Plywood", "Film Face Shuttering"],
+            products: ["Gurjan", "Kerala Hardwood", "Calibrated Ply"]
+          },
+          {
+            bigImage: "/images/door-factory.jpg",
+            services: ["Membrane Doors", "Laminated Doors", "Solid Panel Doors"],
+            products: ["Skin Doors", "FRP Doors", "WPC Doors"]
+          }
+        ]
+      },
 
-            // SECTION 5
-            {
-              heading: "Tiles & Ceramics",
-              cards: [
-                {
-                  bigImage: "/images/vitrified.jpg",
-                  services: ["800x800 Vitrified", "Double Charge", "Full Body"],
-                  products: ["Nano Polished", "PGVT", "GVT"]
-                },
-                {
-                  bigImage: "/images/wall-tiles.jpg",
-                  services: ["Digital Wall Tiles", "Elevation Tiles", "Kitchen Tiles"],
-                  products: ["300x600mm", "Glossy", "Matt Finish"]
-                }
-              ]
-            },
+      // SECTION 5
+      {
+        leftHeading: "Floor Tiles",
+        rightHeading: "Wall Tiles",
+        cards: [
+          {
+            bigImage: "/images/vitrified.jpg",
+            services: ["800x800 Vitrified", "Double Charge", "Full Body"],
+            products: ["Nano Polished", "PGVT", "GVT"]
+          },
+          {
+            bigImage: "/images/wall-tiles.jpg",
+            services: ["Digital Wall Tiles", "Elevation Tiles", "Kitchen Tiles"],
+            products: ["300x600mm", "Glossy", "Matt Finish"]
+          }
+        ]
+      },
 
-            // SECTION 6
-            {
-              heading: "Bathroom & Sanitary",
-              cards: [
-                {
-                  bigImage: "/images/sanitaryware.jpg",
-                  services: ["One Piece WC", "Wall Hung", "Table Top Basin"],
-                  products: ["Jaquar", "Hindware", "Parryton"]
-                },
-                {
-                  bigImage: "/images/cp-fitting.jpg",
-                  services: ["Quarter Turn Faucets", "Sensor Taps", "Rain Showers"],
-                  products: ["Concealed Cistern", "Angle Valves", "Health Faucet"]
-                }
-              ]
-            },
+      // SECTION 6
+      {
+        leftHeading: "Sanitaryware",
+        rightHeading: "CP Fittings",
+        cards: [
+          {
+            bigImage: "/images/sanitaryware.jpg",
+            services: ["One Piece WC", "Wall Hung", "Table Top Basin"],
+            products: ["Jaquar", "Hindware", "Parryton"]
+          },
+          {
+            bigImage: "/images/cp-fitting.jpg",
+            services: ["Quarter Turn Faucets", "Sensor Taps", "Rain Showers"],
+            products: ["Concealed Cistern", "Angle Valves", "Health Faucet"]
+          }
+        ]
+      },
 
-            // SECTION 7
-            {
-              heading: "Paints & Chemicals",
-              cards: [
-                {
-                  bigImage: "/images/asian-paints.jpg",
-                  services: ["Royale Luxury", "Apex Ultima", "Tractor Emulsion"],
-                  products: ["Texture", "Designer Finish", "Enamel"]
-                },
-                {
-                  bigImage: "/images/waterproofing.jpg",
-                  services: ["Dr Fixit Roofseal", "Pidiproof LW+", "Crystalline Coating"],
-                  products: ["Terrace Waterproofing", "Basement", "Bathroom"]
-                }
-              ]
-            },
+      // SECTION 7
+      {
+        leftHeading: "Paints",
+        rightHeading: "Waterproofing",
+        cards: [
+          {
+            bigImage: "/images/asian-paints.jpg",
+            services: ["Royale Luxury", "Apex Ultima", "Tractor Emulsion"],
+            products: ["Texture", "Designer Finish", "Enamel"]
+          },
+          {
+            bigImage: "/images/waterproofing.jpg",
+            services: ["Dr Fixit Roofseal", "Pidiproof LW+", "Crystalline Coating"],
+            products: ["Terrace Waterproofing", "Basement", "Bathroom"]
+          }
+        ]
+      },
 
-            // SECTION 8
-            {
-              heading: "Electrical Solutions",
-              cards: [
-                {
-                  bigImage: "/images/wires.jpg",
-                  services: ["Polycab FR-LSH", "Havells Life Line", "RR Kabel"],
-                  products: ["1.5 - 10 sqmm", "Multicore", "Submersible"]
-                },
-                {
-                  bigImage: "/images/modular-switch.jpg",
-                  services: ["Anchor Roma", "Legrand Mylinc", "Goldmedal"],
-                  products: ["Modular Switches", "MCB Box", "Fan Regulator"]
-                }
-              ]
-            },
+      // SECTION 8
+      {
+        leftHeading: "Wires & Cables",
+        rightHeading: "Switchgear",
+        cards: [
+          {
+            bigImage: "/images/wires.jpg",
+            services: ["Polycab FR-LSH", "Havells Life Line", "RR Kabel"],
+            products: ["1.5 - 10 sqmm", "Multicore", "Submersible"]
+          },
+          {
+            bigImage: "/images/modular-switch.jpg",
+            services: ["Anchor Roma", "Legrand Mylinc", "Goldmedal"],
+            products: ["Modular Switches", "MCB Box", "Fan Regulator"]
+          }
+        ]
+      },
 
-            // SECTION 9
-            {
-              heading: "Glass & Aluminium",
-              cards: [
-                {
-                  bigImage: "/images/toughened.jpg",
-                  services: ["12mm Toughened", "DGU Units", "Curved Glass"],
-                  products: ["Spider Glazing", "Patch Fittings", "Shower Cubicles"]
-                },
-                {
-                  bigImage: "/images/upvc.jpg",
-                  services: ["UPVC Windows", "Sliding Series", "Casement System"],
-                  products: ["Soundproof", "Mosquito Mesh", "Villa Windows"]
-                }
-              ]
-            },
+      // SECTION 9
+      {
+        leftHeading: "Glass Solutions",
+        rightHeading: "UPVC Windows",
+        cards: [
+          {
+            bigImage: "/images/toughened.jpg",
+            services: ["12mm Toughened", "DGU Units", "Curved Glass"],
+            products: ["Spider Glazing", "Patch Fittings", "Shower Cubicles"]
+          },
+          {
+            bigImage: "/images/upvc.jpg",
+            services: ["UPVC Windows", "Sliding Series", "Casement System"],
+            products: ["Soundproof", "Mosquito Mesh", "Villa Windows"]
+          }
+        ]
+      },
 
-            // SECTION 10
-            {
-              heading: "Machinery & Equipment",
-              cards: [
-                {
-                  bigImage: "/images/jcb.jpg",
-                  services: ["JCB 3DX", "Excavator", "Backhoe Loader"],
-                  products: ["Hydra Crane", "Forklift", "Wheel Loader"]
-                },
-                {
-                  bigImage: "/images/scaffolding.jpg",
-                  services: ["Cuplock System", "H-Frame", "Adjustable Props"],
-                  products: ["MS Pipes", "Acrow Span", "Wall Form"]
-                }
-              ]
-            },
+      // SECTION 10
+      {
+        leftHeading: "Heavy Machinery",
+        rightHeading: "Scaffolding",
+        cards: [
+          {
+            bigImage: "/images/jcb.jpg",
+            services: ["JCB 3DX", "Excavator", "Backhoe Loader"],
+            products: ["Hydra Crane", "Forklift", "Wheel Loader"]
+          },
+          {
+            bigImage: "/images/scaffolding.jpg",
+            services: ["Cuplock System", "H-Frame", "Adjustable Props"],
+            products: ["MS Pipes", "Acrow Span", "Wall Form"]
+          }
+        ]
+      },
 
-          ].map((section, sectionIndex) => (
-            <Box key={sectionIndex} mb={12}>
-              {/* Heading - Changes every 2 cards */}
-              <Typography
-                variant="h4"
-                fontWeight={800}
-                color="#0d47a1"
-                textAlign="center"
-                mb={7}
-                sx={{
-                  position: "relative",
-                  "&::after": {
-                    content: '""',
-                    position: "absolute",
-                    width: 120,
-                    height: 6,
-                    bottom: -15,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    borderRadius: 3,
-                  },
-                }}
-              >
-                {section.heading}
-              </Typography>
 
-              <Grid container spacing={8} justifyContent="center">
-                {section.cards.map((card, cardIndex) => (
-                  <Grid item xs={12} sm={6} key={cardIndex}>
-                    <Grid container spacing={3} alignItems="stretch">
-                      {/* LEFT: Big Customizable Image Card - Increased Width (7 columns instead of 6) */}
-                      <Grid item xs={6}> {/* Changed from xs={6} to xs={7} */}
-                        <Card
+
+    ].map((section, sectionIndex) => (
+      <Box key={sectionIndex} mb={12}>
+        {/* TWO HEADINGS ABOVE EACH CARD PAIR */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mb: 4,
+          px: { xs: 2, md: 0 }
+        }}>
+          {/* LEFT HEADING - Aligns with big image card */}
+          <Box sx={{ 
+            flex: 1,
+            textAlign: 'left',
+            pr: 2
+          }}>
+            <Typography
+              variant="h5"
+              fontWeight={700}
+              color="#0d47a1"
+              sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}
+            >
+              {section.leftHeading}
+            </Typography>
+          </Box>
+          
+          {/* SPACER - To match the gap between big and small cards */}
+          <Box sx={{ width: 'calc(33.33% - 24px)' }} />
+          
+          {/* RIGHT HEADING - Aligns with small cards */}
+          <Box sx={{ 
+            flex: 1,
+            textAlign: 'left',
+            pl: 2
+          }}>
+            <Typography
+              variant="h5"
+              fontWeight={700}
+              color="#0d47a1"
+              sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}
+            >
+              {section.rightHeading}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Grid container spacing={12} justifyContent="center">
+          {section.cards.map((card, cardIndex) => (
+            <Grid item xs={12} sm={6} key={cardIndex}>
+              <Grid container spacing={3} alignItems="stretch">
+                
+                {/* LEFT: Big Customizable Image Card */}
+                <Grid item xs={7}>
+                  <Card
+                    sx={{
+                      height: "420px",
+                      borderRadius: 3,
+                      width: "21vw",
+                      overflow: "hidden",
+                      position: "relative",
+                      background: `url(${card.bigImage}) center/cover no-repeat`,
+                    }}
+                  >
+                    <Box sx={{
+                      p: { xs: 2.5, md: 4 },
+                      color: "white",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
+                    }}>
+                      {card.services.map((service, i) => (
+                        <Typography
+                          key={i}
+                          variant="subtitle1"
+                          fontWeight={700}
                           sx={{
-                            height: "420px", // Increased height
-                            borderRadius: 3,
-                            width: "21vw",
-                            overflow: "hidden",
-                            position: "relative",
-                            background: `url(${card.bigImage}) center/cover no-repeat`,
+                            mb: 1.2,
+                            textShadow: "2px 2px 8px #000",
+                            fontSize: { xs: "0.95rem", md: "1.1rem" }
+                          }}
+                        >
+                          {service}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </Card>
+                </Grid>
+
+                {/* RIGHT: 3 Small Customizable Product Cards */}
+                <Grid item xs={5}>
+                  <Grid container direction="column" spacing={2.5} height="100%">
+                    {card.products.map((product, i) => (
+                      <Grid item xs={4} key={i}>
+                        <Box
+                          sx={{
+                            borderRadius: 2.5,
+                            height: "130px",
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            border: "1px solid #eae2e2ff",
                            
                           }}
                         >
+                          <CardMedia
+                            component="img"
+                            image={`/images/small-${sectionIndex}-${cardIndex}-${i}.jpg`}
+                            alt={product}
+                            sx={{
+                              width: 120,
+                              height: "100%",
+                              objectFit: "cover",
+                              borderTopLeftRadius: "8px",
+                              borderBottomLeftRadius: "8px"
+                            }}
+                          />
                           <Box sx={{
-                            p: { xs: 2.5, md: 4 },
-                            color: "white",
-                            height: "100%",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "flex-end"
+                            px: 2,
+                            py: 1.5,
+                            flex: 1,
+                            minWidth: 0
                           }}>
-                            {card.services.map((service, i) => (
-                              <Typography
-                                key={i}
-                                variant="subtitle1"
-                                fontWeight={700}
-                                sx={{
-                                  mb: 1.2,
-                                  textShadow: "2px 2px 8px #000",
-                                  fontSize: { xs: "0.95rem", md: "1.1rem" }
-                                }}
-                              >
-                                {service}
-                              </Typography>
-                            ))}
-
+                            <Typography
+                              variant="subtitle2"
+                              fontWeight={700}
+                              sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical"
+                              }}
+                            >
+                              {product}
+                            </Typography>
                           </Box>
-                        </Card>
+                        </Box>
                       </Grid>
-
-                      {/* RIGHT: 3 Small Customizable Product Cards - Decreased Width (5 columns instead of 6) */}
-                      <Grid item xs={6}> {/* Changed from xs={6} to xs={5} */}
-                        <Grid container direction="column" spacing={2.5} height="100%">
-                          {card.products.map((product, i) => (
-                            <Grid item xs={4} key={i}>
-                              <Box
-                                sx={{
-                                  // bgcolor: "white",
-                                  borderRadius: 2.5,
-                                  height: "130px", // Increased height
-                                  width: "100%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  border: "1px solid #eee",
-
-                                }}
-                              >
-                                <CardMedia
-                                  component="img"
-                                  image={`/images/small-${sectionIndex}-${cardIndex}-${i}.jpg`}
-                                  alt={product}
-                                  sx={{
-                                    width: 120, // Slightly increased
-                                    height: "100%",
-                                    objectFit: "cover"
-                                  }}
-                                />
-                                <Box sx={{
-                                  px: 2,
-                                  py: 1.5,
-                                  flex: 1,
-                                  minWidth: 0 // Prevents text overflow
-                                }}>
-                                  <Typography
-                                    variant="subtitle2"
-                                    fontWeight={700}
-                                    sx={{
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      display: "-webkit-box",
-                                      WebkitLineClamp: 2,
-                                      WebkitBoxOrient: "vertical"
-                                    }}
-                                  >
-                                    {product}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </Grid>
-                          ))}
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    ))}
                   </Grid>
-                ))}
+                </Grid>
               </Grid>
-            </Box>
+            </Grid>
           ))}
-        </Box>
+        </Grid>
       </Box>
+    ))}
+  </Box>
+  
+</Box>
+   <Box sx={{  bgcolor: "#f5f5f5", p: 4 }}>
+      <Grid container spacing={4} alignItems="flex-start">
+        
+        {/* LEFT CONTENT */}
+        <Grid item xs={12} md={6}>
+          <Typography
+            sx={{
+              fontSize: "40px",
+              fontWeight: 500,
+              lineHeight: 1.2,
+              mb: 4,
+            }}
+          >
+            Get <b>free</b> quotes from <br /> multiple sellers
+          </Typography>
+
+          <Grid container spacing={6} sx={{ mt: 2 }}>
+            
+            {/* CARD 1 */}
+            <Grid item xs={12} sm={4} textAlign="center">
+              <Image
+                src="/icons/paperplane.png"
+                width={80}
+                height={80}
+                alt="icon"
+              />
+              <Typography sx={{ mt: 1 }}>Tell us what</Typography>
+              <Typography fontWeight={600}>You Need</Typography>
+            </Grid>
+
+            {/* CARD 2 */}
+            <Grid item xs={12} sm={4} textAlign="center">
+              <Image
+                src="/icons/message.png"
+                width={80}
+                height={80}
+                alt="icon"
+              />
+              <Typography sx={{ mt: 1 }}>Receive free quotes</Typography>
+              <Typography fontWeight={600}>from sellers</Typography>
+            </Grid>
+
+            {/* CARD 3 */}
+            <Grid item xs={12} sm={4} textAlign="center">
+              <Image
+                src="/icons/handshake.png"
+                width={80}
+                height={80}
+                alt="icon"
+              />
+              <Typography sx={{ mt: 1 }}>Seal the</Typography>
+              <Typography fontWeight={600}>Deal</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {/* RIGHT FORM */}
+        <Grid item xs={12} md={6}>
+          <Typography
+            sx={{ fontSize: "22px", fontWeight: 600, mb: 2 }}
+          >
+            Tell us your Requirement
+          </Typography>
+
+          <TextField
+            fullWidth
+            placeholder="Enter Product / Service name"
+            sx={{ mb: 2, bgcolor: "#fff" }}
+          />
+
+          <Grid container spacing={1} sx={{ mb: 2 }}>
+            <Grid item xs={3} sm={2}>
+              <TextField
+                fullWidth
+                value="+91"
+                sx={{ bgcolor: "#fff" }}
+                inputProps={{ readOnly: true }}
+              />
+            </Grid>
+
+            <Grid item xs={9} sm={10}>
+              <TextField
+                fullWidth
+                placeholder="Enter your mobile"
+                sx={{ bgcolor: "#fff" }}
+              />
+            </Grid>
+          </Grid>
+
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: "#00796B",
+              fontSize: "18px",
+              px: 4,
+              py: 1.2,
+              ":hover": { bgcolor: "#00695C" },
+            }}
+          >
+            Submit Requirement
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
+     <Box sx={{ width: "100%", bgcolor: "#fff", mt: 6 }}>
+      
+      {/* BRANDS SECTION */}
+      <Typography
+        sx={{
+          fontSize: "26px",
+          fontWeight: 600,
+          mb: 3,
+          px: 3,
+        }}
+      >
+        Explore products from Premium Brands
+      </Typography>
+
+      <Grid
+        container
+        spacing={3}
+        justifyContent="center"
+        sx={{ px: 3, mb: 4 }}
+      >
+        {brands.map((logo, index) => (
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            md={2}
+            key={index}
+            textAlign="center"
+          >
+            <Image
+              src={`/brands/${logo}`}
+              width={130}
+              height={60}
+              alt="brand"
+              style={{ objectFit: "contain" }}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box sx={{ width: "100%", height: "2px", bgcolor: "#eaeaea", mb: 4 }} />
+
+      {/* MORE FOR YOU SECTION */}
+      <Typography
+        sx={{
+          fontSize: "26px",
+          fontWeight: 600,
+          mb: 4,
+          px: 3,
+        }}
+      >
+        More for You
+      </Typography>
+
+      <Grid
+        container
+        spacing={4}
+        sx={{ px: 3, pb: 6 }}
+        justifyContent="space-between"
+      >
+        {features.map((item, index) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={3}
+            key={index}
+            textAlign="center"
+            sx={{ borderRight: index !== 3 ? "1px solid #ddd" : "none" }}
+          >
+            <Image
+              src={`/icons/${item.icon}`}
+              width={50}
+              height={50}
+              alt="feature"
+            />
+
+            <Typography sx={{ fontSize: "18px", fontWeight: 600, mt: 2 }}>
+              {item.title}
+            </Typography>
+
+            <Typography sx={{ fontSize: "14px", color: "#555", mt: 1 }}>
+              {item.desc}
+            </Typography>
+
+            <Button
+              variant="outlined"
+              sx={{
+                borderRadius: "20px",
+                mt: 2,
+                px: 4,
+                textTransform: "none",
+              }}
+            >
+              {item.btn}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
     </Box>
   );
 }
