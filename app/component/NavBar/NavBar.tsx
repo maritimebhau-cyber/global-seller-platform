@@ -413,7 +413,7 @@ export default function Navbar() {
               sx={
                 {
                 position:"absolute",
-                left:"80%"
+                left:"84vw"
                 }
               }
          
