@@ -25,6 +25,9 @@ import {
   TextField,
   Badge,
   ListItem,
+  Dialog,
+  DialogContent,
+  SelectChangeEvent,
 } from "@mui/material";
 import {
   Search,
@@ -35,38 +38,142 @@ import {
   Person,
   LocationOn,
   KeyboardArrowDown,
-  KeyboardArrowUp,
   MyLocation,
   Language,
   Menu as MenuIcon,
   Close,
+  Home,
+  Settings,
 } from "@mui/icons-material";
 import { ListItemButton } from "@mui/material";
+
+// Import CSS for flag icons
+import 'flag-icons/css/flag-icons.min.css';
+
+// Define country data type
+interface CountryData {
+  code: string;
+  name: string;
+  dial_code: string;
+  flag: string;
+}
+
+// Flag component using flag-icons
+const FlagIcon = ({ countryCode }: { countryCode: string }) => {
+  const flagClass = `fi fi-${countryCode.toLowerCase()}`;
+  
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 32,
+        height: 24,
+        borderRadius: '2px',
+        overflow: 'hidden',
+      }}
+    >
+      <span className={flagClass} style={{ width: '32px', height: '24px' }} />
+    </Box>
+  );
+};
 
 export default function Navbar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
   const [location, setLocation] = useState("Indore");
   const [isDetecting, setIsDetecting] = useState(false);
-  const [signInAnchor, setSignInAnchor] = useState(null);
+  const [signInAnchor, setSignInAnchor] = useState<HTMLElement | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [cities, setCities] = useState([
-    "Indore",
-    "Delhi",
-    "Mumbai",
-    "Chennai",
-    "Bangalore",
-    "Hyderabad",
-    "Kolkata",
-    "Pune",
-    "Ahmedabad"
+  const [cities] = useState([
+    "Indore", "Delhi", "Mumbai", "Chennai", "Bangalore", 
+    "Hyderabad", "Kolkata", "Pune", "Ahmedabad"
   ]);
+  const [signInDialogOpen, setSignInDialogOpen] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [countries, setCountries] = useState<CountryData[]>([
+    { code: "IN", name: "India", dial_code: "+91", flag: "in" },
+    { code: "US", name: "United States", dial_code: "+1", flag: "us" },
+    { code: "GB", name: "United Kingdom", dial_code: "+44", flag: "gb" },
+    { code: "AE", name: "United Arab Emirates", dial_code: "+971", flag: "ae" },
+    { code: "SA", name: "Saudi Arabia", dial_code: "+966", flag: "sa" },
+    { code: "CA", name: "Canada", dial_code: "+1", flag: "ca" },
+    { code: "AU", name: "Australia", dial_code: "+61", flag: "au" },
+    { code: "DE", name: "Germany", dial_code: "+49", flag: "de" },
+    { code: "FR", name: "France", dial_code: "+33", flag: "fr" },
+    { code: "JP", name: "Japan", dial_code: "+81", flag: "jp" },
+    { code: "SG", name: "Singapore", dial_code: "+65", flag: "sg" },
+    { code: "MY", name: "Malaysia", dial_code: "+60", flag: "my" },
+  ]);
+  const [selectedCountry, setSelectedCountry] = useState<CountryData>({
+    code: "IN",
+    name: "India",
+    dial_code: "+91",
+    flag: "in"
+  });
+  const [loadingCountries, setLoadingCountries] = useState(false);
 
-  // Function to detect user's location
+  // Fetch countries from API
+  useEffect(() => {
+    const fetchCountries = async () => {
+      setLoadingCountries(true);
+      try {
+        const response = await fetch('https://restcountries.com/v3.1/all?fields=cca2,name,idd,flag');
+        const data = await response.json();
+        
+        const formattedCountries: CountryData[] = data
+          .filter((country: any) => country.idd?.root && country.idd?.suffixes?.[0])
+          .map((country: any) => {
+            const dialCode = `${country.idd.root}${country.idd.suffixes[0]}`;
+            const flagCode = country.cca2.toLowerCase();
+            
+            return {
+              code: country.cca2,
+              name: country.name.common,
+              dial_code: dialCode,
+              flag: flagCode
+            };
+          })
+          .filter((country: CountryData) => 
+            country.dial_code && 
+            ['IN', 'US', 'GB', 'AE', 'SA', 'CA', 'AU', 'DE', 'FR', 'JP', 'SG', 'MY'].includes(country.code)
+          )
+          .sort((a: CountryData, b: CountryData) => a.name.localeCompare(b.name));
+        
+        const indiaIndex = formattedCountries.findIndex(c => c.code === 'IN');
+        if (indiaIndex > -1) {
+          const [india] = formattedCountries.splice(indiaIndex, 1);
+          formattedCountries.unshift(india);
+        }
+        
+        setCountries(formattedCountries);
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+        setCountries([
+          { code: "IN", name: "India", dial_code: "+91", flag: "in" },
+          { code: "US", name: "United States", dial_code: "+1", flag: "us" },
+          { code: "GB", name: "United Kingdom", dial_code: "+44", flag: "gb" },
+          { code: "AE", name: "United Arab Emirates", dial_code: "+971", flag: "ae" },
+          { code: "SA", name: "Saudi Arabia", dial_code: "+966", flag: "sa" },
+          { code: "CA", name: "Canada", dial_code: "+1", flag: "ca" },
+          { code: "AU", name: "Australia", dial_code: "+61", flag: "au" },
+          { code: "DE", name: "Germany", dial_code: "+49", flag: "de" },
+          { code: "FR", name: "France", dial_code: "+33", flag: "fr" },
+          { code: "JP", name: "Japan", dial_code: "+81", flag: "jp" },
+          { code: "SG", name: "Singapore", dial_code: "+65", flag: "sg" },
+          { code: "MY", name: "Malaysia", dial_code: "+60", flag: "my" },
+        ]);
+      } finally {
+        setLoadingCountries(false);
+      }
+    };
+
+    fetchCountries();
+  }, []);
+
   const detectLocation = () => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
@@ -79,8 +186,6 @@ export default function Navbar() {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-
-          // Using OpenStreetMap Nominatim API for reverse geocoding
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
@@ -88,13 +193,8 @@ export default function Navbar() {
           if (response.ok) {
             const data = await response.json();
             const city = data.address.city || data.address.town || data.address.village;
-
             if (city) {
               setLocation(city);
-              // Add detected city to the list if not already present
-              if (!cities.includes(city)) {
-                setCities(prev => [city, ...prev]);
-              }
             } else {
               setLocation("Location detected");
             }
@@ -121,12 +221,78 @@ export default function Navbar() {
     );
   };
 
-  const handleSignInClick = (event: any) => {
+  const handleSignInClick = (event: React.MouseEvent<HTMLElement>) => {
     setSignInAnchor(event.currentTarget);
   };
 
   const handleSignInClose = () => {
     setSignInAnchor(null);
+  };
+
+  const handleSignInMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setSignInAnchor(event.currentTarget);
+  };
+
+  const handleSignInMouseLeave = () => {
+    setTimeout(() => {
+      if (signInAnchor) {
+        setSignInAnchor(null);
+      }
+    }, 300);
+  };
+
+  const handleOpenSignInDialog = () => {
+    setSignInDialogOpen(true);
+    setSignInAnchor(null);
+  };
+
+  const handleCloseSignInDialog = () => {
+    setSignInDialogOpen(false);
+    setMobileNumber("");
+  };
+
+  const handleMobileNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.replace(/\D/g, '');
+    
+    let maxLength = 15;
+    switch(selectedCountry.code) {
+      case 'IN': maxLength = 10; break;
+      case 'US': maxLength = 10; break;
+      case 'GB': maxLength = 11; break;
+      case 'AU': maxLength = 9; break;
+      case 'DE': maxLength = 10; break;
+      case 'FR': maxLength = 9; break;
+      case 'JP': maxLength = 10; break;
+      default: maxLength = 15;
+    }
+    
+    setMobileNumber(value.slice(0, maxLength));
+  };
+
+  const handleCountryChange = (event: SelectChangeEvent) => {
+    const countryCode = event.target.value;
+    const country = countries.find(c => c.code === countryCode);
+    if (country) {
+      setSelectedCountry(country);
+      setMobileNumber("");
+    }
+  };
+
+  const handleSubmitMobileNumber = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Mobile number submitted:", selectedCountry.dial_code + mobileNumber);
+    handleCloseSignInDialog();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      if (mobileNumber.length >= 5) {
+        handleSubmitMobileNumber(e as any);
+      }
+    }
   };
 
   const isSignInOpen = Boolean(signInAnchor);
@@ -142,9 +308,7 @@ export default function Navbar() {
   // Desktop Navbar
   const DesktopNavbar = () => (
     <>
-      {/* Left Section - Logo, Search and Get Best Price */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
-        {/* Logo */}
         <Box sx={{ display: "flex", alignItems: "center", minWidth: { xs: "auto", lg: 140 } }}>
           <Box sx={{
             bgcolor: "white",
@@ -179,7 +343,6 @@ export default function Navbar() {
           </Typography>
         </Box>
 
-        {/* Location and Search - Hidden on mobile */}
         {!isMobile && (
           <Box sx={{
             display: "flex",
@@ -190,7 +353,6 @@ export default function Navbar() {
             maxWidth: { md: 500, lg: 650 },
             height: 38
           }}>
-            {/* Location Selector */}
             <Box sx={{ display: "flex", alignItems: "center", minWidth: { md: 100, lg: 130 } }}>
               <LocationOn sx={{ color: "#00bfa5", fontSize: "1.1rem", ml: 1.2, mr: 0.3 }} />
               <FormControl size="small" sx={{ minWidth: { md: 80, lg: 90 } }}>
@@ -233,7 +395,6 @@ export default function Navbar() {
 
             <Divider orientation="vertical" flexItem sx={{ height: "24px", my: "auto", mx: 0.8 }} />
 
-            {/* Search Bar */}
             <Box sx={{ display: "flex", alignItems: "center", flex: 1, pr: 0.8 }}>
               <InputBase
                 placeholder="Enter product / service to search"
@@ -271,7 +432,6 @@ export default function Navbar() {
           </Box>
         )}
 
-        {/* Get Best Price Button - Hidden on mobile */}
         {!isMobile && (
           <Button
             variant="contained"
@@ -296,10 +456,8 @@ export default function Navbar() {
         )}
       </Box>
 
-      {/* Right Section - Icons - Hidden on mobile */}
       {!isMobile && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0 }}>
-          {/* Exporters Icon */}
           <IconButton
             color="inherit"
             sx={{
@@ -309,7 +467,6 @@ export default function Navbar() {
               padding: "4px 8px",
               borderRadius: 0.8,
               minWidth: "auto",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
             }}
           >
             <Language sx={{ fontSize: "1.3rem" }} />
@@ -318,7 +475,6 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          {/* Sell Icon */}
           <IconButton
             color="inherit"
             sx={{
@@ -337,7 +493,6 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          {/* Help Icon */}
           <IconButton
             color="inherit"
             sx={{
@@ -356,7 +511,6 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          {/* Messages Icon */}
           <IconButton
             color="inherit"
             sx={{
@@ -377,10 +531,11 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          {/* Sign In Icon with Dropdown - Fixed hover issue */}
-          <Box sx={{ position: "relative" }}>
+          <Box>
             <Box
-              onClick={handleSignInClick}
+              onClick={handleOpenSignInDialog}
+              onMouseEnter={handleSignInMouseEnter}
+              onMouseLeave={handleSignInMouseLeave}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -397,51 +552,151 @@ export default function Navbar() {
                 <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
                   Sign In
                 </Typography>
-                {isSignInOpen ? (
-                  <KeyboardArrowUp sx={{ fontSize: "0.9rem" }} />
-                ) : (
-                  <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
-                )}
+                <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
               </Box>
             </Box>
 
-            {/* Sign In Dropdown Menu */}
             <Menu
+              sx={{
+                position: "absolute",
+                left: "78%",
+              }}
               anchorEl={signInAnchor}
               open={isSignInOpen}
               onClose={handleSignInClose}
-              sx={
-                {
-                position:"absolute",
-                left:"84vw"
-                }
-              }
-         
-              PaperProps={{
-                sx: {
-                  mt: 5,
-                  minWidth: 200,
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  borderRadius: 1
-                  
+              onMouseEnter={() => {
+                if (signInAnchor) {
+                  setSignInAnchor(signInAnchor);
                 }
               }}
+              onMouseLeave={handleSignInMouseLeave}
+              PaperProps={{
+                sx: {
+                  mt: 2,
+                  fontSize: "0.2rem",
+                  width: 460,
+                  borderRadius: 1.5,
+                  overflow: "hidden",
+                },
+              }}
             >
-              <MenuItem onClick={handleSignInClose} sx={{ py: 1.5, fontSize: "0.9rem", fontWeight: 500 }}>
-                Login
-              </MenuItem>
-              <MenuItem onClick={handleSignInClose} sx={{ py: 1.5, fontSize: "0.9rem", fontWeight: 500 }}>
-                Register
-              </MenuItem>
+              <Box sx={{ p: 2 }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#00bfa5",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    py: 1,
+                    borderRadius: 1,
+                    "&:hover": { bgcolor: "#00a88f" },
+                  }}
+                  onClick={handleOpenSignInDialog}
+                >
+                  Sign In
+                </Button>
+
+                <Typography
+                  sx={{
+                    fontSize: "0.8rem",
+                    color: "#666",
+                    textAlign: "center",
+                    mt: 1,
+                  }}
+                >
+                  New to IndiaMART?{" "}
+                  <Box
+                    component="span"
+                    sx={{ color: "#2e3191", fontWeight: 600, cursor: "pointer" }}
+                    onClick={handleOpenSignInDialog}
+                  >
+                    Join Now
+                  </Box>
+                </Typography>
+              </Box>
+
               <Divider />
-              <MenuItem onClick={handleSignInClose} sx={{ py: 1.5, fontSize: "0.9rem" }}>
-                My Account
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Home fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
               </MenuItem>
-              <MenuItem onClick={handleSignInClose} sx={{ py: 1.5, fontSize: "0.9rem" }}>
-                My Orders
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Store fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Post Your Requirement" />
               </MenuItem>
-              <MenuItem onClick={handleSignInClose} sx={{ py: 1.5, fontSize: "0.9rem" }}>
-                My Wishlist
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Person fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Verified Business Buyer" />
+              </MenuItem>
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Search fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Products / Services Directory" />
+              </MenuItem>
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <ShoppingCart fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="My Orders" />
+              </MenuItem>
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Message fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Recent Activity" />
+              </MenuItem>
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      Settings
+                      <Box
+                        sx={{
+                          bgcolor: "#ffc107",
+                          color: "#000",
+                          fontSize: "0.65rem",
+                          px: 0.8,
+                          py: 0.2,
+                          borderRadius: 0.8,
+                          fontWeight: 600,
+                        }}
+                      >
+                        NEW
+                      </Box>
+                    </Box>
+                  }
+                />
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemText
+                  primary="Ship With IndiaMART"
+                  secondary="Easy booking of transport"
+                />
+              </MenuItem>
+
+              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                <ListItemText primary="Download App" />
               </MenuItem>
             </Menu>
           </Box>
@@ -454,7 +709,6 @@ export default function Navbar() {
   const MobileNavbar = () => (
     <>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-        {/* Logo and Menu Icon */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton
             color="inherit"
@@ -498,9 +752,7 @@ export default function Navbar() {
           </Box>
         </Box>
 
-        {/* Right Icons for Mobile */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          {/* Search Icon */}
           <IconButton
             color="inherit"
             onClick={handleMobileSearchToggle}
@@ -509,17 +761,15 @@ export default function Navbar() {
             <Search />
           </IconButton>
 
-          {/* Cart Icon */}
           <IconButton color="inherit" sx={{ p: 1 }}>
             <Badge badgeContent={2} color="error">
               <ShoppingCart />
             </Badge>
           </IconButton>
 
-          {/* User Icon */}
           <IconButton
             color="inherit"
-            onClick={handleSignInClick}
+            onClick={handleOpenSignInDialog}
             sx={{ p: 1 }}
           >
             <Person />
@@ -527,31 +777,32 @@ export default function Navbar() {
         </Box>
       </Box>
 
-      {/* Mobile Search Popover */}
       <Popover
         open={mobileSearchOpen}
         onClose={handleMobileSearchToggle}
+        anchorReference="anchorPosition"
+        anchorPosition={{ top: 60, left: 80 }}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: 'top',
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'center',
+          horizontal: 'right',
         }}
         PaperProps={{
           sx: {
             width: '100%',
             maxWidth: '100vw',
             borderRadius: 0,
-            mt: 7,
             p: 2,
-            bgcolor: '#2e3191'
+            bgcolor: '#2e3191',
+            boxShadow: 'none',
+            borderTop: '1px solid rgba(255,255,255,0.1)'
           }
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {/* Location Selector for Mobile */}
           <Box sx={{ display: "flex", alignItems: "center", bgcolor: "white", borderRadius: 0.8, p: 1 }}>
             <LocationOn sx={{ color: "#00bfa5", fontSize: "1.1rem", mr: 1 }} />
             <FormControl size="small" fullWidth>
@@ -590,7 +841,6 @@ export default function Navbar() {
             </FormControl>
           </Box>
 
-          {/* Search Bar for Mobile */}
           <Box sx={{ display: "flex", gap: 1 }}>
             <TextField
               placeholder="Search products/services"
@@ -622,7 +872,6 @@ export default function Navbar() {
             </Button>
           </Box>
 
-          {/* Get Best Price Button for Mobile */}
           <Button
             variant="contained"
             fullWidth
@@ -641,7 +890,6 @@ export default function Navbar() {
         </Box>
       </Popover>
 
-      {/* Mobile Menu Drawer */}
       <Drawer
         anchor="left"
         open={mobileMenuOpen}
@@ -696,7 +944,7 @@ export default function Navbar() {
 
             <Divider sx={{ my: 2, bgcolor: "rgba(255,255,255,0.2)" }} />
 
-            <ListItemButton sx={{ py: 1.5 }}>
+            <ListItemButton sx={{ py: 1.5 }} onClick={handleOpenSignInDialog}>
               <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
                 <Person />
               </ListItemIcon>
@@ -721,18 +969,246 @@ export default function Navbar() {
   );
 
   return (
-    <AppBar position="sticky" sx={{ bgcolor: "#2e3191", boxShadow: "none" }}>
-      <Toolbar sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        minHeight: "52px !important",
-        paddingX: { xs: 1, sm: 2, md: 2.5 },
-        gap: { xs: 1, md: 2 },
-        py: 0.5
-      }}>
-        {isMobile ? <MobileNavbar /> : <DesktopNavbar />}
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="sticky" sx={{ bgcolor: "#2e3191", boxShadow: "none" }}>
+        <Toolbar sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          minHeight: "52px !important",
+          paddingX: { xs: 1, sm: 2, md: 2.5 },
+          gap: { xs: 1, md: 2 },
+          py: 0.5
+        }}>
+          {isMobile ? <MobileNavbar /> : <DesktopNavbar />}
+        </Toolbar>
+      </AppBar>
+
+      {/* Sign In Dialog - Moved outside AppBar */}
+      <Dialog
+        open={signInDialogOpen}
+        onClose={handleCloseSignInDialog}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            overflow: 'hidden',
+            maxWidth: 450,
+            position: 'relative',
+          }
+        }}
+      >
+        <Box sx={{ 
+          bgcolor: "#2e3191", 
+          p: 3, 
+          textAlign: "center",
+          position: 'relative'
+        }}>
+          <IconButton
+            onClick={handleCloseSignInDialog}
+            sx={{
+              position: 'absolute',
+              right: 12,
+              top: 12,
+              color: 'white',
+              bgcolor: 'rgba(255, 255, 255, 0.1)',
+              '&:hover': {
+                bgcolor: 'rgba(255, 255, 255, 0.2)',
+              }
+            }}
+          >
+            <Close />
+          </IconButton>
+          <Typography variant="h5" sx={{ color: "white", fontWeight: 600 }}>
+            Sign In
+          </Typography>
+          {/* <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.8)", mt: 0.5 }}>
+            Enter your mobile number to continue
+          </Typography> */}
+        </Box>
+
+        <DialogContent sx={{ p: 4 }}>
+          <Box 
+            component="div" 
+            sx={{ textAlign: "center" }}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 3, fontSize: '1.1rem' }}>
+              Mobile Number
+            </Typography>
+            
+            <Box sx={{ display: "flex", alignItems: "center", mb: 4, gap: 1.5 }}>
+              <FormControl sx={{ minWidth: 150 }}>
+                <Select
+                  value={selectedCountry.code}
+                  onChange={handleCountryChange}
+                  sx={{
+                    height: 50,
+                    borderRadius: 1,
+                    "& .MuiSelect-select": {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      py: 1.5,
+                      px: 2,
+                    },
+                    "& fieldset": {
+                      borderColor: "#ddd",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#bbb",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#2e3191",
+                    },
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        maxHeight: 300,
+                        mt: 1,
+                      }
+                    }
+                  }}
+                  renderValue={(value) => {
+                    const country = countries.find(c => c.code === value);
+                    return country ? (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        <FlagIcon countryCode={country.code} />
+                        <Box>
+                          <Typography sx={{ fontWeight: 600, fontSize: '1rem' }}>
+                            {country.dial_code}
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#666', fontSize: '0.8rem' }}>
+                            {country.name}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Typography>Select Country</Typography>
+                    );
+                  }}
+                >
+                  {loadingCountries ? (
+                    <MenuItem disabled>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', py: 2 }}>
+                        <CircularProgress size={20} />
+                      </Box>
+                    </MenuItem>
+                  ) : (
+                    countries.map((country) => (
+                      <MenuItem key={country.code} value={country.code} sx={{ py: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                          <FlagIcon countryCode={country.code} />
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography sx={{ fontWeight: 500, fontSize: '0.95rem' }} noWrap>
+                              {country.name}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: '#666', fontSize: '0.85rem' }} noWrap>
+                              {country.dial_code}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </MenuItem>
+                    ))
+                  )}
+                </Select>
+              </FormControl>
+              
+              <TextField
+                fullWidth
+                placeholder="Enter Your Mobile Number"
+                value={mobileNumber}
+                onChange={handleMobileNumberChange}
+                onKeyDown={handleKeyDown}
+                variant="outlined"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    height: 50,
+                    fontSize: '1rem',
+                    "& fieldset": {
+                      borderColor: "#ddd",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#bbb",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#2e3191",
+                      borderWidth: 1,
+                    },
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    padding: '0 14px',
+                  }
+                }}
+                inputProps={{
+                  type: "tel",
+                  style: {
+                    fontSize: '1rem',
+                  }
+                }}
+              />
+            </Box>
+
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{
+                bgcolor: "#00bfa5",
+                textTransform: "none",
+                fontWeight: 600,
+                py: 1.5,
+                borderRadius: 1,
+                fontSize: "1rem",
+                "&:hover": { bgcolor: "#00a88f" },
+                mb: 3,
+                height: 46,
+                boxShadow: 'none',
+                '&:disabled': {
+                  bgcolor: '#cccccc',
+                  color: '#666666'
+                }
+              }}
+              onClick={handleSubmitMobileNumber}
+              disabled={mobileNumber.length < 5}
+            >
+              Submit
+            </Button>
+
+            {/* <Typography
+              sx={{
+                fontSize: "0.85rem",
+                color: "#666",
+                mb: 3,
+              }}
+            >
+              New to IndiaMART?{" "}
+              <Box
+                component="span"
+                sx={{ color: "#2e3191", fontWeight: 600, cursor: "pointer" }}
+                onClick={handleCloseSignInDialog}
+              >
+                Join Now
+              </Box>
+            </Typography>
+
+            <Typography variant="body2" sx={{ 
+              color: "#666", 
+              fontSize: "0.75rem",
+              lineHeight: 1.4
+            }}>
+              By continuing, you agree to IndiaMART{" "}
+              <Box component="span" sx={{ color: "#2e3191", cursor: "pointer" }}>
+                Terms & Conditions
+              </Box>{" "}
+              and{" "}
+              <Box component="span" sx={{ color: "#2e3191", cursor: "pointer" }}>
+                Privacy Policy
+              </Box>
+            </Typography> */}
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

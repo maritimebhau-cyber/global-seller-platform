@@ -1,14 +1,5 @@
-import HomeComponent from "./component/Home/Home";
-import Navbar from "./component/NavBar/NavBar";
-import Footer from "./component/Footer/Footer";
+import Homepage from "./component/Home/Home";
 
-export default function HomePage() {
-  return (
-    <>
-    <Navbar />
-      <HomeComponent />
-      <Footer/>
-    </>
-  );
+export default function Page() {
+  return <Homepage />;
 }
- 

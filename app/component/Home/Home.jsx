@@ -1,11 +1,12 @@
 'use client';
 
 import { Box, Typography, IconButton, Grid, TextField, Button, Card, CardContent, CardMedia } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef,useRouter } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CircleIcon from '@mui/icons-material/Circle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+// import { useRouter } from "next/navigation";
 
 // Category Icons
 import BuildIcon from '@mui/icons-material/Build';
@@ -26,6 +27,8 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import Image from 'next/image';
 import Paper from '@mui/material/Paper';
+import Link from "next/link";
+
 
 
 
@@ -57,6 +60,8 @@ export default function Home() {
   const [productName, setProductName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [transitionSpeed, setTransitionSpeed] = useState(1000); // Default speed
+    // const router = useRouter();
+
   
    const brands = [
     "hyundai.png",
@@ -718,6 +723,7 @@ export default function Home() {
                   {cat.label}
                 </Typography>
               </Box>
+              
             </Grid>
           ))}
         </Grid>
@@ -995,7 +1001,7 @@ export default function Home() {
                             fontSize: { xs: "0.95rem", md: "1.1rem" }
                           }}
                         >
-                          {service}
+                    {service}
                         </Typography>
                       ))}
                     </Box>
@@ -1047,7 +1053,7 @@ export default function Home() {
                                 WebkitBoxOrient: "vertical"
                               }}
                             >
-                              {product}
+                              <Link href="/machine/${id}">  {product}</Link>       
                             </Typography>
                           </Box>
                         </Box>
@@ -1065,7 +1071,7 @@ export default function Home() {
   
 </Box>
    <Box sx={{  bgcolor: "#f5f5f5", p: 4 }}>
-      <Grid container spacing={4} alignItems="flex-start">
+      <Grid container spacing={40} alignItems="flex-start">
         
         {/* LEFT CONTENT */}
         <Grid item xs={12} md={6}>
@@ -1130,23 +1136,25 @@ export default function Home() {
 
           <TextField
             fullWidth
+             size="small"
             placeholder="Enter Product / Service name"
             sx={{ mb: 2, bgcolor: "#fff" }}
           />
 
-          <Grid container spacing={1} sx={{ mb: 2 }}>
-            <Grid item xs={3} sm={2}>
+          <Grid container sx={{ mb: 2 }}>
+            <Grid size={2}>
               <TextField
+                 size="small"
                 fullWidth
                 value="+91"
-                sx={{ bgcolor: "#fff" }}
+                sx={{ bgcolor: "#f5f5f5" }}
                 inputProps={{ readOnly: true }}
               />
             </Grid>
 
             <Grid item xs={9} sm={10}>
               <TextField
-                fullWidth
+             size="small"
                 placeholder="Enter your mobile"
                 sx={{ bgcolor: "#fff" }}
               />
@@ -1155,11 +1163,13 @@ export default function Home() {
 
           <Button
             variant="contained"
+            size='small'
+            
             sx={{
               bgcolor: "#00796B",
               fontSize: "18px",
-              px: 4,
-              py: 1.2,
+             
+           
               ":hover": { bgcolor: "#00695C" },
             }}
           >
