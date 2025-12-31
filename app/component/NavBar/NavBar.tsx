@@ -46,9 +46,13 @@ import {
   Settings,
 } from "@mui/icons-material";
 import { ListItemButton } from "@mui/material";
+import { useRouter } from 'next/navigation';
+
 
 // Import CSS for flag icons
 import 'flag-icons/css/flag-icons.min.css';
+import Link from "next/link";
+
 
 // Define country data type
 interface CountryData {
@@ -81,6 +85,8 @@ const FlagIcon = ({ countryCode }: { countryCode: string }) => {
 
 export default function Navbar() {
   const theme = useTheme();
+  const router = useRouter();
+
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [location, setLocation] = useState("Indore");
@@ -282,6 +288,11 @@ export default function Navbar() {
     e.preventDefault();
     e.stopPropagation();
     console.log("Mobile number submitted:", selectedCountry.dial_code + mobileNumber);
+    
+    // Navigate to Buyer page
+    router.push("/dashboard/buyer");
+    
+    // Close the dialog
     handleCloseSignInDialog();
   };
 
@@ -1023,14 +1034,12 @@ export default function Navbar() {
           <Typography variant="h5" sx={{ color: "white", fontWeight: 600 }}>
             Sign In
           </Typography>
-          {/* <Typography variant="body2" sx={{ color: "rgba(255,255,255,0.8)", mt: 0.5 }}>
-            Enter your mobile number to continue
-          </Typography> */}
         </Box>
 
         <DialogContent sx={{ p: 4 }}>
           <Box 
-            component="div" 
+            component="form" 
+            onSubmit={handleSubmitMobileNumber}
             sx={{ textAlign: "center" }}
           >
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 3, fontSize: '1.1rem' }}>
@@ -1149,8 +1158,9 @@ export default function Navbar() {
                 }}
               />
             </Box>
-
+            
             <Button
+              type="submit"
               fullWidth
               variant="contained"
               sx={{
@@ -1163,49 +1173,17 @@ export default function Navbar() {
                 "&:hover": { bgcolor: "#00a88f" },
                 mb: 3,
                 height: 46,
-                boxShadow: 'none',
-                '&:disabled': {
-                  bgcolor: '#cccccc',
-                  color: '#666666'
-                }
+                boxShadow: "none",
+                textDecoration: "none",
+                "&:disabled": {
+                  bgcolor: "#cccccc",
+                  color: "#666666",
+                },
               }}
-              onClick={handleSubmitMobileNumber}
-              disabled={mobileNumber.length < 5}
+              disabled={mobileNumber.length < 10}
             >
               Submit
             </Button>
-
-            {/* <Typography
-              sx={{
-                fontSize: "0.85rem",
-                color: "#666",
-                mb: 3,
-              }}
-            >
-              New to IndiaMART?{" "}
-              <Box
-                component="span"
-                sx={{ color: "#2e3191", fontWeight: 600, cursor: "pointer" }}
-                onClick={handleCloseSignInDialog}
-              >
-                Join Now
-              </Box>
-            </Typography>
-
-            <Typography variant="body2" sx={{ 
-              color: "#666", 
-              fontSize: "0.75rem",
-              lineHeight: 1.4
-            }}>
-              By continuing, you agree to IndiaMART{" "}
-              <Box component="span" sx={{ color: "#2e3191", cursor: "pointer" }}>
-                Terms & Conditions
-              </Box>{" "}
-              and{" "}
-              <Box component="span" sx={{ color: "#2e3191", cursor: "pointer" }}>
-                Privacy Policy
-              </Box>
-            </Typography> */}
           </Box>
         </DialogContent>
       </Dialog>
