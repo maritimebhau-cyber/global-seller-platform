@@ -1,4 +1,4 @@
-import { Machine } from "@/types/machine";
+// import { Machine } from "@/types/machine";
 import Link from "next/link";
 
 

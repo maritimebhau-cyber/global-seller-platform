@@ -10,7 +10,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
 // Category Icons
 import BuildIcon from '@mui/icons-material/Build';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'; 
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
