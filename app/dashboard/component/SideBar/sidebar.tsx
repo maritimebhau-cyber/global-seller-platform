@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
+
 const Sidebar: React.FC = () => {
   return (
     <aside className={styles.sidebar}>
