@@ -3,4 +3,6 @@
 // export default function Page() {
 //   return <MachineList />;
 // }
-             
+             export default function Page() {
+  return null;
+}
