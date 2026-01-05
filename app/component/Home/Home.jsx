@@ -1,12 +1,11 @@
 'use client';
 
-import { Box, Typography, IconButton, Grid, TextField, Button, Card, CardContent, CardMedia } from '@mui/material';
+import { Box, Typography, IconButton, Grid, TextField, Button, Card,  CardMedia } from '@mui/material';
 import { useState, useEffect, useRef,useRouter } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CircleIcon from '@mui/icons-material/Circle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-// import { useRouter } from "next/navigation";
 
 // Category Icons
 import BuildIcon from '@mui/icons-material/Build';
@@ -26,7 +25,7 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import Image from 'next/image';
-import Paper from '@mui/material/Paper';
+
 import Link from "next/link";
 
 
@@ -60,7 +59,6 @@ export default function Home() {
   const [productName, setProductName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [transitionSpeed, setTransitionSpeed] = useState(1000); // Default speed
-    // const router = useRouter();
 
   
    const brands = [

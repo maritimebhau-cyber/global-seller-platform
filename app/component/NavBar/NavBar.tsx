@@ -28,6 +28,7 @@ import {
   Dialog,
   DialogContent,
   SelectChangeEvent,
+  Avatar,
 } from "@mui/material";
 import {
   Search,
@@ -44,14 +45,24 @@ import {
   Close,
   Home,
   Settings,
+  ExitToApp,
+  AccountCircle,
+
+  Description,
+
+  VerifiedUser,
+  BusinessCenter,
+  LocalShipping,
+  GetApp,
+  SwapHoriz,
 } from "@mui/icons-material";
 import { ListItemButton } from "@mui/material";
 import { useRouter } from 'next/navigation';
 
-
 // Import CSS for flag icons
 import 'flag-icons/css/flag-icons.min.css';
-import Link from "next/link";
+import MarineMartlogo from '../../../public/images/marinemart.png';
+
 
 
 // Define country data type
@@ -92,6 +103,7 @@ export default function Navbar() {
   const [location, setLocation] = useState("Indore");
   const [isDetecting, setIsDetecting] = useState(false);
   const [signInAnchor, setSignInAnchor] = useState<HTMLElement | null>(null);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<HTMLElement | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [cities] = useState([
@@ -100,6 +112,12 @@ export default function Navbar() {
   ]);
   const [signInDialogOpen, setSignInDialogOpen] = useState(false);
   const [mobileNumber, setMobileNumber] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    name: "Ritik",
+    phone: "",
+    verified: true
+  });
   const [countries, setCountries] = useState<CountryData[]>([
     { code: "IN", name: "India", dial_code: "+91", flag: "in" },
     { code: "US", name: "United States", dial_code: "+1", flag: "us" },
@@ -289,11 +307,18 @@ export default function Navbar() {
     e.stopPropagation();
     console.log("Mobile number submitted:", selectedCountry.dial_code + mobileNumber);
     
-    // Navigate to Buyer page
-    router.push("/dashboard/buyer");
+    // Set user as signed in with phone number
+    setIsSignedIn(true);
+    setUserInfo({
+      ...userInfo,
+      phone: selectedCountry.dial_code + mobileNumber
+    });
     
     // Close the dialog
     handleCloseSignInDialog();
+    
+    // Navigate to Buyer page
+    router.push("/dashboard/buyer");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -306,7 +331,36 @@ export default function Navbar() {
     }
   };
 
+  // User Menu handlers
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+
+  const handleUserMenuMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+
+  const handleUserMenuMouseLeave = () => {
+    setTimeout(() => {
+      if (userMenuAnchor) {
+        setUserMenuAnchor(null);
+      }
+    }, 300);
+  };
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setUserMenuAnchor(null);
+    setMobileNumber("");
+    router.push("/");
+  };
+
   const isSignInOpen = Boolean(signInAnchor);
+  const isUserMenuOpen = Boolean(userMenuAnchor);
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -322,22 +376,23 @@ export default function Navbar() {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
         <Box sx={{ display: "flex", alignItems: "center", minWidth: { xs: "auto", lg: 140 } }}>
           <Box sx={{
-            bgcolor: "white",
+          
             borderRadius: "50%",
-            width: 30,
-            height: 30,
+            // width: 30,
+            // height: 30,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             mr: 0.8
           }}>
-            <Typography sx={{
-              color: "#2e3191",
-              fontWeight: "bold",
-              fontSize: "1.1rem"
-            }}>
-              M
-            </Typography>
+        <img
+  src={MarineMartlogo.src}
+  alt="MarineMart Logo"
+  className="h-10 w-auto object-contain"
+/>
+
+
+           
           </Box>
           <Typography
             variant="h6"
@@ -350,7 +405,7 @@ export default function Navbar() {
               whiteSpace: "nowrap"
             }}
           >
-            indiamart
+            marinemart
           </Typography>
         </Box>
 
@@ -542,175 +597,476 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          <Box>
-            <Box
-              onClick={handleOpenSignInDialog}
-              onMouseEnter={handleSignInMouseEnter}
-              onMouseLeave={handleSignInMouseLeave}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "4px 8px",
-                borderRadius: 0.8,
-                cursor: "pointer",
-                minWidth: 60,
-                "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
-              }}
-            >
-              <Person sx={{ fontSize: "1.3rem" }} />
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.3, justifyContent: "center" }}>
-                <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
-                  Sign In
-                </Typography>
-                <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
+          {/* Conditional: Show Sign In or User Menu */}
+          {!isSignedIn ? (
+            <Box>
+              <Box
+                onClick={handleOpenSignInDialog}
+                onMouseEnter={handleSignInMouseEnter}
+                onMouseLeave={handleSignInMouseLeave}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "4px 8px",
+                  borderRadius: 0.8,
+                  cursor: "pointer",
+                  minWidth: 60,
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
+                }}
+              >
+                <Person sx={{ fontSize: "1.3rem" }} />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.3, justifyContent: "center" }}>
+                  <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
+                    Sign In
+                  </Typography>
+                  <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
+                </Box>
               </Box>
-            </Box>
 
-            <Menu
-              sx={{
-                position: "absolute",
-                left: "78%",
-              }}
-              anchorEl={signInAnchor}
-              open={isSignInOpen}
-              onClose={handleSignInClose}
-              onMouseEnter={() => {
-                if (signInAnchor) {
-                  setSignInAnchor(signInAnchor);
-                }
-              }}
-              onMouseLeave={handleSignInMouseLeave}
-              PaperProps={{
-                sx: {
-                  mt: 2,
-                  fontSize: "0.2rem",
-                  width: 460,
-                  borderRadius: 1.5,
-                  overflow: "hidden",
-                },
-              }}
-            >
-              <Box sx={{ p: 2 }}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    bgcolor: "#00bfa5",
-                    textTransform: "none",
-                    fontWeight: 600,
-                    py: 1,
-                    borderRadius: 1,
-                    "&:hover": { bgcolor: "#00a88f" },
-                  }}
-                  onClick={handleOpenSignInDialog}
-                >
-                  Sign In
-                </Button>
-
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    color: "#666",
-                    textAlign: "center",
-                    mt: 1,
-                  }}
-                >
-                  New to IndiaMART?{" "}
-                  <Box
-                    component="span"
-                    sx={{ color: "#2e3191", fontWeight: 600, cursor: "pointer" }}
+              <Menu
+                sx={{
+                  position: "absolute",
+                  left: "78%",
+                }}
+                anchorEl={signInAnchor}
+                open={isSignInOpen}
+                onClose={handleSignInClose}
+                onMouseEnter={() => {
+                  if (signInAnchor) {
+                    setSignInAnchor(signInAnchor);
+                  }
+                }}
+                onMouseLeave={handleSignInMouseLeave}
+                PaperProps={{
+                  sx: {
+                    mt: 2,
+                    fontSize: "0.2rem",
+                    width: 460,
+                    borderRadius: 1.5,
+                    overflow: "hidden",
+                  },
+                }}
+              >
+                <Box sx={{ p: 2 }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{
+                      bgcolor: "#00bfa5",
+                      textTransform: "none",
+                      fontWeight: 600,
+                      py: 1,
+                      borderRadius: 1,
+                      "&:hover": { bgcolor: "#00a88f" },
+                    }}
                     onClick={handleOpenSignInDialog}
                   >
-                    Join Now
-                  </Box>
-                </Typography>
+                    Sign In
+                  </Button>
+
+                  <Typography
+                    sx={{
+                      fontSize: "0.8rem",
+                      color: "#666",
+                      textAlign: "center",
+                      mt: 1,
+                    }}
+                  >
+                    New to IndiaMART?{" "}
+                    <Box
+                      component="span"
+                      sx={{ color: "#2e3191", fontWeight: 600, cursor: "pointer" }}
+                      onClick={handleOpenSignInDialog}
+                    >
+                      Join Now
+                    </Box>
+                  </Typography>
+                </Box>
+
+                <Divider />
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Home fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Store fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Post Your Requirement" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Person fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Verified Business Buyer" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Search fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Products / Services Directory" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <ShoppingCart fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="My Orders" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Message fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Recent Activity" />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemIcon>
+                    <Settings fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        Settings
+                        <Box
+                          sx={{
+                            bgcolor: "#ffc107",
+                            color: "#000",
+                            fontSize: "0.65rem",
+                            px: 0.8,
+                            py: 0.2,
+                            borderRadius: 0.8,
+                            fontWeight: 600,
+                          }}
+                        >
+                          NEW
+                        </Box>
+                      </Box>
+                    }
+                  />
+                </MenuItem>
+
+                <Divider />
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemText
+                    primary="Ship With IndiaMART"
+                    secondary="Easy booking of transport"
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
+                  <ListItemText primary="Download App" />
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            // USER MENU AFTER SIGN IN
+            <Box>
+              <Box
+                onClick={handleUserMenuClick}
+                onMouseEnter={handleUserMenuMouseEnter}
+                onMouseLeave={handleUserMenuMouseLeave}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "4px 8px",
+                  borderRadius: 0.8,
+                  cursor: "pointer",
+                  minWidth: 60,
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
+                }}
+              >
+                <Avatar 
+                  sx={{ 
+                    width: 28, 
+                    height: 28, 
+                    bgcolor: "#00bfa5",
+                    fontSize: "0.8rem",
+                    fontWeight: 600
+                  }}
+                >
+                  {userInfo.name.charAt(0)}
+                </Avatar>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.3, justifyContent: "center", mt: 0.2 }}>
+                  <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
+                    {userInfo.name}
+                  </Typography>
+                  <KeyboardArrowDown sx={{ fontSize: "0.9rem" }} />
+                </Box>
               </Box>
 
-              <Divider />
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Home fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Store fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Post Your Requirement" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Person fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Verified Business Buyer" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Search fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Products / Services Directory" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <ShoppingCart fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="My Orders" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Message fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Recent Activity" />
-              </MenuItem>
-
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemIcon>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      Settings
-                      <Box
-                        sx={{
-                          bgcolor: "#ffc107",
-                          color: "#000",
-                          fontSize: "0.65rem",
-                          px: 0.8,
-                          py: 0.2,
-                          borderRadius: 0.8,
-                          fontWeight: 600,
+              <Menu
+                sx={{
+                  position: "absolute",
+                  left: "78%",
+                }}
+                anchorEl={userMenuAnchor}
+                open={isUserMenuOpen}
+                onClose={handleUserMenuClose}
+                onMouseEnter={() => {
+                  if (userMenuAnchor) {
+                    setUserMenuAnchor(userMenuAnchor);
+                  }
+                }}
+                onMouseLeave={handleUserMenuMouseLeave}
+                PaperProps={{
+                  sx: {
+                    mt: 2,
+                    width: 340,
+                    borderRadius: 1.5,
+                    overflow: "hidden",
+                  },
+                }}
+              >
+                {/* User Info Header */}
+                <Box sx={{ p: 2.5, bgcolor: "#f8f9fa", borderBottom: "1px solid #e0e0e0" }}>
+                  <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}>
+                    <Box sx={{ position: "relative" }}>
+                      <Avatar 
+                        sx={{ 
+                          width: 48, 
+                          height: 48, 
+                          bgcolor: "#2e3191",
+                          fontSize: "1.3rem",
+                          fontWeight: 600
                         }}
                       >
-                        NEW
-                      </Box>
+                        {userInfo.name.charAt(0)}
+                      </Avatar>
                     </Box>
-                  }
-                />
-              </MenuItem>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography sx={{ fontWeight: 600, fontSize: "1rem", mb: 0.3 }}>
+                        {userInfo.name}
+                      </Typography>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 0.5 }}>
+                        <Typography sx={{ fontSize: "0.8rem", color: "#666" }}>
+                          {userInfo.phone}
+                        </Typography>
+                        {userInfo.verified && (
+                          <Box sx={{ 
+                            display: "flex", 
+                            alignItems: "center", 
+                            bgcolor: "#e8f5e9",
+                            px: 0.8,
+                            py: 0.2,
+                            borderRadius: 1,
+                            gap: 0.3
+                          }}>
+                            <Box sx={{ 
+                              width: 6, 
+                              height: 6, 
+                              bgcolor: "#4caf50", 
+                              borderRadius: "50%" 
+                            }} />
+                            <Typography sx={{ fontSize: "0.65rem", color: "#2e7d32", fontWeight: 500 }}>
+                              Verified
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                      <Button
+                        variant="text"
+                        size="small"
+                        startIcon={<AccountCircle sx={{ fontSize: "0.9rem" }} />}
+                        sx={{
+                          textTransform: "none",
+                          fontSize: "0.75rem",
+                          fontWeight: 500,
+                          color: "#2e3191",
+                          p: 0,
+                          minWidth: "auto",
+                          "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
+                        }}
+                        onClick={handleUserMenuClose}
+                      >
+                        View Profile
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
 
-              <Divider />
+                {/* Menu Items */}
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Home fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Home"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
 
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemText
-                  primary="Ship With IndiaMART"
-                  secondary="Easy booking of transport"
-                />
-              </MenuItem>
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Description fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Post Your Requirement"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
 
-              <MenuItem sx={{ py: 1.2 }} onClick={handleSignInClose}>
-                <ListItemText primary="Download App" />
-              </MenuItem>
-            </Menu>
-          </Box>
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <VerifiedUser fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Verified Business Buyer"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Search fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Products/Services Directory"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <ShoppingCart fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="My Orders"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Message fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Recent Activity"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Settings fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        Settings
+                        <Box
+                          sx={{
+                            bgcolor: "#ffc107",
+                            color: "#000",
+                            fontSize: "0.6rem",
+                            px: 0.6,
+                            py: 0.2,
+                            borderRadius: 0.5,
+                            fontWeight: 600,
+                          }}
+                        >
+                          NEW
+                        </Box>
+                      </Box>
+                    }
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <Divider sx={{ my: 0.5 }} />
+
+                {/* Additional Services */}
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <BusinessCenter fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Business Loans"
+                    secondary="Loans made simple"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                    secondaryTypographyProps={{ fontSize: "0.75rem" }}
+                  />
+                  <Box
+                    sx={{
+                      bgcolor: "#ffc107",
+                      color: "#000",
+                      fontSize: "0.6rem",
+                      px: 0.6,
+                      py: 0.2,
+                      borderRadius: 0.5,
+                      fontWeight: 600,
+                    }}
+                  >
+                    NEW
+                  </Box>
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <LocalShipping fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Ship With IndiaMART"
+                    secondary="Easy booking of transport"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                    secondaryTypographyProps={{ fontSize: "0.75rem" }}
+                  />
+                </MenuItem>
+
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <GetApp fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Download App"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                <Divider sx={{ my: 0.5 }} />
+
+                {/* Sign In as Different User */}
+                <MenuItem sx={{ py: 1.2, px: 2.5 }} onClick={handleUserMenuClose}>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <SwapHoriz fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Sign In as Different User"
+                    primaryTypographyProps={{ fontSize: "0.9rem" }}
+                  />
+                </MenuItem>
+
+                {/* Sign Out */}
+                <MenuItem 
+                  onClick={handleSignOut} 
+                  sx={{ 
+                    py: 1.2,
+                    px: 2.5,
+                    color: "#d32f2f",
+                    "&:hover": { bgcolor: "#ffebee" }
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <ExitToApp fontSize="small" sx={{ color: "#d32f2f" }} />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary="Sign Out"
+                    primaryTypographyProps={{ fontSize: "0.9rem", fontWeight: 500 }}
+                  />
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
         </Box>
       )}
     </>
@@ -778,13 +1134,33 @@ export default function Navbar() {
             </Badge>
           </IconButton>
 
-          <IconButton
-            color="inherit"
-            onClick={handleOpenSignInDialog}
-            sx={{ p: 1 }}
-          >
-            <Person />
-          </IconButton>
+          {!isSignedIn ? (
+            <IconButton
+              color="inherit"
+              onClick={handleOpenSignInDialog}
+              sx={{ p: 1 }}
+            >
+              <Person />
+            </IconButton>
+          ) : (
+            <IconButton
+              color="inherit"
+              onClick={handleUserMenuClick}
+              sx={{ p: 1 }}
+            >
+              <Avatar 
+                sx={{ 
+                  width: 32, 
+                  height: 32, 
+                  bgcolor: "#00bfa5",
+                  fontSize: "0.9rem",
+                  fontWeight: 600
+                }}
+              >
+                {userInfo.name.charAt(0)}
+              </Avatar>
+            </IconButton>
+          )}
         </Box>
       </Box>
 
@@ -955,12 +1331,38 @@ export default function Navbar() {
 
             <Divider sx={{ my: 2, bgcolor: "rgba(255,255,255,0.2)" }} />
 
-            <ListItemButton sx={{ py: 1.5 }} onClick={handleOpenSignInDialog}>
-              <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
-                <Person />
-              </ListItemIcon>
-              <ListItemText primary="Login / Register" />
-            </ListItemButton>
+            {!isSignedIn ? (
+              <ListItemButton sx={{ py: 1.5 }} onClick={handleOpenSignInDialog}>
+                <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText primary="Login / Register" />
+              </ListItemButton>
+            ) : (
+              <>
+                <Box sx={{ px: 2, py: 1.5, display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Avatar 
+                    sx={{ 
+                      width: 40, 
+                      height: 40, 
+                      bgcolor: "#00bfa5",
+                      fontSize: "1rem",
+                      fontWeight: 600
+                    }}
+                  >
+                    {userInfo.name.charAt(0)}
+                  </Avatar>
+                  <Box>
+                    <Typography sx={{ fontWeight: 600, fontSize: "0.95rem" }}>
+                      {userInfo.name}
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.75rem", opacity: 0.8 }}>
+                      {userInfo.phone}
+                    </Typography>
+                  </Box>
+                </Box>
+              </>
+            )}
 
             <ListItem sx={{ py: 1.5 }}>
               <ListItemText primary="My Account" sx={{ pl: 7 }} />
@@ -973,6 +1375,18 @@ export default function Navbar() {
             <ListItem sx={{ py: 1.5 }}>
               <ListItemText primary="My Wishlist" sx={{ pl: 7 }} />
             </ListItem>
+
+            {isSignedIn && (
+              <>
+                <Divider sx={{ my: 2, bgcolor: "rgba(255,255,255,0.2)" }} />
+                <ListItemButton sx={{ py: 1.5, color: "#ff6b6b" }} onClick={handleSignOut}>
+                  <ListItemIcon sx={{ minWidth: 40, color: "#ff6b6b" }}>
+                    <ExitToApp />
+                  </ListItemIcon>
+                  <ListItemText primary="Sign Out" />
+                </ListItemButton>
+              </>
+            )}
           </List>
         </Box>
       </Drawer>
@@ -995,7 +1409,7 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
 
-      {/* Sign In Dialog - Moved outside AppBar */}
+      {/* Sign In Dialog */}
       <Dialog
         open={signInDialogOpen}
         onClose={handleCloseSignInDialog}
