@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Typography, IconButton, Grid, TextField, Button, Card,  CardMedia } from '@mui/material';
-import { useState, useEffect, useRef,useRouter } from 'react';
+import { Box, Typography, IconButton, Grid, TextField, Button, Card, CardMedia } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -356,15 +356,16 @@ export default function Home() {
                 <Box sx={{
                   position: 'absolute',
                   top: '50%',
-                  left: { xs: '10em', md: '37%' },
-                  transform: 'translateY(-50%)',
+                  left: { xs: '50%', md: '37%' },
+                  transform: { xs: 'translate(-50%, -50%)', md: 'translateY(-50%)' },
                   color: 'white',
                   maxWidth: { xs: '90%', md: item.hasForm ? '800px' : '600px' },
                   width: '100%',
                   display: 'flex',
                   flexDirection: { xs: 'column', md: item.hasForm ? 'row' : 'column' },
-                  alignItems: { xs: 'flex-start', md: item.hasForm ? 'flex-start' : 'flex-start' },
-                  gap: { xs: 2, md: item.hasForm ? 6 : 0 }
+                  alignItems: { xs: 'center', md: item.hasForm ? 'flex-start' : 'flex-start' },
+                  gap: { xs: 2, md: item.hasForm ? 6 : 0 },
+                  textAlign: { xs: 'center', md: 'left' }
                 }}>
                   {/* Text Content */}
                   <Box sx={{
@@ -428,7 +429,7 @@ export default function Home() {
                       onSubmit={handleSubmit}
                       sx={{
                         flex: 1,
-                        maxWidth: '400px',
+                        maxWidth: { xs: '100%', md: '400px' },
                         p: { xs: 2, sm: 3 },
                         borderRadius: 2,
                         // backdropFilter: 'blur(10px)'
@@ -917,149 +918,122 @@ export default function Home() {
 
 
     ].map((section, sectionIndex) => (
-      <Box key={sectionIndex} mb={12}>
-        {/* TWO HEADINGS ABOVE EACH CARD PAIR */}
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          mb: 4,
-          px: { xs: 2, md: 0 }
-        }}>
-          {/* LEFT HEADING - Aligns with big image card */}
-          <Box sx={{ 
-            flex: 1,
-            textAlign: 'left',
-            pr: 2
-          }}>
-            <Typography
-              variant="h5"
-              fontWeight={700}
-              color="#0d47a1"
-              sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}
-            >
-              {section.leftHeading}
-            </Typography>
-          </Box>
-          
-          {/* SPACER - To match the gap between big and small cards */}
-          <Box sx={{ width: 'calc(33.33% - 24px)' }} />
-          
-          {/* RIGHT HEADING - Aligns with small cards */}
-          <Box sx={{ 
-            flex: 1,
-            textAlign: 'left',
-            pl: 2
-          }}>
-            <Typography
-              variant="h5"
-              fontWeight={700}
-              color="#0d47a1"
-              sx={{ fontSize: { xs: "1.2rem", md: "1.5rem" } }}
-            >
-              {section.rightHeading}
-            </Typography>
-          </Box>
-        </Box>
-
-        <Grid container spacing={12} justifyContent="center">
+      <Box key={sectionIndex} mb={{ xs: 6, md: 12 }}>
+        <Grid container spacing={{ xs: 4, md: 12 }} justifyContent="center">
           {section.cards.map((card, cardIndex) => (
             <Grid item xs={12} sm={6} key={cardIndex}>
-              <Grid container spacing={3} alignItems="stretch">
-                
-                {/* LEFT: Big Customizable Image Card */}
-                <Grid item xs={7}>
-                  <Card
-                    sx={{
-                      height: "420px",
-                      borderRadius: 3,
-                      width: "21vw",
-                      overflow: "hidden",
-                      position: "relative",
-                      background: `url(${card.bigImage}) center/cover no-repeat`,
-                    }}
-                  >
-                    <Box sx={{
-                      p: { xs: 2.5, md: 4 },
-                      color: "white",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-end",
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
-                    }}>
-                      {card.services.map((service, i) => (
-                        <Typography
-                          key={i}
-                          variant="subtitle1"
-                          fontWeight={700}
-                          sx={{
-                            mb: 1.2,
-                            textShadow: "2px 2px 8px #000",
-                            fontSize: { xs: "0.95rem", md: "1.1rem" }
-                          }}
-                        >
-                    {service}
-                        </Typography>
-                      ))}
-                    </Box>
-                  </Card>
-                </Grid>
-
-                {/* RIGHT: 3 Small Customizable Product Cards */}
-                <Grid item xs={5}>
-                  <Grid container direction="column" spacing={2.5} height="100%">
-                    {card.products.map((product, i) => (
-                      <Grid item xs={4} key={i}>
-                        <Box
-                          sx={{
-                            borderRadius: 2.5,
-                            height: "130px",
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid #eae2e2ff",
-                           
-                          }}
-                        >
-                          <CardMedia
-                            component="img"
-                            image={`/images/small-${sectionIndex}-${cardIndex}-${i}.jpg`}
-                            alt={product}
+              <Box>
+                <Typography
+                  variant="h5"
+                  fontWeight={700}
+                  color="#0d47a1"
+                  sx={{ 
+                    fontSize: { xs: "1.2rem", md: "1.5rem" },
+                    mb: 2,
+                    textAlign: { xs: 'center', md: 'left' }
+                  }}
+                >
+                  {cardIndex === 0 ? section.leftHeading : section.rightHeading}
+                </Typography>
+                <Grid 
+                  container 
+                  spacing={3} 
+                  alignItems="stretch" 
+                  direction={{ xs: 'column', md: 'row' }}
+                >
+                  {/* LEFT: Big Customizable Image Card */}
+                  <Grid item xs={12} md={7}>
+                    <Card
+                      sx={{
+                        height: { xs: "250px", md: "420px" },
+                        borderRadius: 3,
+                        overflow: "hidden",
+                        position: "relative",
+                        background: `url(${card.bigImage}) center/cover no-repeat`,
+                      }}
+                    >
+                      <Box sx={{
+                        p: { xs: 1.5, md: 4 },
+                        color: "white",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-end",
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
+                      }}>
+                        {card.services.map((service, i) => (
+                          <Typography
+                            key={i}
+                            variant="subtitle1"
+                            fontWeight={700}
                             sx={{
-                              width: 120,
-                              height: "100%",
-                              objectFit: "cover",
-                              borderTopLeftRadius: "8px",
-                              borderBottomLeftRadius: "8px"
+                              mb: 1.2,
+                              textShadow: "2px 2px 8px #000",
+                              fontSize: { xs: "0.8rem", md: "1.1rem" }
                             }}
-                          />
-                          <Box sx={{
-                            px: 2,
-                            py: 1.5,
-                            flex: 1,
-                            minWidth: 0
-                          }}>
-                            <Typography
-                              variant="subtitle2"
-                              fontWeight={700}
+                          >
+                            {service}
+                          </Typography>
+                        ))}
+                      </Box>
+                    </Card>
+                  </Grid>
+
+                  {/* RIGHT: 3 Small Customizable Product Cards */}
+                  <Grid item xs={12} md={5}>
+                    <Grid container direction="column" spacing={{ xs: 1.5, md: 2.5 }} height="100%">
+                      {card.products.map((product, i) => (
+                        <Grid item xs={4} key={i}>
+                          <Box
+                            sx={{
+                              borderRadius: 2.5,
+                              height: { xs: "100px", md: "130px" },
+                              width: "100%",
+                              display: "flex",
+                              alignItems: "center",
+                              border: "1px solid #eae2e2ff",
+                            }}
+                          >
+                            <CardMedia
+                              component="img"
+                              image={`/images/small-${sectionIndex}-${cardIndex}-${i}.jpg`}
+                              alt={product}
                               sx={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical"
+                                width: { xs: 80, md: 120 },
+                                height: "100%",
+                                objectFit: "cover",
+                                borderTopLeftRadius: "8px",
+                                borderBottomLeftRadius: "8px"
                               }}
-                            >
-                              <Link href="/machine/${id}">  {product}</Link>       
-                            </Typography>
+                            />
+                            <Box sx={{
+                              px: 2,
+                              py: 1.5,
+                              flex: 1,
+                              minWidth: 0
+                            }}>
+                              <Typography
+                                variant="subtitle2"
+                                fontWeight={700}
+                                sx={{
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  display: "-webkit-box",
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: "vertical",
+                                  fontSize: { xs: "0.9rem", md: "1rem" }
+                                }}
+                              >
+                                <Link href={`/machine/${product.toLowerCase().replace(/ /g, '-')}`}>{product}</Link>       
+                              </Typography>
+                            </Box>
                           </Box>
-                        </Box>
-                      </Grid>
-                    ))}
+                        </Grid>
+                      ))}
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Box>
             </Grid>
           ))}
         </Grid>
@@ -1069,7 +1043,7 @@ export default function Home() {
   
 </Box>
    <Box sx={{  bgcolor: "#f5f5f5", p: 4 }}>
-      <Grid container spacing={40} alignItems="flex-start">
+      <Grid container spacing={4} alignItems="flex-start">
         
         {/* LEFT CONTENT */}
         <Grid item xs={12} md={6}>
@@ -1140,7 +1114,7 @@ export default function Home() {
           />
 
           <Grid container sx={{ mb: 2 }}>
-            <Grid size={2}>
+            <Grid item xs={2}>
               <TextField
                  size="small"
                 fullWidth
@@ -1150,9 +1124,10 @@ export default function Home() {
               />
             </Grid>
 
-            <Grid item xs={9} sm={10}>
+            <Grid item xs={10}>
               <TextField
              size="small"
+                fullWidth
                 placeholder="Enter your mobile"
                 sx={{ bgcolor: "#fff" }}
               />

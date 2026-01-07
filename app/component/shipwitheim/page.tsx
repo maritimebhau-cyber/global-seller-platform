@@ -1,10 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { Truck, Package, ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 
 const TransportationBooking: React.FC = () => {
-  const [pickupPostcode, setPickupPostcode] = useState('');
-  const [dropPostcode, setDropPostcode] = useState('');
+  const [selectedService, setSelectedService] = useState('full-truck');
+  const [pickupCity, setPickupCity] = useState('');
+  const [dropCity, setDropCity] = useState('');
   const [selectedWeight, setSelectedWeight] = useState('');
 
   const services = [
@@ -18,22 +19,36 @@ const TransportationBooking: React.FC = () => {
       id: 'part-truck', 
       label: 'Part Truck', 
       icon: '🚐',
-      desc: '20 Kgs to 2500 Kg'
+      desc: '30 Kg to 2500 Kg'
     },
     { 
       id: 'courier', 
       label: 'Courier', 
       icon: '📦',
-      desc: 'Less than 20 Kg'
+      desc: 'Less than 30 Kg'
     }
   ];
 
-  const weightOptions = [
-    { id: 'upto5', label: 'Upto 5 Kg' },
-    { id: '5to10', label: '5 to 10 Kg' },
-    { id: '11to20', label: '11 to 20 Kg' },
-    { id: 'morethan20', label: 'More than 20 Kg' }
-  ];
+  const getWeightOptions = () => {
+    if (selectedService === 'courier') {
+      return [
+        { id: 'upto5', label: 'Upto 5 Kg' },
+        { id: '5to10', label: '5 to 10 Kg' },
+        { id: '11to20', label: '11 to 20 Kg' },
+        { id: 'morethan20', label: 'More than 20 Kg' }
+      ];
+    } else {
+      return [
+        { id: 'morethan18', label: 'More than 18 Ton' },
+        { id: '9to18', label: '9 to 18 Ton' },
+        { id: '3to9', label: '3 to 9 Ton' },
+        { id: 'upto3', label: 'Upto 3 Ton' }
+      ];
+    }
+  };
+
+  const pickupPopularCities = ['Delhi', 'Mumbai', 'Pune', 'Kolkata'];
+  const dropPopularCities = ['Mumbai', 'Delhi', 'Ahmedabad', 'Pune'];
 
   const faqs = [
     {
@@ -77,32 +92,43 @@ const TransportationBooking: React.FC = () => {
     alert('Finding services...');
   };
 
-  const clearPickup = () => setPickupPostcode('');
-  const clearDrop = () => setDropPostcode('');
+  const clearPickup = () => setPickupCity('');
+  const clearDrop = () => setDropCity('');
+
+  const handleServiceChange = (serviceId: string) => {
+    setSelectedService(serviceId);
+    setSelectedWeight('');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Hero Section with Background */}
+      {/* Hero Section - SHORT HEIGHT */}
       <div 
-        className="relative bg-cover bg-center pb-32 pt-8"
+        className="relative bg-cover bg-center pb-16 pt-6"
         style={{
-          backgroundImage: 'linear-gradient(rgba(70, 80, 150, 0.85), rgba(70, 80, 150, 0.85)), url("data:image/svg+xml,%3Csvg width="1200" height="400" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="1200" height="400" fill="%23667"%3E%3C/rect%3E%3C/svg%3E")',
-          minHeight: '280px'
+          backgroundImage: 'linear-gradient(rgba(80, 90, 130, 0.75), rgba(80, 90, 130, 0.75)), url("data:image/svg+xml,%3Csvg width="1200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="1200" height="200" fill="%23667"%3E%3C/rect%3E%3C/svg%3E")',
+          minHeight: '180px'
         }}
       >
-        <div className="max-w-5xl mx-auto px-4">
-          <h1 className="text-white text-3xl font-bold text-center mb-8">Book Transportation Service</h1>
+        <div className="max-w-6xl mx-auto px-4">
+          <h1 className="text-white text-2xl font-bold text-center mb-6">Book Transportation Service</h1>
           
-          {/* Service Type Cards */}
-          <div className="flex justify-center gap-4">
+          {/* Service Type Cards - WIDE AND SHORT */}
+          <div className="flex justify-center gap-3">
             {services.map((service) => (
               <button
                 key={service.id}
-                className="bg-white rounded-lg p-4 w-28 flex flex-col items-center hover:shadow-lg transition-shadow"
+                onClick={() => handleServiceChange(service.id)}
+                className="bg-white rounded-md p-3 w-44 flex flex-col items-center hover:shadow-lg transition-all relative"
               >
-                <div className="text-4xl mb-2">{service.icon}</div>
-                <div className="font-semibold text-gray-800 text-sm mb-1">{service.label}</div>
-                <div className="text-xs text-gray-600 text-center">{service.desc}</div>
+                <div className="text-3xl mb-1">{service.icon}</div>
+                <div className="font-semibold text-gray-800 text-sm mb-0.5">{service.label}</div>
+                <div className="text-xs text-gray-600 text-center leading-tight">{service.desc}</div>
+                
+                {/* Teal underline indicator */}
+                {selectedService === service.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-600 rounded-b-md"></div>
+                )}
               </button>
             ))}
           </div>
@@ -110,95 +136,122 @@ const TransportationBooking: React.FC = () => {
       </div>
 
       {/* Booking Form Card - Overlapping */}
-      <div className="max-w-3xl mx-auto px-4 -mt-24 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 -mt-10 relative z-10">
         <div className="bg-white rounded-lg shadow-xl p-8">
-          <h2 className="text-xl font-semibold mb-6 text-gray-800">Enter Your Shipment Details</h2>
+          <h2 className="text-lg font-semibold mb-5 text-gray-800">Enter Your Shipment Details</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Pickup Pincode */}
-            <div>
+          {/* SINGLE ROW LAYOUT - WIDE */}
+          <div className="flex items-start gap-6">
+            {/* Pickup City */}
+            <div className="flex-1">
               <label className="block text-sm font-medium mb-2 text-gray-700">
-                Pickup Pincode <span className="text-red-500">*</span>
+                Pickup City <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Enter pickup pincode"
-                  value={pickupPostcode}
-                  onChange={(e) => setPickupPostcode(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-teal-500 pr-8"
+                  placeholder="Sihora"
+                  value={pickupCity}
+                  onChange={(e) => setPickupCity(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 pr-8 text-sm"
                 />
-                {pickupPostcode && (
+                {pickupCity && (
                   <button
                     onClick={clearPickup}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                   >
                     ✕
                   </button>
                 )}
+              </div>
+              {/* Popular cities */}
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-blue-600 font-medium">Popular:</span>
+                {pickupPopularCities.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => setPickupCity(city)}
+                    className="text-xs px-2 py-0.5 border border-gray-300 rounded-full hover:bg-gray-50 text-gray-700"
+                  >
+                    {city}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Swap Icon */}
-            <div className="hidden md:flex items-end justify-center pb-2">
-              <div className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center">
+            <div className="flex items-start justify-center pt-8">
+              <div className="w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center bg-white flex-shrink-0">
                 <ArrowLeftRight className="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
-            {/* Drop Pincode */}
-            <div>
+            {/* Drop City */}
+            <div className="flex-1">
               <label className="block text-sm font-medium mb-2 text-gray-700">
-                Drop Pincode <span className="text-red-500">*</span>
+                Drop City <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Enter drop pincode"
-                  value={dropPostcode}
-                  onChange={(e) => setDropPostcode(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-teal-500 pr-8"
+                  placeholder="Enter drop city"
+                  value={dropCity}
+                  onChange={(e) => setDropCity(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 pr-8 text-sm"
                 />
-                {dropPostcode && (
+                {dropCity && (
                   <button
                     onClick={clearDrop}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
                   >
                     ✕
                   </button>
                 )}
               </div>
+              {/* Popular cities */}
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-blue-600 font-medium">Popular:</span>
+                {dropPopularCities.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => setDropCity(city)}
+                    className="text-xs px-2 py-0.5 border border-gray-300 rounded-full hover:bg-gray-50 text-gray-700"
+                  >
+                    {city}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Material Weight Section */}
-          <div className="mt-6">
-            <label className="block text-sm font-medium mb-3 text-gray-700">
-              Material Weight <span className="text-red-500">*</span>
-              <span className="ml-1 inline-flex items-center justify-center w-4 h-4 text-xs border border-gray-400 rounded-full text-gray-500">i</span>
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {weightOptions.map((option) => (
-                <label
-                  key={option.id}
-                  className="flex items-center space-x-2 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="weight"
-                    value={option.id}
-                    checked={selectedWeight === option.id}
-                    onChange={(e) => setSelectedWeight(e.target.value)}
-                    className="w-4 h-4 text-teal-600 focus:ring-teal-500"
-                  />
-                  <span className="text-sm text-gray-700">{option.label}</span>
-                </label>
-              ))}
+            {/* Material Weight - RIGHT SIDE */}
+            <div className="flex-1">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Material Weight <span className="text-red-500">*</span>
+                <span className="ml-1 inline-flex items-center justify-center w-4 h-4 text-xs border border-gray-400 rounded-full text-gray-500 cursor-help">ⓘ</span>
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {getWeightOptions().map((option) => (
+                  <label
+                    key={option.id}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="weight"
+                      value={option.id}
+                      checked={selectedWeight === option.id}
+                      onChange={(e) => setSelectedWeight(e.target.value)}
+                      className="w-3.5 h-3.5 text-teal-600 focus:ring-teal-500"
+                    />
+                    <span className="text-xs text-gray-700">{option.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Progress Dots */}
-          <div className="flex justify-center gap-2 mt-8 mb-6">
+          <div className="flex justify-center gap-2 mt-6 mb-5">
             <div className="w-2 h-2 rounded-full bg-teal-600"></div>
             <div className="w-2 h-2 rounded-full bg-gray-300"></div>
           </div>
@@ -207,7 +260,7 @@ const TransportationBooking: React.FC = () => {
           <div className="text-center">
             <button
               onClick={handleSubmit}
-              className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-16 py-3 rounded-md transition-colors shadow-md"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-16 py-2.5 rounded-md transition-colors shadow-md text-sm"
             >
               Submit
             </button>
@@ -216,14 +269,14 @@ const TransportationBooking: React.FC = () => {
       </div>
 
       {/* FAQ Section */}
-      <div className="max-w-4xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-8 text-gray-700">FAQ's</h2>
+      <div className="max-w-5xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">FAQ's</h2>
         
-        <div className="space-y-6">
+        <div className="space-y-5">
           {faqs.map((faq, index) => (
-            <div key={index}>
-              <h3 className="font-semibold text-purple-900 mb-2 text-base">{faq.q}</h3>
-              <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+            <div key={index} className="border-b border-gray-200 pb-5 last:border-0">
+              <h3 className="font-semibold text-gray-800 mb-2 text-sm">{faq.q}</h3>
+              <div className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                 {faq.a}
               </div>
             </div>
@@ -232,11 +285,11 @@ const TransportationBooking: React.FC = () => {
       </div>
 
       {/* Popular Areas Section */}
-      <div className="bg-indigo-900 text-white py-12">
+      <div className="bg-indigo-900 text-white py-10">
         <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-10">Popular Areas We Serve</h2>
+          <h2 className="text-xl font-bold text-center mb-8">Popular Areas We Serve</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-12">
             {locations.map((row, rowIndex) => (
               <React.Fragment key={rowIndex}>
                 <a

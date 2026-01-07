@@ -383,7 +383,8 @@ export default function Navbar() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            mr: 0.8
+            mr: 0.8,
+            backgroundColor: "white",
           }}>
         <img
   src={MarineMartlogo.src}
