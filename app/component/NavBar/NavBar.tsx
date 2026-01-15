@@ -47,23 +47,25 @@ import {
   Settings,
   ExitToApp,
   AccountCircle,
-
   Description,
-
   VerifiedUser,
   BusinessCenter,
   LocalShipping,
   GetApp,
   SwapHoriz,
+  Email,
+  Phone,
+  Chat,
+  Feedback,
+  School,
+  ShoppingBag,
 } from "@mui/icons-material";
 import { ListItemButton } from "@mui/material";
 import { useRouter } from 'next/navigation';
-
+import Link from "next/link";
 // Import CSS for flag icons
 import 'flag-icons/css/flag-icons.min.css';
 import MarineMartlogo from '../../../public/images/marinemart.png';
-
-
 
 // Define country data type
 interface CountryData {
@@ -104,6 +106,7 @@ export default function Navbar() {
   const [isDetecting, setIsDetecting] = useState(false);
   const [signInAnchor, setSignInAnchor] = useState<HTMLElement | null>(null);
   const [userMenuAnchor, setUserMenuAnchor] = useState<HTMLElement | null>(null);
+  const [helpAnchor, setHelpAnchor] = useState<HTMLElement | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [cities] = useState([
@@ -265,6 +268,27 @@ export default function Navbar() {
     }, 300);
   };
 
+  // Help menu handlers
+  const handleHelpClick = (event: React.MouseEvent<HTMLElement>) => {
+    setHelpAnchor(event.currentTarget);
+  };
+
+  const handleHelpClose = () => {
+    setHelpAnchor(null);
+  };
+
+  const handleHelpMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setHelpAnchor(event.currentTarget);
+  };
+
+  const handleHelpMouseLeave = () => {
+    setTimeout(() => {
+      if (helpAnchor) {
+        setHelpAnchor(null);
+      }
+    }, 300);
+  };
+
   const handleOpenSignInDialog = () => {
     setSignInDialogOpen(true);
     setSignInAnchor(null);
@@ -361,6 +385,7 @@ export default function Navbar() {
 
   const isSignInOpen = Boolean(signInAnchor);
   const isUserMenuOpen = Boolean(userMenuAnchor);
+  const isHelpOpen = Boolean(helpAnchor);
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -376,38 +401,36 @@ export default function Navbar() {
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
         <Box sx={{ display: "flex", alignItems: "center", minWidth: { xs: "auto", lg: 140 } }}>
           <Box sx={{
-          
-            borderRadius: "50%",
-            // width: 30,
-            // height: 30,
+            borderRadius: "40%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             mr: 0.8,
             backgroundColor: "white",
           }}>
-        <img
-  src={MarineMartlogo.src}
-  alt="MarineMart Logo"
-  className="h-10 w-auto object-contain"
-/>
-
-
-           
+            <img
+              src={MarineMartlogo.src}
+              alt="MarineMart Logo"
+              className="h-10 w-10"
+            />
           </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 600,
-              color: "white",
-              cursor: "pointer",
-              fontSize: { xs: "1rem", md: "1.2rem" },
-              letterSpacing: "0.3px",
-              whiteSpace: "nowrap"
-            }}
-          >
-            marinemart
-          </Typography>
+        <Link href="/dashboard/buyer" style={{ textDecoration: "none" }}>
+  <Typography
+    variant="h6"
+    sx={{
+      fontWeight: 600,
+      color: "white",
+      cursor: "pointer",
+      fontSize: { xs: "1rem", md: "1.2rem" },
+      letterSpacing: "0.3px",
+      whiteSpace: "nowrap",
+      "&:hover": { opacity: 0.85 }
+    }}
+  >
+    marinemart
+  </Typography>
+</Link>
+
         </Box>
 
         {!isMobile && (
@@ -542,61 +565,193 @@ export default function Navbar() {
             </Typography>
           </IconButton>
 
-          <IconButton
-            color="inherit"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "4px 8px",
-              borderRadius: 0.8,
-              minWidth: "auto",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
-            }}
-          >
-            <Store sx={{ fontSize: "1.3rem" }} />
-            <Typography variant="caption" sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}>
-              Sell
-            </Typography>
-          </IconButton>
+          <Link href="/component/seller" passHref legacyBehavior>
+            <IconButton
+              component="a"
+              color="inherit"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "4px 8px",
+                borderRadius: 0.8,
+                minWidth: "auto",
+                textDecoration: "none",
+                "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
+              }}
+            >
+              <Store sx={{ fontSize: "1.3rem" }} />
+              <Typography
+                variant="caption"
+                sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}
+              >
+                Sell
+              </Typography>
+            </IconButton>
+          </Link>
 
-          <IconButton
-            color="inherit"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "4px 8px",
-              borderRadius: 0.8,
-              minWidth: "auto",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
-            }}
-          >
-            <HelpOutline sx={{ fontSize: "1.3rem" }} />
-            <Typography variant="caption" sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}>
-              Help
-            </Typography>
-          </IconButton>
+          {/* Help Section - No Arrow */}
+          <Box>
+            <Box
+              onClick={handleHelpClick}
+              onMouseEnter={handleHelpMouseEnter}
+              onMouseLeave={handleHelpMouseLeave}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "4px 8px",
+                borderRadius: 0.8,
+                cursor: "pointer",
+                minWidth: 60,
+                "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
+              }}
+            >
+              <HelpOutline sx={{ fontSize: "1.3rem" }} />
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.3, justifyContent: "center" }}>
+                <Typography variant="caption" sx={{ fontSize: "0.65rem", lineHeight: 1 }}>
+                  Help
+                </Typography>
+                {/* NO ARROW - REMOVED */}
+              </Box>
+            </Box>
 
-          <IconButton
-            color="inherit"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "4px 8px",
-              borderRadius: 0.8,
-              minWidth: "auto",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
-            }}
-          >
-            <Badge badgeContent={3} color="error" sx={{ "& .MuiBadge-badge": { fontSize: "0.6rem", height: 16, minWidth: 16 } }}>
-              <Message sx={{ fontSize: "1.3rem" }} />
-            </Badge>
-            <Typography variant="caption" sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}>
-              Messages
-            </Typography>
-          </IconButton>
+            <Menu
+              sx={{
+                position: "absolute",
+                left: "65%",
+              }}
+              anchorEl={helpAnchor}
+              open={isHelpOpen}
+              onClose={handleHelpClose}
+              onMouseEnter={() => {
+                if (helpAnchor) {
+                  setHelpAnchor(helpAnchor);
+                }
+              }}
+              onMouseLeave={handleHelpMouseLeave}
+              PaperProps={{
+                sx: {
+                  mt: 2,
+                  fontSize: "0.2rem",
+                  width: 320,
+                  borderRadius: 1.5,
+                  overflow: "hidden",
+                },
+              }}
+            >
+              {/* Header */}
+              <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderBottom: "1px solid #e0e0e0" }}>
+                <Typography sx={{ fontWeight: 600, fontSize: "0.95rem", color: "#333" }}>
+                  Find answers to your queries
+                </Typography>
+              </Box>
+
+              {/* For Buying */}
+              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <ShoppingBag fontSize="small" sx={{ color: "#666" }} />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="For Buying"
+                  primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+                />
+              </MenuItem>
+
+              {/* Share your Feedback */}
+              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <Feedback fontSize="small" sx={{ color: "#666" }} />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Share your Feedback"
+                  primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+                />
+              </MenuItem>
+
+              {/* Raise a Complaint */}
+              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <Description fontSize="small" sx={{ color: "#666" }} />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Raise a Complaint"
+                  primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+                />
+              </MenuItem>
+
+              <Divider sx={{ my: 0.5 }} />
+
+              {/* Contact Section */}
+              <Box sx={{ px: 2, py: 1.5 }}>
+                {/* Email us on */}
+                <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
+                  Email us on
+                </Typography>
+                <Typography sx={{ fontSize: "0.9rem", fontWeight: 500, color: "#2e3191", mb: 2 }}>
+                  customercare@indiamart.co
+                </Typography>
+
+                {/* Call us at */}
+                <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
+                  Call us at
+                </Typography>
+                <Typography sx={{ fontSize: "0.9rem", fontWeight: 500, color: "#2e3191", mb: 2 }}>
+                  096-9696-9696
+                </Typography>
+
+                {/* Chat With us */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Chat fontSize="small" sx={{ color: "#666" }} />
+                  <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+                    Chat With us
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider sx={{ my: 0.5 }} />
+
+              {/* Seller Academy */}
+              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <School fontSize="small" sx={{ color: "#666" }} />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Seller Academy"
+                  primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+                />
+              </MenuItem>
+            </Menu>
+          </Box>
+
+          <Link href="/component/messages" style={{ textDecoration: "none" }}>
+            <IconButton
+              color="inherit"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "4px 8px",
+                borderRadius: 0.8,
+                minWidth: "auto",
+                "&:hover": { bgcolor: "rgba(255,255,255,0.1)" }
+              }}
+            >
+              <Badge
+                badgeContent={3}
+                color="error"
+                sx={{ "& .MuiBadge-badge": { fontSize: "0.6rem", height: 16, minWidth: 16 } }}
+              >
+                <Message sx={{ fontSize: "1.3rem" }} />
+              </Badge>
+              <Typography
+                variant="caption"
+                sx={{ fontSize: "0.65rem", mt: 0.2, lineHeight: 1 }}
+              >
+                Messages
+              </Typography>
+            </IconButton>
+          </Link>
 
           {/* Conditional: Show Sign In or User Menu */}
           {!isSignedIn ? (
@@ -1135,6 +1290,15 @@ export default function Navbar() {
             </Badge>
           </IconButton>
 
+          {/* Help icon for mobile - NO ARROW */}
+          <IconButton
+            color="inherit"
+            onClick={handleHelpClick}
+            sx={{ p: 1 }}
+          >
+            <HelpOutline />
+          </IconButton>
+
           {!isSignedIn ? (
             <IconButton
               color="inherit"
@@ -1164,6 +1328,103 @@ export default function Navbar() {
           )}
         </Box>
       </Box>
+
+      {/* Help menu for mobile - Updated to match image */}
+      <Menu
+        anchorEl={helpAnchor}
+        open={isHelpOpen}
+        onClose={handleHelpClose}
+        PaperProps={{
+          sx: {
+            mt: 2,
+            width: 280,
+            borderRadius: 1.5,
+            overflow: "hidden",
+          },
+        }}
+      >
+        {/* Header */}
+        <Box sx={{ p: 1.5, bgcolor: "#f8f9fa", borderBottom: "1px solid #e0e0e0" }}>
+          <Typography sx={{ fontWeight: 600, fontSize: "0.95rem", color: "#333" }}>
+            Find answers to your queries
+          </Typography>
+        </Box>
+
+        {/* For Buying */}
+        <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+          <ListItemIcon sx={{ minWidth: 36 }}>
+            <ShoppingBag fontSize="small" sx={{ color: "#666" }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="For Buying"
+            primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+          />
+        </MenuItem>
+
+        {/* Share your Feedback */}
+        <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+          <ListItemIcon sx={{ minWidth: 36 }}>
+            <Feedback fontSize="small" sx={{ color: "#666" }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="Share your Feedback"
+            primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+          />
+        </MenuItem>
+
+        {/* Raise a Complaint */}
+        <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+          <ListItemIcon sx={{ minWidth: 36 }}>
+            <Description fontSize="small" sx={{ color: "#666" }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="Raise a Complaint"
+            primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+          />
+        </MenuItem>
+
+        <Divider sx={{ my: 0.5 }} />
+
+        {/* Contact Section */}
+        <Box sx={{ px: 2, py: 1.5 }}>
+          {/* Email us on */}
+          <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
+            Email us on
+          </Typography>
+          <Typography sx={{ fontSize: "0.85rem", fontWeight: 500, color: "#2e3191", mb: 1.5 }}>
+            customercare@indiamart.co
+          </Typography>
+
+          {/* Call us at */}
+          <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
+            Call us at
+          </Typography>
+          <Typography sx={{ fontSize: "0.85rem", fontWeight: 500, color: "#2e3191", mb: 1.5 }}>
+            096-9696-9696
+          </Typography>
+
+          {/* Chat With us */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+            <Chat fontSize="small" sx={{ color: "#666" }} />
+            <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+              Chat With us
+            </Typography>
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 0.5 }} />
+
+        {/* Seller Academy */}
+        <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+          <ListItemIcon sx={{ minWidth: 36 }}>
+            <School fontSize="small" sx={{ color: "#666" }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="Seller Academy"
+            primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+          />
+        </MenuItem>
+      </Menu>
 
       <Popover
         open={mobileSearchOpen}
@@ -1314,7 +1575,7 @@ export default function Navbar() {
               <ListItemText primary="Sell" />
             </ListItemButton>
 
-            <ListItemButton sx={{ py: 1.5 }}>
+            <ListItemButton sx={{ py: 1.5 }} onClick={handleHelpClick}>
               <ListItemIcon sx={{ minWidth: 40, color: "white" }}>
                 <HelpOutline />
               </ListItemIcon>

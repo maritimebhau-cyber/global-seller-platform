@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { ArrowLeftRight } from 'lucide-react';
+import BackgroundImage from '../../../public/images/backgroundimage.jpg';
 
 const TransportationBooking: React.FC = () => {
   const [selectedService, setSelectedService] = useState('full-truck');
@@ -102,30 +103,32 @@ const TransportationBooking: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Hero Section - SHORT HEIGHT */}
+      {/* Hero Section */}
       <div 
-        className="relative bg-cover bg-center pb-16 pt-6"
+        className="relative pb-12 md:pb-16 pt-4 md:pt-6"
         style={{
-          backgroundImage: 'linear-gradient(rgba(80, 90, 130, 0.75), rgba(80, 90, 130, 0.75)), url("data:image/svg+xml,%3Csvg width="1200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="1200" height="200" fill="%23667"%3E%3C/rect%3E%3C/svg%3E")',
-          minHeight: '180px'
+          backgroundImage: `linear-gradient(rgba(50, 60, 100, 0.6), rgba(50, 60, 100, 0.6)), url(${BackgroundImage.src})`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          
         }}
       >
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-white text-2xl font-bold text-center mb-6">Book Transportation Service</h1>
+          <h1 className="text-white text-xl md:text-2xl font-bold text-center mb-4 md:mb-6">Book Transportation Service</h1>
           
-          {/* Service Type Cards - WIDE AND SHORT */}
-          <div className="flex justify-center gap-3">
+          {/* Service Type Cards */}
+          <div className="flex justify-center gap-2 md:gap-3">
             {services.map((service) => (
               <button
                 key={service.id}
                 onClick={() => handleServiceChange(service.id)}
-                className="bg-white rounded-md p-3 w-44 flex flex-col items-center hover:shadow-lg transition-all relative"
+                className="bg-white rounded-md p-2 md:p-3 w-28 md:w-44 flex flex-col items-center hover:shadow-lg transition-all relative"
               >
-                <div className="text-3xl mb-1">{service.icon}</div>
-                <div className="font-semibold text-gray-800 text-sm mb-0.5">{service.label}</div>
-                <div className="text-xs text-gray-600 text-center leading-tight">{service.desc}</div>
+                <div className="text-2xl md:text-3xl mb-0.5 md:mb-1">{service.icon}</div>
+                <div className="font-semibold text-gray-800 text-xs md:text-sm mb-0.5">{service.label}</div>
+                <div className="text-[10px] md:text-xs text-gray-600 text-center leading-tight">{service.desc}</div>
                 
-                {/* Teal underline indicator */}
                 {selectedService === service.id && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-600 rounded-b-md"></div>
                 )}
@@ -135,13 +138,13 @@ const TransportationBooking: React.FC = () => {
         </div>
       </div>
 
-      {/* Booking Form Card - Overlapping */}
-      <div className="max-w-6xl mx-auto px-4 -mt-10 relative z-10">
-        <div className="bg-white rounded-lg shadow-xl p-8">
-          <h2 className="text-lg font-semibold mb-5 text-gray-800">Enter Your Shipment Details</h2>
+      {/* Booking Form Card */}
+      <div className="max-w-6xl mx-auto px-4 -mt-8 md:-mt-10 relative z-10">
+        <div className="bg-white rounded-lg shadow-xl p-4 md:p-8">
+          <h2 className="text-base md:text-lg font-semibold mb-4 md:mb-5 text-gray-800">Enter Your Shipment Details</h2>
           
-          {/* SINGLE ROW LAYOUT - WIDE */}
-          <div className="flex items-start gap-6">
+          {/* Responsive Layout */}
+          <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
             {/* Pickup City */}
             <div className="flex-1">
               <label className="block text-sm font-medium mb-2 text-gray-700">
@@ -164,7 +167,6 @@ const TransportationBooking: React.FC = () => {
                   </button>
                 )}
               </div>
-              {/* Popular cities */}
               <div className="mt-2 flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-blue-600 font-medium">Popular:</span>
                 {pickupPopularCities.map((city) => (
@@ -180,14 +182,14 @@ const TransportationBooking: React.FC = () => {
             </div>
 
             {/* Swap Icon */}
-            <div className="flex items-start justify-center pt-8">
-              <div className="w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center bg-white flex-shrink-0">
+            <div className="flex md:items-start justify-center md:pt-8 order-3 md:order-2">
+              <div className="w-9 h-9 rounded-full border-2 border-gray-300 flex items-center justify-center bg-white flex-shrink-0 rotate-90 md:rotate-0">
                 <ArrowLeftRight className="w-4 h-4 text-gray-400" />
               </div>
             </div>
 
             {/* Drop City */}
-            <div className="flex-1">
+            <div className="flex-1 order-2 md:order-3">
               <label className="block text-sm font-medium mb-2 text-gray-700">
                 Drop City <span className="text-red-500">*</span>
               </label>
@@ -208,7 +210,6 @@ const TransportationBooking: React.FC = () => {
                   </button>
                 )}
               </div>
-              {/* Popular cities */}
               <div className="mt-2 flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-blue-600 font-medium">Popular:</span>
                 {dropPopularCities.map((city) => (
@@ -223,8 +224,8 @@ const TransportationBooking: React.FC = () => {
               </div>
             </div>
 
-            {/* Material Weight - RIGHT SIDE */}
-            <div className="flex-1">
+            {/* Material Weight */}
+            <div className="flex-1 order-4">
               <label className="block text-sm font-medium mb-2 text-gray-700">
                 Material Weight <span className="text-red-500">*</span>
                 <span className="ml-1 inline-flex items-center justify-center w-4 h-4 text-xs border border-gray-400 rounded-full text-gray-500 cursor-help">ⓘ</span>
@@ -260,7 +261,7 @@ const TransportationBooking: React.FC = () => {
           <div className="text-center">
             <button
               onClick={handleSubmit}
-              className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-16 py-2.5 rounded-md transition-colors shadow-md text-sm"
+              className="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-12 md:px-16 py-2.5 rounded-md transition-colors shadow-md text-sm w-full md:w-auto"
             >
               Submit
             </button>
@@ -269,12 +270,12 @@ const TransportationBooking: React.FC = () => {
       </div>
 
       {/* FAQ Section */}
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">FAQ's</h2>
+      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+        <h2 className="text-xl md:text-2xl font-bold text-center mb-6 md:mb-8 text-gray-800">FAQ's</h2>
         
-        <div className="space-y-5">
+        <div className="space-y-4 md:space-y-5">
           {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-gray-200 pb-5 last:border-0">
+            <div key={index} className="border-b border-gray-200 pb-4 md:pb-5 last:border-0">
               <h3 className="font-semibold text-gray-800 mb-2 text-sm">{faq.q}</h3>
               <div className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                 {faq.a}
@@ -285,11 +286,11 @@ const TransportationBooking: React.FC = () => {
       </div>
 
       {/* Popular Areas Section */}
-      <div className="bg-indigo-900 text-white py-10">
+      <div className="bg-indigo-900 text-white py-8 md:py-10">
         <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-xl font-bold text-center mb-8">Popular Areas We Serve</h2>
+          <h2 className="text-lg md:text-xl font-bold text-center mb-6 md:mb-8">Popular Areas We Serve</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 md:gap-x-12">
             {locations.map((row, rowIndex) => (
               <React.Fragment key={rowIndex}>
                 <a
