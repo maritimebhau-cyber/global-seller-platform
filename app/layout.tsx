@@ -11,7 +11,7 @@ export default function RootLayout({
       <body style={{ margin: 0, padding: 0, boxSizing: "border-box" }}>
         <Navbar />
         <main>{children}</main>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

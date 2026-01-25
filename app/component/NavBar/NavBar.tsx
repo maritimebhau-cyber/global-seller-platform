@@ -59,7 +59,19 @@ import {
   Feedback,
   School,
   ShoppingBag,
+  CurrencyExchange,
 } from "@mui/icons-material";
+import { 
+  MagnifyingGlassIcon, 
+  ShoppingCartIcon as HeroShoppingCartIcon, 
+  CurrencyDollarIcon, 
+  HandThumbUpIcon, 
+  ExclamationTriangleIcon, 
+  EnvelopeIcon, 
+  PhoneIcon, 
+  ChatBubbleLeftRightIcon, 
+  AcademicCapIcon 
+} from '@heroicons/react/24/outline';
 import { ListItemButton } from "@mui/material";
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
@@ -633,7 +645,6 @@ export default function Navbar() {
               PaperProps={{
                 sx: {
                   mt: 2,
-                  fontSize: "0.2rem",
                   width: 320,
                   borderRadius: 1.5,
                   overflow: "hidden",
@@ -641,14 +652,14 @@ export default function Navbar() {
               }}
             >
               {/* Header */}
-              <Box sx={{ p: 2, bgcolor: "#f8f9fa", borderBottom: "1px solid #e0e0e0" }}>
+              <Box sx={{ p: 1.5, bgcolor: "#f8f9fa", borderBottom: "1px solid #e0e0e0" }}>
                 <Typography sx={{ fontWeight: 600, fontSize: "0.95rem", color: "#333" }}>
                   Find answers to your queries
                 </Typography>
               </Box>
 
               {/* For Buying */}
-              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+              <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
                 <ListItemIcon sx={{ minWidth: 36 }}>
                   <ShoppingBag fontSize="small" sx={{ color: "#666" }} />
                 </ListItemIcon>
@@ -658,8 +669,19 @@ export default function Navbar() {
                 />
               </MenuItem>
 
+              {/* For Selling */}
+              <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <CurrencyExchange fontSize="small" sx={{ color: "#666" }} />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="For Selling"
+                  primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+                />
+              </MenuItem>
+
               {/* Share your Feedback */}
-              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+              <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
                 <ListItemIcon sx={{ minWidth: 36 }}>
                   <Feedback fontSize="small" sx={{ color: "#666" }} />
                 </ListItemIcon>
@@ -670,7 +692,7 @@ export default function Navbar() {
               </MenuItem>
 
               {/* Raise a Complaint */}
-              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+              <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
                 <ListItemIcon sx={{ minWidth: 36 }}>
                   <Description fontSize="small" sx={{ color: "#666" }} />
                 </ListItemIcon>
@@ -685,23 +707,23 @@ export default function Navbar() {
               {/* Contact Section */}
               <Box sx={{ px: 2, py: 1.5 }}>
                 {/* Email us on */}
-                <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
-                  Email us on
-                </Typography>
-                <Typography sx={{ fontSize: "0.9rem", fontWeight: 500, color: "#2e3191", mb: 2 }}>
-                  customercare@indiamart.co
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                  <Email fontSize="small" sx={{ color: "#666" }} />
+                  <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+                    Email us on customercare@indiamart.com
+                  </Typography>
+                </Box>
 
                 {/* Call us at */}
-                <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
-                  Call us at
-                </Typography>
-                <Typography sx={{ fontSize: "0.9rem", fontWeight: 500, color: "#2e3191", mb: 2 }}>
-                  096-9696-9696
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                  <Phone fontSize="small" sx={{ color: "#666" }} />
+                  <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+                    Call us at 096-9696-9696
+                  </Typography>
+                </Box>
 
                 {/* Chat With us */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
                   <Chat fontSize="small" sx={{ color: "#666" }} />
                   <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
                     Chat With us
@@ -712,7 +734,7 @@ export default function Navbar() {
               <Divider sx={{ my: 0.5 }} />
 
               {/* Seller Academy */}
-              <MenuItem sx={{ py: 1.5, px: 2 }} onClick={handleHelpClose}>
+              <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
                 <ListItemIcon sx={{ minWidth: 36 }}>
                   <School fontSize="small" sx={{ color: "#666" }} />
                 </ListItemIcon>
@@ -1329,7 +1351,7 @@ export default function Navbar() {
         </Box>
       </Box>
 
-      {/* Help menu for mobile - Updated to match image */}
+      {/* Help menu for mobile */}
       <Menu
         anchorEl={helpAnchor}
         open={isHelpOpen}
@@ -1361,6 +1383,17 @@ export default function Navbar() {
           />
         </MenuItem>
 
+        {/* For Selling */}
+        <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
+          <ListItemIcon sx={{ minWidth: 36 }}>
+            <CurrencyExchange fontSize="small" sx={{ color: "#666" }} />
+          </ListItemIcon>
+          <ListItemText 
+            primary="For Selling"
+            primaryTypographyProps={{ fontSize: "0.9rem", color: "#333" }}
+          />
+        </MenuItem>
+
         {/* Share your Feedback */}
         <MenuItem sx={{ py: 1.2, px: 2 }} onClick={handleHelpClose}>
           <ListItemIcon sx={{ minWidth: 36 }}>
@@ -1388,20 +1421,20 @@ export default function Navbar() {
         {/* Contact Section */}
         <Box sx={{ px: 2, py: 1.5 }}>
           {/* Email us on */}
-          <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
-            Email us on
-          </Typography>
-          <Typography sx={{ fontSize: "0.85rem", fontWeight: 500, color: "#2e3191", mb: 1.5 }}>
-            customercare@indiamart.co
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+            <Email fontSize="small" sx={{ color: "#666" }} />
+            <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+              Email us on customercare@indiamart.com
+            </Typography>
+          </Box>
 
           {/* Call us at */}
-          <Typography sx={{ fontSize: "0.85rem", color: "#666", mb: 0.5 }}>
-            Call us at
-          </Typography>
-          <Typography sx={{ fontSize: "0.85rem", fontWeight: 500, color: "#2e3191", mb: 1.5 }}>
-            096-9696-9696
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+            <Phone fontSize="small" sx={{ color: "#666" }} />
+            <Typography sx={{ fontSize: "0.9rem", color: "#333", fontWeight: 500 }}>
+              Call us at 096-9696-9696
+            </Typography>
+          </Box>
 
           {/* Chat With us */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
