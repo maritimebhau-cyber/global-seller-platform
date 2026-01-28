@@ -1,192 +1,363 @@
 'use client';
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Plus } from 'lucide-react';
+
+import { useState } from 'react';
+import { ArrowLeft, Edit, Trash2, MoreVertical } from 'lucide-react';
 
 interface Admin {
   id: string;
-  name: string;
+  fullName: string;
+  mobile: string;
   email: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-  lastActive: string;
-  initial: string;
+  role: string;
+  designation: string;
+  status: 'Active' | 'Inactive';
 }
 
-const AdminManagement: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+interface AdminForm {
+  fullName: string;
+  mobile: string;
+  email: string;
+  role: string;
+  designation: string;
+  status: 'Active' | 'Inactive';
+}
 
-  const admins: Admin[] = [
+export default function AdminManagementPage() {
+  const [view, setView] = useState<'list' | 'add' | 'edit'>('list');
+  const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
+  const [admins, setAdmins] = useState<Admin[]>([
     {
       id: '1',
-      name: 'John Smith',
-      email: 'john.smith@example.com',
-      status: 'active',
-      createdAt: '2024-01-15',
-      lastActive: '2 hours ago',
-      initial: 'J'
+      fullName: 'John Doe',
+      mobile: '9876543210',
+      email: 'john@company.com',
+      role: 'Admin',
+      designation: 'IT Manager',
+      status: 'Active',
     },
     {
       id: '2',
-      name: 'Sarah Wilson',
-      email: 'sarah.wilson@example.com',
-      status: 'active',
-      createdAt: '2024-02-20',
-      lastActive: '1 day ago',
-      initial: 'S'
+      fullName: 'Jane Smith',
+      mobile: '9876543211',
+      email: 'jane@company.com',
+      role: 'Admin',
+      designation: 'Operations Head',
+      status: 'Active',
     },
-    {
-      id: '3',
-      name: 'Mike Johnson',
-      email: 'mike.johnson@example.com',
-      status: 'inactive',
-      createdAt: '2023-12-10',
-      lastActive: '1 week ago',
-      initial: 'M'
-    },
-    {
-      id: '4',
-      name: 'Emily Davis',
-      email: 'emily.davis@example.com',
-      status: 'active',
-      createdAt: '2024-03-05',
-      lastActive: '5 minutes ago',
-      initial: 'E'
-    },
-    {
-      id: '5',
-      name: 'Robert Brown',
-      email: 'robert.brown@example.com',
-      status: 'active',
-      createdAt: '2024-01-28',
-      lastActive: '3 hours ago',
-      initial: 'R'
+  ]);
+
+  const [form, setForm] = useState<AdminForm>({
+    fullName: '',
+    mobile: '',
+    email: '',
+    role: 'Admin',
+    designation: '',
+    status: 'Active',
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (view === 'edit' && editingAdmin) {
+      // Update existing admin
+      setAdmins(prev =>
+        prev.map(admin =>
+          admin.id === editingAdmin.id ? { ...admin, ...form } : admin
+        )
+      );
+      alert('Admin updated successfully!');
+    } else {
+      // Create new admin
+      const newAdmin: Admin = {
+        id: Date.now().toString(),
+        ...form,
+      };
+      setAdmins(prev => [...prev, newAdmin]);
+      alert('Admin account created successfully!');
     }
-  ];
 
-  const filteredAdmins = admins.filter(admin =>
-    admin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    // Reset form and go back to list
+    setForm({
+      fullName: '',
+      mobile: '',
+      email: '',
+      role: 'Admin',
+      designation: '',
+      status: 'Active',
+    });
+    setEditingAdmin(null);
+    setView('list');
+  };
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            <h1 className="text-3xl font-semibold text-gray-900 mb-2">Manage Admins</h1>
-            <p className="text-gray-600">View and manage admins</p>
-          </div>
-          <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors">
-            <Plus size={20} />
-            Add New Admin
-          </button>
-        </div>
+  const handleEdit = (admin: Admin) => {
+    setEditingAdmin(admin);
+    setForm({
+      fullName: admin.fullName,
+      mobile: admin.mobile,
+      email: admin.email,
+      role: admin.role,
+      designation: admin.designation,
+      status: admin.status,
+    });
+    setView('edit');
+  };
 
-        {/* Table Container */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          {/* Search and Filter */}
-          <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search by name or email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              />
+  const handleDelete = (id: string) => {
+    if (confirm('Are you sure you want to delete this admin?')) {
+      setAdmins(prev => prev.filter(admin => admin.id !== id));
+      alert('Admin deleted successfully!');
+    }
+  };
+
+  const handleCancel = () => {
+    setForm({
+      fullName: '',
+      mobile: '',
+      email: '',
+      role: 'Admin',
+      designation: '',
+      status: 'Active',
+    });
+    setEditingAdmin(null);
+    setView('list');
+  };
+
+  // List View
+  if (view === 'list') {
+    return (
+      <div className="min-h-screen bg-gray-50 px-6 py-6">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h1 className="text-2xl font-semibold">Admin Management</h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Manage admin accounts and permissions
+              </p>
             </div>
-            <button className="ml-4 px-4 py-2 border border-gray-300 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors">
-              <Filter size={20} />
-              Filter
+            <button
+              onClick={() => setView('add')}
+              className="bg-emerald-600 text-white px-4 py-2 rounded-md text-sm hover:bg-emerald-700"
+            >
+              + Add New Admin
             </button>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
+          {/* Admin List */}
+          <div className="bg-white rounded-lg border overflow-hidden">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Created At</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Last Active</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">
+                    Name
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">
+                    Mobile
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">
+                    Email
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">
+                    Designation
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="text-right px-4 py-3 text-sm font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredAdmins.map((admin) => (
-                  <tr key={admin.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
-                          {admin.initial}
-                        </div>
-                        <span className="text-gray-900 font-medium">{admin.name}</span>
-                      </div>
+              <tbody>
+                {admins.map(admin => (
+                  <tr key={admin.id} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm">{admin.fullName}</td>
+                    <td className="px-4 py-3 text-sm">{admin.mobile}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {admin.email || '-'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                      {admin.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                        admin.status === 'active'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}>
+                    <td className="px-4 py-3 text-sm">{admin.designation || '-'}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs ${
+                          admin.status === 'Active'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
                         {admin.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                      {admin.createdAt}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                      {admin.lastActive}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                        <MoreVertical size={20} />
-                      </button>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => handleEdit(admin)}
+                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"
+                          title="Edit"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(admin.id)}
+                          className="p-1.5 text-red-600 hover:bg-red-50 rounded"
+                          title="Delete"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t border-gray-200 flex justify-between items-center">
-            <div className="text-sm text-gray-600">
-              Showing 1 to 5 of 5 entries
-            </div>
-            <div className="flex gap-2">
-              <button
-                disabled
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed"
-              >
-                Previous
-              </button>
-              <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
-                1
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                2
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                3
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                Next
-              </button>
-            </div>
-          </div>
         </div>
+      </div>
+    );
+  }
+
+  // Add/Edit Form View
+  return (
+    <div className="min-h-screen bg-gray-50 px-6 py-6">
+      {/* BACK */}
+      <button
+        onClick={handleCancel}
+        className="flex items-center gap-2 text-sm text-gray-600 mb-4 hover:text-gray-900"
+      >
+        <ArrowLeft size={16} /> Back
+      </button>
+
+      {/* TITLE */}
+      <h1 className="text-xl font-semibold">
+        {view === 'edit' ? 'Edit Admin' : 'Add New Admin'}
+      </h1>
+      <p className="text-sm text-gray-500 mb-6">
+        {view === 'edit'
+          ? 'Update admin account details'
+          : 'Create a Super Admin account with full system access'}
+      </p>
+
+      {/* FORM CARD */}
+      <div className="max-w-xl mx-auto bg-white rounded-lg border p-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+              placeholder="Enter full name"
+              required
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+
+          {/* Mobile */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Mobile Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              name="mobile"
+              value={form.mobile}
+              onChange={handleChange}
+              placeholder="Enter 10-digit mobile number"
+              required
+              maxLength={10}
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Primary identifier for login via OTP
+            </p>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Email ID</label>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="admin@company.com (optional)"
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+
+          {/* Role */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Role</label>
+            <input
+              value="Admin"
+              disabled
+              className="w-full bg-gray-100 border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+
+          {/* Designation */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Designation
+            </label>
+            <input
+              name="designation"
+              value={form.designation}
+              onChange={handleChange}
+              placeholder="e.g., IT Manager, Operations Head (optional)"
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+
+          {/* Status */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+              className="w-full border rounded-md px-3 py-2 text-sm"
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          {/* INFO BOX */}
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 text-xs p-3 rounded-md">
+            {view === 'edit'
+              ? 'Changes will be saved immediately upon submission.'
+              : 'An OTP-based invitation will be sent to the mobile number for account activation.'}
+          </div>
+
+          {/* ACTIONS */}
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="border px-4 py-2 rounded-md text-sm hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-emerald-600 text-white px-4 py-2 rounded-md text-sm hover:bg-emerald-700"
+            >
+              {view === 'edit' ? 'Update Admin' : 'Create Admin Account'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
-};
-
-export default AdminManagement;
+}
