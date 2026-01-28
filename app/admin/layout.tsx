@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import SidebarAdmin from "./adminsidebar/page";
+import SidebarAdmin from "./adminsidebar/sidebaradmin";
 
 export default function DashboardLayout({
   children,
