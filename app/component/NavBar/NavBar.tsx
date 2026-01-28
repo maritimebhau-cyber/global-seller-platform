@@ -1052,23 +1052,26 @@ export default function Navbar() {
                           </Box>
                         )}
                       </Box>
-                      <Button
-                        variant="text"
-                        size="small"
-                        startIcon={<AccountCircle sx={{ fontSize: "0.9rem" }} />}
-                        sx={{
-                          textTransform: "none",
-                          fontSize: "0.75rem",
-                          fontWeight: 500,
-                          color: "#2e3191",
-                          p: 0,
-                          minWidth: "auto",
-                          "&:hover": { bgcolor: "transparent", textDecoration: "underline" }
-                        }}
-                        onClick={handleUserMenuClose}
-                      >
-                        View Profile
-                      </Button>
+                     <Link href="/dashboard/profile" passHref>
+  <Button
+    component="a"
+    variant="text"
+    size="small"
+    startIcon={<AccountCircle sx={{ fontSize: "0.9rem" }} />}
+    sx={{
+      textTransform: "none",
+      fontSize: "0.75rem",
+      fontWeight: 500,
+      color: "#2e3191",
+      p: 0,
+      minWidth: "auto",
+      "&:hover": { bgcolor: "transparent", textDecoration: "underline" },
+    }}
+    onClick={handleUserMenuClose}
+  >
+    View Profile
+  </Button>
+</Link>
                     </Box>
                   </Box>
                 </Box>

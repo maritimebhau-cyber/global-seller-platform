@@ -19,7 +19,7 @@ const Sidebar = () => {
     const [openSuggestion, setOpenSuggestion] = useState(false);
 
   return (
-    <div className="w-60 bg-white min-h-screen p-4 flex flex-col font-sans">
+    <div className="w-65 bg-white min-h-screen p-4 flex flex-col font-sans">
       {/* Profile Section */}
       <div className="flex items-center gap-4 mb-6 px-2">
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0">
