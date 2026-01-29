@@ -1,5 +1,8 @@
 'use client';
 
+import Image from 'next/image';
+import Boat from '../../../public/images/boat.jpg';
+
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
@@ -7,8 +10,15 @@ export default function HomePage() {
       {/* TOP SECTION */}
       <section className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-        {/* EMPTY LEFT */}
-        <div />
+        {/* IMAGE */}
+        <div className="flex justify-center lg:justify-start">
+          <Image
+            src={Boat}
+            alt="Seller Top Image"
+            className="w-full max-w-sm h-auto shadow-md rounded-lg"
+            priority
+          />
+        </div>
 
         {/* CENTER CONTENT */}
         <div className="space-y-8 flex flex-col justify-center">
@@ -26,7 +36,7 @@ export default function HomePage() {
         {/* LOGIN CARD */}
         <div className="bg-gray-50 rounded-lg p-6 shadow-md">
           <h2 className="text-xl font-semibold mb-4">
-            Free Registration/Sign In
+            Free Registration / Sign In
           </h2>
 
           <div className="border border-teal-500 rounded-md flex items-center px-3 py-2 bg-white">
@@ -49,26 +59,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SELL ON INDIAMART */}
+      {/* SELL ON PLATFORM */}
       <section className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
         {/* LEFT INFO */}
         <div className="bg-gray-50 rounded-lg p-6 shadow-md space-y-6">
           <Info title="Grow your Business" desc="Sell to buyers anytime, anywhere" />
           <Info title="Zero Cost" desc="No commission or transaction fee" />
-          <Info title="Manage your Business Better" desc="Lead Management System & other features" />
+          <Info
+            title="Manage your Business Better"
+            desc="Lead Management System & other features"
+          />
         </div>
 
-        {/* STEPS WITH ANGLED BACKGROUND */}
+        {/* STEPS */}
         <div className="lg:col-span-2 relative overflow-hidden rounded-lg bg-gray-100">
-
-          {/* ANGLED SHAPES */}
           <div className="absolute inset-0">
-            <div className="absolute left-1/3 top-0 h-full w-1/3 bg-white skew-x-[-12deg] origin-top" />
-            <div className="absolute left-2/3 top-0 h-full w-1/3 bg-gray-50 skew-x-[-12deg] origin-top" />
+            <div className="absolute left-1/3 top-0 h-full w-1/3 bg-white skew-x-[-12deg]" />
+            <div className="absolute left-2/3 top-0 h-full w-1/3 bg-gray-50 skew-x-[-12deg]" />
           </div>
 
-          {/* CONTENT */}
           <div className="relative p-8">
             <h2 className="text-xl font-semibold mb-8">
               Get a free listing in 3 simple steps:
@@ -83,12 +93,12 @@ export default function HomePage() {
               <Step
                 step="2"
                 title="Add Business"
-                desc="Add name, address & e-mail of your company, store/ business."
+                desc="Add name, address & e-mail of your company"
               />
               <Step
                 step="3"
-                title="Add Products/ Services"
-                desc="Minimum 3 products/ services needed for your free listing page."
+                title="Add Products / Services"
+                desc="Minimum 3 products or services needed"
               />
             </div>
           </div>

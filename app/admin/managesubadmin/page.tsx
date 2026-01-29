@@ -1,21 +1,32 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Search, Filter, MoreVertical, Edit, Trash2, Eye, UserX, X, Check } from 'lucide-react';
+
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, MoreVertical, Edit, Trash2, Eye, UserX, X, Check, Plus } from 'lucide-react';
+
+interface SubAdminFormData {
+  fullName: string;
+  mobileNumber: string;
+  emailId: string;
+  role: string;
+  designation: string;
+  status: 'Active' | 'Inactive';
+}
 
 interface SubAdmin {
   id: string;
   name: string;
   initial: string;
   email: string;
+  phone: string;
   status: 'active' | 'inactive';
   createdAt: string;
   lastActive: string;
-  phone: string;
   role: string;
   department: string;
 }
 
 export default function ManageSubAdmins() {
+  // Manage Sub-Admins State
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showActionsMenu, setShowActionsMenu] = useState<string | null>(null);
@@ -24,10 +35,13 @@ export default function ManageSubAdmins() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDisableModal, setShowDisableModal] = useState(false);
+  const [showAddSubAdminModal, setShowAddSubAdminModal] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [disableSuccess, setDisableSuccess] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<SubAdmin | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  
+  // Edit Form State
   const [editForm, setEditForm] = useState({
     name: '',
     phone: '',
@@ -37,6 +51,19 @@ export default function ManageSubAdmins() {
     status: 'active' as 'active' | 'inactive',
   });
 
+  // Add Sub-Admin Form State
+  const [addFormData, setAddFormData] = useState<SubAdminFormData>({
+    fullName: '',
+    mobileNumber: '',
+    emailId: '',
+    role: 'Sub-Admin',
+    designation: '',
+    status: 'Active',
+  });
+
+  const [addFormErrors, setAddFormErrors] = useState<Partial<Record<keyof SubAdminFormData, string>>>({});
+
+  // Sub-Admins Data
   const [subAdmins, setSubAdmins] = useState<SubAdmin[]>([
     {
       id: '1',
@@ -109,6 +136,7 @@ export default function ManageSubAdmins() {
         setShowDeleteModal(false);
         setShowDisableModal(false);
         setShowFilterModal(false);
+        setShowAddSubAdminModal(false);
         setShowActionsMenu(null);
       }
     };
@@ -117,6 +145,19 @@ export default function ManageSubAdmins() {
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (showActionsMenu) {
+        setShowActionsMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showActionsMenu]);
+
+  // Filtered admins
   const filteredAdmins = subAdmins.filter(admin => {
     const matchesSearch = admin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       admin.email.toLowerCase().includes(searchQuery.toLowerCase());
@@ -124,13 +165,90 @@ export default function ManageSubAdmins() {
     return matchesSearch && matchesFilter;
   });
 
+  // Add Sub-Admin Form Handlers
+  const handleAddInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setAddFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    if (addFormErrors[name as keyof SubAdminFormData]) {
+      setAddFormErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateAddForm = (): boolean => {
+    const newErrors: Partial<Record<keyof SubAdminFormData, string>> = {};
+
+    if (!addFormData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+
+    if (!addFormData.mobileNumber.trim()) {
+      newErrors.mobileNumber = 'Mobile number is required';
+    } else if (!/^\d{10}$/.test(addFormData.mobileNumber)) {
+      newErrors.mobileNumber = 'Please enter a valid 10-digit mobile number';
+    }
+
+    setAddFormErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateAddForm()) {
+      // Create new sub-admin
+      const newSubAdmin: SubAdmin = {
+        id: (subAdmins.length + 1).toString(),
+        name: addFormData.fullName,
+        initial: addFormData.fullName.charAt(0).toUpperCase(),
+        email: addFormData.emailId,
+        phone: `+91 ${addFormData.mobileNumber}`,
+        status: addFormData.status.toLowerCase() as 'active' | 'inactive',
+        createdAt: new Date().toISOString().split('T')[0],
+        lastActive: 'Just now',
+        role: addFormData.role,
+        department: addFormData.designation,
+      };
+
+      // Add to list
+      setSubAdmins(prev => [newSubAdmin, ...prev]);
+      
+      // Reset form and close modal
+      setAddFormData({
+        fullName: '',
+        mobileNumber: '',
+        emailId: '',
+        role: 'Sub-Admin',
+        designation: '',
+        status: 'Active',
+      });
+      setAddFormErrors({});
+      setShowAddSubAdminModal(false);
+      
+      console.log('New sub-admin created:', newSubAdmin);
+    }
+  };
+
+  const handleAddCancel = () => {
+    setAddFormData({
+      fullName: '',
+      mobileNumber: '',
+      emailId: '',
+      role: 'Sub-Admin',
+      designation: '',
+      status: 'Active',
+    });
+    setAddFormErrors({});
+    setShowAddSubAdminModal(false);
+  };
+
+  // Manage Sub-Admins Handlers
   const handleEdit = (id: string) => {
     const admin = subAdmins.find(a => a.id === id);
     if (admin) {
       setSelectedAdmin(admin);
       setEditForm({
         name: admin.name,
-        phone: admin.phone,
+        phone: admin.phone.replace('+91 ', ''),
         email: admin.email,
         role: admin.role,
         department: admin.department,
@@ -150,7 +268,7 @@ export default function ManageSubAdmins() {
             ...a, 
             name: editForm.name,
             initial: editForm.name.charAt(0).toUpperCase(),
-            phone: editForm.phone,
+            phone: `+91 ${editForm.phone}`,
             email: editForm.email,
             role: editForm.role,
             department: editForm.department,
@@ -174,10 +292,8 @@ export default function ManageSubAdmins() {
   const confirmDisableAccount = () => {
     if (!selectedAdmin) return;
     
-    // Show success state
     setDisableSuccess(true);
     
-    // Update the status after a delay
     setTimeout(() => {
       setSubAdmins(prev => prev.map(a => 
         a.id === selectedAdmin.id ? { ...a, status: a.status === 'active' ? 'inactive' : 'active' } : a
@@ -199,10 +315,8 @@ export default function ManageSubAdmins() {
   const confirmDeletePermanently = () => {
     if (!selectedAdmin) return;
     
-    // Show success state
     setDeleteSuccess(true);
     
-    // Delete after a delay
     setTimeout(() => {
       setSubAdmins(prev => prev.filter(a => a.id !== selectedAdmin.id));
       setShowDeleteModal(false);
@@ -227,18 +341,6 @@ export default function ManageSubAdmins() {
     setShowFilterModal(false);
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => {
-      if (showActionsMenu) {
-        setShowActionsMenu(null);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [showActionsMenu]);
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -248,8 +350,12 @@ export default function ManageSubAdmins() {
             <h1 className="text-2xl font-normal text-gray-800">Manage Sub-Admins</h1>
             <p className="text-gray-500 text-sm mt-1">View and manage sub admins</p>
           </div>
-          <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-md text-sm font-medium shadow-sm">
-            + Add New Sub-Admin
+          <button 
+            onClick={() => setShowAddSubAdminModal(true)}
+            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-md text-sm font-medium shadow-sm flex items-center gap-2"
+          >
+            <Plus size={18} />
+            Add New Sub-Admin
           </button>
         </div>
       </div>
@@ -422,6 +528,169 @@ export default function ManageSubAdmins() {
           </div>
         </div>
       </div>
+
+      {/* Add Sub-Admin Modal */}
+      {showAddSubAdminModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b bg-white sticky top-0">
+              <div>
+                <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+                  Add New Sub-Admin
+                </h3>
+                <p className="mt-1 text-slate-600 text-sm">
+                  Create a Sub-Admin account with limited permissions
+                </p>
+              </div>
+              <button 
+                onClick={handleAddCancel}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddSubmit} className="p-6 space-y-6">
+              {/* Full Name */}
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-slate-700 mb-2">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  value={addFormData.fullName}
+                  onChange={handleAddInputChange}
+                  placeholder="Enter full name"
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    addFormErrors.fullName ? 'border-red-300 bg-red-50' : 'border-slate-200'
+                  } focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 text-slate-900 placeholder-slate-400`}
+                />
+                {addFormErrors.fullName && (
+                  <p className="mt-1 text-sm text-red-600">{addFormErrors.fullName}</p>
+                )}
+              </div>
+
+              {/* Mobile Number */}
+              <div>
+                <label htmlFor="mobileNumber" className="block text-sm font-medium text-slate-700 mb-2">
+                  Mobile Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  value={addFormData.mobileNumber}
+                  onChange={handleAddInputChange}
+                  placeholder="Enter 10-digit mobile number"
+                  maxLength={10}
+                  className={`w-full px-4 py-3 rounded-lg border ${
+                    addFormErrors.mobileNumber ? 'border-red-300 bg-red-50' : 'border-slate-200'
+                  } focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 text-slate-900 placeholder-slate-400`}
+                />
+                {addFormErrors.mobileNumber && (
+                  <p className="mt-1 text-sm text-red-600">{addFormErrors.mobileNumber}</p>
+                )}
+                <p className="mt-1 text-xs text-slate-500">
+                  Primary identifier for login via OTP
+                </p>
+              </div>
+
+              {/* Email ID */}
+              <div>
+                <label htmlFor="emailId" className="block text-sm font-medium text-slate-700 mb-2">
+                  Email ID
+                </label>
+                <input
+                  type="email"
+                  id="emailId"
+                  name="emailId"
+                  value={addFormData.emailId}
+                  onChange={handleAddInputChange}
+                  placeholder="subadmin@company.com (optional)"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 text-slate-900 placeholder-slate-400"
+                />
+              </div>
+
+              {/* Role */}
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-2">
+                  Role
+                </label>
+                <input
+                  type="text"
+                  id="role"
+                  name="role"
+                  value={addFormData.role}
+                  readOnly
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 cursor-not-allowed"
+                />
+              </div>
+
+              {/* Designation */}
+              <div>
+                <label htmlFor="designation" className="block text-sm font-medium text-slate-700 mb-2">
+                  Designation
+                </label>
+                <input
+                  type="text"
+                  id="designation"
+                  name="designation"
+                  value={addFormData.designation}
+                  onChange={handleAddInputChange}
+                  placeholder="e.g., Support Manager, Sales Lead (optional)"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 text-slate-900 placeholder-slate-400"
+                />
+              </div>
+
+              {/* Status */}
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium text-slate-700 mb-2">
+                  Status <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  value={addFormData.status}
+                  onChange={handleAddInputChange}
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 text-slate-900 bg-white cursor-pointer"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  An OTP-based invitation will be sent to the mobile number for account activation. 
+                  Sub-Admins can only manage Buyers and Users.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t">
+                <button
+                  type="button"
+                  onClick={handleAddCancel}
+                  className="px-6 py-3 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-all duration-200 flex items-center gap-2"
+                >
+                  <X size={18} />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-3 rounded-lg bg-teal-600 text-white font-medium hover:bg-teal-700 transition-all duration-200 flex items-center gap-2 shadow-lg shadow-teal-600/30"
+                >
+                  <Plus size={18} />
+                  Create Sub-Admin Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Filter Modal */}
       {showFilterModal && (

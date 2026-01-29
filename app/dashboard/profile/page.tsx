@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Phone, Building2, Bell, HelpCircle, Store, Ticket, MapPin, Edit, Calendar, Star, ChevronRight, ShieldCheck, Check, X, CheckCircle, Pencil, MessageCircle, Headphones } from 'lucide-react';
+import Link from 'next/link';
 
 type FormType = 'contact' | 'company' | 'communication' | 'help' | null;
 
@@ -43,6 +44,15 @@ type CommunicationSettings = {
   replyMessages: CommunicationChannels;
   feedbackEmails: CommunicationChannels;
   contactDetailsUpdate: CommunicationChannels;
+};
+
+type CardItem = {
+  icon: any;
+  title: string;
+  desc: string;
+  progress?: number;
+  type?: FormType;
+  link?: string;
 };
 
 const ProfileDashboard = () => {
@@ -134,13 +144,13 @@ const ProfileDashboard = () => {
   const handleWhatsAppToggle = () => 
     setCommunicationSettings(prev => ({ ...prev, whatsappUpdates: !prev.whatsappUpdates }));
 
-  const cardItems = [
-    { icon: Phone, title: 'Contact Information', desc: 'Edit phone, email & address', progress: contactProgress, type: 'contact' as FormType },
-    { icon: Building2, title: 'Company Details', desc: 'Edit company & tax info', progress: companyProgress, type: 'company' as FormType },
-    { icon: Bell, title: 'Communication Settings', desc: 'Manage notifications', type: 'communication' as FormType },
-    { icon: HelpCircle, title: 'Help', desc: 'Get support & assistance', type: 'help' as FormType },
+  const cardItems: CardItem[] = [
+    { icon: Phone, title: 'Contact Information', desc: 'Edit phone, email & address', progress: contactProgress, type: 'contact' },
+    { icon: Building2, title: 'Company Details', desc: 'Edit company & tax info', progress: companyProgress, type: 'company' },
+    { icon: Bell, title: 'Communication Settings', desc: 'Manage notifications', type: 'communication' },
+    { icon: HelpCircle, title: 'Help', desc: 'Get support & assistance', type: 'help' },
     { icon: Store, title: 'Sell on IndiaMART', desc: 'Start selling your products' },
-    { icon: Ticket, title: 'Raise request to update', desc: 'Create a ticket to update Profile Details' }
+    { icon: Ticket, title: 'Raise request to update', desc: 'Create a ticket to update Profile Details', link: '/dashboard/mytickets' }
   ];
 
   const contactFormFields = [
@@ -223,6 +233,36 @@ const ProfileDashboard = () => {
       borderColor: 'border-amber-200'
     }
   ];
+
+  const CardContent = ({ card, idx }: { card: CardItem; idx: number }) => (
+    <div className="bg-white rounded-lg p-8 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer h-full">
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start gap-4 flex-1">
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+            <card.icon className="w-6 h-6 text-gray-600" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-bold text-black mb-2 text-base">{card.title}</h3>
+            <p className="text-xs text-gray-600">{card.desc}</p>
+          </div>
+        </div>
+        <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+      </div>
+      {card.progress !== undefined && (
+        <div className="relative pt-1">
+          <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className={`h-full rounded-full transition-all ${idx === 0 ? 'bg-red-600' : 'bg-gray-300'}`}
+              style={{ width: `${card.progress}%` }}
+            ></div>
+          </div>
+          <div className="flex items-center gap-1 absolute right-0 -top-5">
+            <span className="text-xs font-medium text-black">{card.progress}%</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -376,39 +416,30 @@ const ProfileDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cardItems.map((card, idx) => (
-            <div 
-              key={idx} 
-              onClick={() => card.type && handleCardClick(card.type)}
-              className="bg-white rounded-lg p-8 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
-                    <card.icon className="w-6 h-6 text-gray-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-black mb-2 text-base">{card.title}</h3>
-                    <p className="text-xs text-gray-600">{card.desc}</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+          {cardItems.map((card, idx) => {
+            // If card has a link, wrap with Link component
+            if (card.link) {
+              return (
+                <Link 
+                  key={idx}
+                  href={card.link}
+                  className="block no-underline hover:no-underline"
+                >
+                  <CardContent card={card} idx={idx} />
+                </Link>
+              );
+            }
+            
+            // If card has a type (opens modal), use onClick
+            return (
+              <div 
+                key={idx}
+                onClick={() => card.type && handleCardClick(card.type)}
+              >
+                <CardContent card={card} idx={idx} />
               </div>
-              {card.progress !== undefined && (
-                <div className="relative pt-1">
-                  <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full transition-all ${idx === 0 ? 'bg-red-600' : 'bg-gray-300'}`}
-                      style={{ width: `${card.progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex items-center gap-1 absolute right-0 -top-5">
-                    <span className="text-xs font-medium text-black">{card.progress}%</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {openForm === 'contact' && (
