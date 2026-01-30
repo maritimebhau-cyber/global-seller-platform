@@ -61,11 +61,11 @@ const defaultMenuItems: MenuItem[] = [
     icon: <ShoppingCart size={20} />, 
     label: 'Manage Buyers', 
     id: 'buyers', 
-    href: '/buyers/list' 
+    href: '/admin/managebuyer' 
   },
   { 
     icon: <User size={20} />, 
-    label: 'Manage Users', 
+    label: 'Manage Sellers', 
     id: 'users', 
     href: '/users/management' 
   },
