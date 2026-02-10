@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <>
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white text-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static shadow-lg ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 min-h-screen bg-white text-gray-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static shadow-lg ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-label="Sidebar navigation"
