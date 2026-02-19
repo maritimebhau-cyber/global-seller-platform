@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.989.0",
+    "@aws-sdk/s3-request-presigner": "^3.989.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
@@ -20,24 +22,34 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@mui/material-nextjs": "^7.3.5",
+    "@neondatabase/serverless": "^1.0.2",
+    "bcryptjs": "^3.0.3",
+    "cloudflare": "^5.2.0",
+    "drizzle-orm": "^0.45.1",
     "flag-icons": "^7.5.0",
     "lucide-react": "^0.562.0",
     "next": "^16.1.6",
+    "pg": "^8.18.0",
     "react": "^19.2.4",
     "react-country-flag": "^3.1.0",
     "react-dom": "^19.2.4",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "twilio": "^5.12.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.19.27",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.23",
+    "drizzle-kit": "^0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.65.0"
   }
 }

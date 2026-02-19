@@ -1,26 +1,202 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { 
   Grid, 
   MessageSquare, 
   Shield, 
   User, 
-  DollarSign, 
   Truck, 
   Ticket, 
   Edit3, 
   ChevronRight 
 } from 'lucide-react';
 import Link from 'next/link';
-import SuggestionModal from '../../suggestion/sugesstion';
 
 const Sidebar = () => {
-    const [openSuggestion, setOpenSuggestion] = useState(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [otpSent, setOtpSent] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string[]>(['', '', '', '']);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [pendingRoute, setPendingRoute] = useState<string>('');
+  const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null)
+  ];
 
+  // Check if already verified on mount (optional: persist in localStorage)
+  useEffect(() => {
+    const verified = sessionStorage.getItem('sidebarVerified');
+    if (verified === 'true') {
+      setIsVerified(true);
+    }
+  }, []);
+
+  const handleNavigation = (e: React.MouseEvent<HTMLDivElement | HTMLAnchorElement>, route: string) => {
+    // If already verified, allow normal navigation
+    if (isVerified) {
+      return; // Let the Link work normally
+    }
+    
+    // Otherwise show popup
+    e.preventDefault();
+    setPendingRoute(route);
+    setShowPopup(true);
+    setOtpSent(false);
+    setOtp(['', '', '', '']);
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+    setOtpSent(false);
+    setOtp(['', '', '', '']);
+    setPendingRoute('');
+  };
+
+  const handleSendOTP = () => {
+    setOtpSent(true);
+    setTimeout(() => {
+      inputRefs[0].current?.focus();
+    }, 100);
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    if (value.length > 1) return;
+    
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    if (value && index < 3) {
+      inputRefs[index + 1].current?.focus();
+    }
+
+    if (index === 3 && value) {
+      // OTP complete - verify and navigate
+      setTimeout(() => {
+        completeVerification();
+      }, 300);
+    }
+  };
+
+  const completeVerification = () => {
+    setIsVerified(true);
+    sessionStorage.setItem('sidebarVerified', 'true');
+    setShowPopup(false);
+    setOtp(['', '', '', '']);
+    setOtpSent(false);
+    
+    // Navigate to the pending route if exists
+    if (pendingRoute) {
+      window.location.href = pendingRoute;
+    }
+    setPendingRoute('');
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs[index - 1].current?.focus();
+    }
+  };
+
+  const handleSignInDifferent = () => {
+    // Reset verification
+    setIsVerified(false);
+    sessionStorage.removeItem('sidebarVerified');
+    closePopup();
+  };
+
+  // If popup is shown, render only the popup
+  if (showPopup) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white w-full max-w-md mx-4 rounded-lg shadow-2xl overflow-hidden">
+          <div className="bg-indigo-700 px-6 py-4 flex justify-between items-center">
+            <h2 className="text-white text-lg font-semibold">
+              Login with One Time Password (OTP)
+            </h2>
+            <button 
+              onClick={closePopup}
+              className="text-white hover:text-gray-200 text-2xl leading-none"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="p-8 text-center">
+            {!otpSent ? (
+              <>
+                <h3 className="text-gray-800 text-lg font-medium mb-2">
+                  To Continue with Login
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Click below to get One Time Password (OTP)<br />
+                  on your mobile
+                </p>
+                
+                <button 
+                  onClick={handleSendOTP}
+                  className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-12 rounded transition-colors"
+                >
+                  Send OTP
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600 mb-6">
+                  Enter the 4 digit One Time Password (OTP) sent to<br />
+                  your mobile number
+                </p>
+                
+                <h3 className="text-gray-800 text-lg font-semibold mb-4">
+                  Enter OTP
+                </h3>
+                
+                <div className="flex justify-center gap-3 mb-4">
+                  {[0, 1, 2, 3].map((index) => (
+                    <input
+                      key={index}
+                      ref={inputRefs[index]}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={otp[index]}
+                      onChange={(e) => handleOtpChange(index, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      className="w-12 h-12 border-2 border-gray-400 rounded text-center text-xl font-semibold focus:border-indigo-500 focus:outline-none"
+                    />
+                  ))}
+                </div>
+                
+                <p className="text-gray-600 text-sm mb-8">
+                  Didn&apos;t receive OTP on mobile? <span className="text-teal-600 cursor-pointer hover:underline">Resend (00:27)</span>
+                </p>
+              </>
+            )}
+            
+            <div className="flex items-center my-6">
+              <div className="flex-1 h-px bg-gray-300"></div>
+              <span className="px-4 text-gray-600 font-medium">OR</span>
+              <div className="flex-1 h-px bg-gray-300"></div>
+            </div>
+            
+            <button 
+              onClick={handleSignInDifferent}
+              className="text-gray-600 hover:text-gray-800 underline font-medium"
+            >
+              Sign In as Different User
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Normal sidebar view
   return (
     <div className="w-65 bg-white min-h-screen p-4 flex flex-col font-sans">
-      {/* Profile Section */}
       <div className="flex items-center gap-4 mb-6 px-2">
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0">
           R
@@ -28,99 +204,147 @@ const Sidebar = () => {
         <div className="text-xl font-semibold text-gray-900">Ritik</div>
       </div>
 
-      {/* Menu Items */}
       <nav className="flex flex-col gap-1">
-        {/* Dashboard - Active */}
-<Link
-  href="/dashboard/buyer"
-  className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-indigo-50 text-indigo-600 cursor-pointer group"
->
-  <Grid size={20} strokeWidth={2} />
-  <span className="flex-1 text-[15px] font-medium">Dashboard</span>
-  <ChevronRight size={18} className="text-gray-400" />
-</Link>
+        {/* Dashboard - Always accessible */}
+        <Link
+          href="/dashboard/buyer"
+          className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-indigo-50 text-indigo-600 cursor-pointer group"
+        >
+          <Grid size={20} strokeWidth={2} />
+          <span className="flex-1 text-[15px] font-medium">Dashboard</span>
+          <ChevronRight size={18} className="text-gray-400" />
+        </Link>
 
         {/* Messages */}
-<Link
-  href="/component/messages"
-  className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
->
-  <MessageSquare size={20} strokeWidth={2} />
-  <span className="flex-1 text-[15px]">Messages</span>
-  <ChevronRight size={18} className="text-gray-400" />
-</Link>
+        {isVerified ? (
+          <Link
+            href="/component/messages"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <MessageSquare size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">Messages</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </Link>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '/component/messages')}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <MessageSquare size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">Messages</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </div>
+        )}
 
+        {/* Know Your Seller */}
+        {isVerified ? (
+          <Link
+            href="/dashboard/knowyourseller"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-teal-50 text-teal-600 cursor-pointer hover:bg-teal-100 transition-colors group"
+          >
+            <Shield size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px] font-medium">Know Your Seller</span>
+            <ChevronRight size={18} className="text-gray-400 group-hover:text-teal-600 transition-colors" />
+          </Link>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '/dashboard/knowyourseller')}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-teal-50 text-teal-600 cursor-pointer hover:bg-teal-100 transition-colors group"
+          >
+            <Shield size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px] font-medium">Know Your Seller</span>
+            <ChevronRight size={18} className="text-gray-400 group-hover:text-teal-600 transition-colors" />
+          </div>
+        )}
 
-        {/* Know Your Seller - Highlighted */}
-    <Link
-  href="/dashboard/knowyourseller"
-  className="flex items-center gap-3 px-4 py-3.5 rounded-lg bg-teal-50 text-teal-600 cursor-pointer hover:bg-teal-100 transition-colors group"
->
-  <Shield size={20} strokeWidth={2} />
-
-  <span className="flex-1 text-[15px] font-medium">
-    Know Your Seller
-  </span>
-
-  <ChevronRight
-    size={18}
-    className="text-gray-400 group-hover:text-teal-600 transition-colors"
-  />
-</Link>
-
-
-        {/* My Profile with badge */}
-      <Link href="/dashboard/profile" className="block">
-      <div className="flex items-start gap-3 px-4 pt-3.5 pb-7 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group relative">
-        <div className="relative">
-          <User size={20} strokeWidth={2} />
-          <div className="w-2.5 h-2.5 rounded-full bg-orange-400 absolute -top-0.5 -right-0.5 border-2 border-white"></div>
-        </div>
-
-        <span className="flex-1 text-[15px]">My Profile</span>
-
-        <ChevronRight size={18} className="text-gray-400 mt-0.5" />
-
-        <div className="absolute left-12 bottom-2 text-xs font-medium text-orange-500">
-           complete
-        </div>
-      </div>
-    </Link>
-        {/* Finance */}
-        {/* <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group">
-          <DollarSign size={20} strokeWidth={2} />
-          <span className="flex-1 text-[15px]">Finance</span>
-          <ChevronRight size={18} className="text-gray-400" />
-        </div> */}
+        {/* My Profile */}
+        {isVerified ? (
+          <Link href="/dashboard/profile" className="block">
+            <div className="flex items-start gap-3 px-4 pt-3.5 pb-7 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group relative">
+              <div className="relative">
+                <User size={20} strokeWidth={2} />
+                <div className="w-2.5 h-2.5 rounded-full bg-orange-400 absolute -top-0.5 -right-0.5 border-2 border-white"></div>
+              </div>
+              <span className="flex-1 text-[15px]">My Profile</span>
+              <ChevronRight size={18} className="text-gray-400 mt-0.5" />
+              <div className="absolute left-12 bottom-2 text-xs font-medium text-orange-500">complete</div>
+            </div>
+          </Link>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '/dashboard/profile')}
+            className="flex items-start gap-3 px-4 pt-3.5 pb-7 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group relative"
+          >
+            <div className="relative">
+              <User size={20} strokeWidth={2} />
+              <div className="w-2.5 h-2.5 rounded-full bg-orange-400 absolute -top-0.5 -right-0.5 border-2 border-white"></div>
+            </div>
+            <span className="flex-1 text-[15px]">My Profile</span>
+            <ChevronRight size={18} className="text-gray-400 mt-0.5" />
+            <div className="absolute left-12 bottom-2 text-xs font-medium text-orange-500">complete</div>
+          </div>
+        )}
 
         {/* Ship With IM */}
-        <Link href="/component/shipwitheim" className="block">
-  <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group">
-    <Truck size={20} strokeWidth={2} />
-    <span className="flex-1 text-[15px]">Ship With IM</span>
-    <ChevronRight size={18} className="text-gray-400" />
-  </div>
-</Link>
+        {isVerified ? (
+          <Link href="/component/shipwitheim" className="block">
+            <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group">
+              <Truck size={20} strokeWidth={2} />
+              <span className="flex-1 text-[15px]">Ship With IM</span>
+              <ChevronRight size={18} className="text-gray-400" />
+            </div>
+          </Link>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '/component/shipwitheim')}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <Truck size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">Ship With IM</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </div>
+        )}
 
         {/* My Tickets */}
-       <Link href="/dashboard/mytickets" className="block">
-  <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group">
-    <Ticket size={20} strokeWidth={2} />
-    <span className="flex-1 text-[15px]">My Tickets</span>
-    <ChevronRight size={18} className="text-gray-400" />
-  </div>
-</Link>
+        {isVerified ? (
+          <Link href="/dashboard/mytickets" className="block">
+            <div className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group">
+              <Ticket size={20} strokeWidth={2} />
+              <span className="flex-1 text-[15px]">My Tickets</span>
+              <ChevronRight size={18} className="text-gray-400" />
+            </div>
+          </Link>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '/dashboard/mytickets')}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <Ticket size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">My Tickets</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </div>
+        )}
 
         {/* Any Suggestion */}
-       <div
-  onClick={() => setOpenSuggestion(true)}
-  className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
->
-  <Edit3 size={20} strokeWidth={2} />
-  <span className="flex-1 text-[15px]">Any Suggestion</span>
-  <ChevronRight size={18} className="text-gray-400" />
-</div>
-
+        {isVerified ? (
+          <div
+            onClick={() => {/* Handle suggestion modal */}}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <Edit3 size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">Any Suggestion</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </div>
+        ) : (
+          <div
+            onClick={(e) => handleNavigation(e, '')}
+            className="flex items-center gap-3 px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 cursor-pointer group"
+          >
+            <Edit3 size={20} strokeWidth={2} />
+            <span className="flex-1 text-[15px]">Any Suggestion</span>
+            <ChevronRight size={18} className="text-gray-400" />
+          </div>
+        )}
       </nav>
 
       {/* Help Card */}
@@ -145,11 +369,6 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
-      <SuggestionModal
-  open={openSuggestion}
-  onClose={() => setOpenSuggestion(false)}
-/>
-
     </div>
   );
 };
