@@ -99,20 +99,20 @@ const menuItems: MenuItem[] = [
   { 
     label: "BuyLeads", 
     icon: <BuyLeadsIcon />, 
-    href: "/dashboard/buy-leads",
+    href: "/sellerdashboard/buyleads",
     badge: "0",
     badgeType: "count",
   },
-  { label: "Products", icon: <ProductsIcon />, href: "/dashboard/products" },
-  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/dashboard/photos-docs" },
+  { label: "Products", icon: <ProductsIcon />, href: "/sellerdashboard/products" },
+  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/sellerdashboard/photos-docs" },
   {
     label: "Buyer Tools",
     icon: <BuyerToolsIcon />,
-    href: "/dashboard/buyer-tools",
+    href: "/sellerdashboard/buyer-tools",
     badge: "New",
     badgeType: "new",
   },
-  { label: "Settings", icon: <SettingsIcon />, href: "/dashboard/settings" },
+  { label: "Settings", icon: <SettingsIcon />, href: "/sellerdashboard/settings" },
  
 ];
 

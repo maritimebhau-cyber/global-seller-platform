@@ -554,14 +554,14 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
     </div>
   );
 
-  // Active Services Section
+  // Active Services Section - MOVED TO SECOND POSITION AND BOLDER TEXT
   const renderActiveServices = () => (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
       <div className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <h2 className="text-base font-semibold text-gray-900">Active Services</h2>
+          <h2 className="text-lg font-bold text-gray-900">Active Services</h2>
           <span className="text-gray-400">|</span>
-          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+          <button className="text-blue-600 hover:text-blue-700 text-sm font-semibold flex items-center gap-1">
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
@@ -571,17 +571,17 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
       </div>
 
       <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-        <span className="text-sm text-gray-700">Available Leads Balance</span>
+        <span className="text-sm font-semibold text-gray-800">Available Leads Balance</span>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">Not Available</span>
-          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+          <span className="text-sm font-semibold text-gray-600">Not Available</span>
+          <button className="text-blue-600 hover:text-blue-700 text-sm font-semibold">
             Subscribe Now
           </button>
         </div>
       </div>
 
       <div className="px-4 py-2 bg-gray-50 border-b border-gray-100">
-        <span className="text-sm font-semibold text-gray-700">Additional Service</span>
+        <span className="text-sm font-bold text-gray-800">Additional Service</span>
       </div>
 
       <div className="divide-y divide-gray-100">
@@ -589,26 +589,26 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
           <div key={service.id} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors">
             <div className="flex items-center gap-3">
               {service.icon}
-              <span className="text-sm text-gray-700">
+              <span className="text-sm font-semibold text-gray-800">
                 {service.name}
                 {service.details && (
-                  <span className="text-gray-900 font-medium">{service.details}</span>
+                  <span className="text-gray-900 font-bold ml-1">{service.details}</span>
                 )}
               </span>
             </div>
             <div className="flex items-center gap-4">
               {service.status === 'enabled' ? (
-                <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
+                <span className="flex items-center gap-1 text-green-600 text-sm font-bold">
                   <Check className="w-4 h-4" />
                   Enabled
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-red-500 text-sm font-medium">
+                <span className="flex items-center gap-1 text-red-500 text-sm font-bold">
                   <X className="w-4 h-4" />
                   Disabled
                 </span>
               )}
-              <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+              <button className="text-blue-600 hover:text-blue-700 text-sm font-semibold">
                 Settings
               </button>
             </div>
@@ -622,13 +622,13 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
   const renderQuoteRequestSection = () => (
     <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6 text-center">
+        <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">
           Tell us what you need, and we&apos;ll help you get quotes
         </h3>
         
         <form onSubmit={handleRequirementSubmit} className="space-y-4">
           <div className="flex items-center gap-4">
-            <label className="text-sm text-gray-700 whitespace-nowrap font-medium">
+            <label className="text-sm text-gray-800 whitespace-nowrap font-semibold">
               I want quotes for
             </label>
             <input
@@ -645,7 +645,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <button
               type="submit"
               disabled={isSubmittingRequirement || !requirementInput.trim()}
-              className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-md transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+              className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-md transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
             >
               {isSubmittingRequirement ? 'Submitting...' : 'Submit Requirement'}
             </button>
@@ -666,14 +666,14 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
               Tell us what you need
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 font-medium">
               Describe your requirements and get connected with verified sellers
             </p>
           </div>
 
           <form onSubmit={handleRequirementSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-bold text-gray-800 mb-2">
                 I want quotes for
               </label>
               <input
@@ -689,7 +689,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <button
               type="submit"
               disabled={isSubmittingRequirement || !requirementInput.trim()}
-              className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               {isSubmittingRequirement ? (
                 'Submitting...'
@@ -703,7 +703,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+            <div className="flex flex-wrap gap-4 text-sm text-gray-700 font-semibold">
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-green-500" />
                 <span>Verified Sellers</span>
@@ -723,11 +723,10 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
     </div>
   );
 
-  // Dashboard Component
+  // Dashboard Component - ACTIVE SERVICES MOVED TO SECOND POSITION
   const renderDashboard = () => (
     <div className="space-y-6 animate-fadeIn">
-      {renderActiveServices()}
-
+      {/* First: Messages Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Messages Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -735,26 +734,26 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
               <MessageSquare className="w-4 h-4 text-blue-600" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900">Messages</h3>
+            <h3 className="text-base font-bold text-gray-900">Messages</h3>
           </div>
           <div className="divide-y divide-gray-100">
             {messages.map((msg) => (
               <div key={msg.id} className="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className="font-semibold text-gray-900 text-sm">{msg.sender}</h4>
-                  <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <h4 className="font-bold text-gray-900 text-sm">{msg.sender}</h4>
+                  <span className="text-xs text-gray-600 font-semibold flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {msg.date}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-1">{msg.company}</p>
-                <p className="text-xs text-gray-400">{msg.location}</p>
-                <p className="text-sm text-gray-800 mt-2 font-medium">{msg.message}</p>
+                <p className="text-xs text-gray-600 font-medium mb-1">{msg.company}</p>
+                <p className="text-xs text-gray-500 font-medium">{msg.location}</p>
+                <p className="text-sm text-gray-800 mt-2 font-semibold">{msg.message}</p>
               </div>
             ))}
           </div>
           <div className="p-3 border-t border-gray-100 text-center">
-            <button className="text-blue-600 font-semibold text-sm hover:text-blue-700">
+            <button className="text-blue-600 font-bold text-sm hover:text-blue-700">
               View All
             </button>
           </div>
@@ -766,15 +765,15 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
               <TrendingIcon className="w-4 h-4 text-purple-600" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900">Relevant BuyLeads (0)</h3>
+            <h3 className="text-base font-bold text-gray-900">Relevant BuyLeads (0)</h3>
           </div>
           <div className="p-8 text-center">
             <div className="mb-4">
-              <h4 className="text-lg font-semibold text-gray-700 mb-2">Sorry!</h4>
-              <p className="text-sm text-gray-600 mb-1">No BuyLeads for your current location preference.</p>
-              <p className="text-sm text-gray-500">Click below to view recommended BuyLeads</p>
+              <h4 className="text-lg font-bold text-gray-800 mb-2">Sorry!</h4>
+              <p className="text-sm text-gray-700 font-semibold mb-1">No BuyLeads for your current location preference.</p>
+              <p className="text-sm text-gray-600 font-medium">Click below to view recommended BuyLeads</p>
             </div>
-            <button className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded transition-colors text-sm">
+            <button className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded transition-colors text-sm">
               View recommended BuyLeads
             </button>
           </div>
@@ -786,7 +785,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
             <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
               <TrendingIcon className="w-4 h-4 text-indigo-600" />
             </div>
-            <h3 className="text-base font-semibold text-gray-900">Recent BuyLeads (0)</h3>
+            <h3 className="text-base font-bold text-gray-900">Recent BuyLeads (0)</h3>
           </div>
           <div className="p-8 text-center">
             <div className="mb-4">
@@ -796,27 +795,30 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H6a2 2 0 00-2 2v6a2 2 0 002 2h2a1 1 0 100-2H6V7h5a1 1 0 011 1v5h2V8a3 3 0 00-3-3H6z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h4 className="text-base font-semibold text-gray-800 mb-2">You have no Buy Leads yet</h4>
-              <p className="text-sm text-gray-500 mb-4">New buyers are looking for your products. Help them find you easily.</p>
+              <h4 className="text-base font-bold text-gray-800 mb-2">You have no Buy Leads yet</h4>
+              <p className="text-sm text-gray-600 font-medium mb-4">New buyers are looking for your products. Help them find you easily.</p>
             </div>
-            <button className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-medium rounded transition-colors text-sm">
+            <button className="px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded transition-colors text-sm">
               Add Product Details
             </button>
           </div>
         </div>
       </div>
 
-      {/* Improve Catalog Quality Section */}
+      {/* Second: Active Services Section */}
+      {renderActiveServices()}
+
+      {/* Third: Improve Catalog Quality Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-          <h3 className="text-base font-semibold text-gray-900">Improve your Catalog Quality</h3>
-          <button className="text-blue-600 font-semibold text-sm hover:text-blue-700">
+          <h3 className="text-base font-bold text-gray-900">Improve your Catalog Quality</h3>
+          <button className="text-blue-600 font-bold text-sm hover:text-blue-700">
             View All Products
           </button>
         </div>
         <div className="p-4">
-          <p className="text-sm text-gray-600 mb-4">
-            You have <span className="font-semibold text-gray-900">{missingPriceCount} products</span> with missing price details. Buyers are likely to show interest in products with price.
+          <p className="text-sm text-gray-700 font-semibold mb-4">
+            You have <span className="font-bold text-gray-900">{missingPriceCount} products</span> with missing price details. Buyers are likely to show interest in products with price.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {products.filter(p => !p.price).slice(0, 4).map((product) => (
@@ -830,7 +832,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                     </div>
                   )}
                 </div>
-                <p className="text-xs font-medium text-gray-900 truncate mb-2 text-center">{product.name || 'Unnamed'}</p>
+                <p className="text-xs font-bold text-gray-900 truncate mb-2 text-center">{product.name || 'Unnamed'}</p>
                 <button 
                   onClick={() => {
                     const price = prompt(`Enter price for ${product.name || 'this product'}:`);
@@ -840,7 +842,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                       ));
                     }
                   }}
-                  className="w-full py-1.5 px-3 bg-teal-500 text-white text-xs font-medium rounded hover:bg-teal-600 transition-colors flex items-center justify-center gap-1"
+                  className="w-full py-1.5 px-3 bg-teal-500 text-white text-xs font-bold rounded hover:bg-teal-600 transition-colors flex items-center justify-center gap-1"
                 >
                   <Plus className="w-3 h-3" />
                   Add Price
@@ -873,16 +875,16 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                 Limited Time Offer
               </div>
             </div>
-            <div className="text-white text-sm font-medium">
+            <div className="text-white text-sm font-bold">
               ₹3,000 Off On Yearly Plan
             </div>
           </div>
 
           <div className="text-center flex-1 px-4">
-            <p className="text-white text-base">
+            <p className="text-white text-base font-bold">
               Enjoy our paid listing for as low as <span className="line-through opacity-70">₹35,000</span> <span className="font-bold text-lg">₹32,000/-</span> year
             </p>
-            <p className="text-white/90 text-sm mt-0.5">
+            <p className="text-white/90 text-sm mt-0.5 font-semibold">
               + Choose One <span className="font-bold">FREE</span> 6-Month Subscription From <span className="font-bold text-yellow-300">Live Keeping / Vyapar</span>
             </p>
           </div>
@@ -902,7 +904,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
     currentStep === 'dashboard' && (
       <div className="fixed right-0 top-1/2 transform -translate-y-1/2 z-50">
         <button 
-          className="bg-sky-400 hover:bg-sky-500 text-white font-semibold py-4 px-2 rounded-l-lg shadow-lg transition-all"
+          className="bg-sky-400 hover:bg-sky-500 text-white font-bold py-4 px-2 rounded-l-lg shadow-lg transition-all"
           style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
           Post Buy Requirement
@@ -943,7 +945,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                       </svg>
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <span className="text-3xl font-bold text-gray-900">{totalMissing}</span>
-                        <span className="text-xs text-gray-600">Steps Left</span>
+                        <span className="text-xs text-gray-600 font-semibold">Steps Left</span>
                       </div>
                     </div>
 
@@ -952,7 +954,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                         Complete Your Profile to Become a{' '}
                         <span className="text-green-600 bg-green-50 px-2 py-1 rounded-lg">Verified Seller</span>
                       </h1>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-700 font-semibold">
                         <span className="flex items-center gap-1">
                           <TrendingUp className="w-4 h-4 text-blue-500" />
                           Higher listing priority
@@ -969,14 +971,14 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                     <div className="flex gap-3 text-sm">
                       {missingPhotoCount > 0 && (
                         <div className="px-3 py-2 bg-orange-50 rounded-lg border border-orange-200">
-                          <span className="font-semibold text-orange-600">{missingPhotoCount}</span>
-                          <span className="text-gray-600 ml-1">Photo{missingPhotoCount > 1 ? 's' : ''} needed</span>
+                          <span className="font-bold text-orange-600">{missingPhotoCount}</span>
+                          <span className="text-gray-700 font-semibold ml-1">Photo{missingPhotoCount > 1 ? 's' : ''} needed</span>
                         </div>
                       )}
                       {missingDescCount > 0 && (
                         <div className="px-3 py-2 bg-orange-50 rounded-lg border border-orange-200">
-                          <span className="font-semibold text-orange-600">{missingDescCount}</span>
-                          <span className="text-gray-600 ml-1">Description{missingDescCount > 1 ? 's' : ''} needed</span>
+                          <span className="font-bold text-orange-600">{missingDescCount}</span>
+                          <span className="text-gray-700 font-semibold ml-1">Description{missingDescCount > 1 ? 's' : ''} needed</span>
                         </div>
                       )}
                     </div>
@@ -1005,15 +1007,15 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                           ) : index === 1 && (currentStep === 'photos' || dontHaveGst) ? (
                             <Check className="w-4 h-4 text-green-600" />
                           ) : (
-                            <span className="text-sm font-medium text-gray-700">{index + 1}</span>
+                            <span className="text-sm font-bold text-gray-700">{index + 1}</span>
                           )}
                         </div>
-                        <span className={`text-xs mt-1.5 font-medium ${
+                        <span className={`text-xs mt-1.5 font-bold ${
                           index === 2 && currentStep === 'photos'
                             ? 'text-blue-600'
                             : index <= 1 && (currentStep === 'photos' || dontHaveGst)
                             ? 'text-green-600'
-                            : 'text-gray-500'
+                            : 'text-gray-600'
                         }`}>
                           {step}
                         </span>
@@ -1038,7 +1040,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                   <h1 className="text-xl font-bold text-gray-900">Seller Dashboard</h1>
                   <button 
                     onClick={() => setCurrentStep('gst')}
-                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors text-sm"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors text-sm font-semibold"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     Back to Start
@@ -1053,7 +1055,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
               {photoError && (
                 <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
                   <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                  <p className="text-sm text-red-700">{photoError}</p>
+                  <p className="text-sm text-red-700 font-semibold">{photoError}</p>
                   <button 
                     onClick={() => setPhotoError(null)}
                     className="ml-auto text-red-500 hover:text-red-700"
@@ -1067,7 +1069,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                 <form onSubmit={handleGstSubmit} className="max-w-3xl mx-auto">
                   <div className="mb-8">
                     <div className="flex items-center gap-2 mb-4">
-                      <h2 className="text-xl font-semibold text-gray-900">
+                      <h2 className="text-xl font-bold text-gray-900">
                         Add GST to Double Your Business
                       </h2>
                       <span className="text-red-500">*</span>
@@ -1083,7 +1085,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                     {showError && (
                       <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
                         <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                        <p className="text-sm text-red-700">
+                        <p className="text-sm text-red-700 font-semibold">
                           Please enter a valid 15-digit GST number
                         </p>
                       </div>
@@ -1091,7 +1093,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
 
                     {renderGstInputs()}
 
-                    <p className="text-xs text-gray-500 mt-3 flex items-center gap-1">
+                    <p className="text-xs text-gray-600 mt-3 flex items-center gap-1 font-semibold">
                       <Info className="w-3.5 h-3.5" />
                       Enter your 15-character GST identification number
                     </p>
@@ -1105,7 +1107,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                         onChange={handleSkipGst}
                         className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="text-sm text-gray-600 group-hover:text-gray-900">
+                      <span className="text-sm text-gray-700 font-semibold group-hover:text-gray-900">
                         I don&apos;t have GST yet (skip for now)
                       </span>
                     </label>
@@ -1113,7 +1115,7 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                     <button
                       type="submit"
                       disabled={(!dontHaveGst && !isGstValid) || isSubmitting}
-                      className="px-8 py-3 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all transform hover:scale-105 min-w-[140px] flex items-center justify-center gap-2"
+                      className="px-8 py-3 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all transform hover:scale-105 min-w-[140px] flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
                         'Processing...'
@@ -1133,17 +1135,17 @@ export default function GSTVerificationForm({ onComplete }: GSTVerificationFormP
                     {products.map(renderProductCard)}
                   </div>
 
-                  {/* Action Buttons - FIXED SYNTAX ERROR HERE */}
+                  {/* Action Buttons */}
                   <div className="flex justify-end gap-3 pt-4 border-t">
                     <button
                       onClick={() => setCurrentStep('gst')}
-                      className="px-6 py-2.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
+                      className="px-6 py-2.5 border border-gray-300 text-gray-800 text-sm font-bold rounded-xl hover:bg-gray-50 transition-colors"
                     >
                       Back
                     </button>
                     <button
                       onClick={handleComplete}
-                      className={`px-8 py-2.5 text-white text-sm font-medium rounded-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                      className={`px-8 py-2.5 text-white text-sm font-bold rounded-xl transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
                         totalMissing === 0
                           ? 'bg-green-600 hover:bg-green-700'
                           : 'bg-gray-400 cursor-not-allowed'
