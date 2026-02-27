@@ -80,40 +80,40 @@ const TallyIcon = () => (
 );
 
 const menuItems: MenuItem[] = [
-  { label: "Dashboard", icon: <DashboardIcon />, href: "/" },
+  { label: "Dashboard", icon: <DashboardIcon />, href: "/sellerdashboard/gstverifyform" },
   {
     label: "Paid Services",
     icon: <DiamondIcon />,
-    href: "/paid-services",
+    href: "/sellerdashboard/paidservices",
     badge: "Offer",
     badgeType: "offer",
   },
-  { label: "Profile", icon: <ProfileIcon />, href: "/profile" },
+  { label: "Profile", icon: <ProfileIcon />, href: "/sellerdashboard/profile" },
   { 
     label: "Lead Manager", 
     icon: <LeadManagerIcon />, 
-    href: "/leads",
+    href: "/sellerdashboard/leadmanager",
     badge: "7",
     badgeType: "count",
   },
   { 
     label: "BuyLeads", 
     icon: <BuyLeadsIcon />, 
-    href: "/buy-leads",
+    href: "/dashboard/buy-leads",
     badge: "0",
     badgeType: "count",
   },
-  { label: "Products", icon: <ProductsIcon />, href: "/products" },
-  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/photos-docs" },
+  { label: "Products", icon: <ProductsIcon />, href: "/dashboard/products" },
+  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/dashboard/photos-docs" },
   {
     label: "Buyer Tools",
     icon: <BuyerToolsIcon />,
-    href: "/buyer-tools",
+    href: "/dashboard/buyer-tools",
     badge: "New",
     badgeType: "new",
   },
-  { label: "Settings", icon: <SettingsIcon />, href: "/settings" },
-  { label: "Tally on web", icon: <TallyIcon />, href: "/tally" },
+  { label: "Settings", icon: <SettingsIcon />, href: "/dashboard/settings" },
+ 
 ];
 
 export default function Sidebar() {
