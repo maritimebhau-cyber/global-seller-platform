@@ -104,11 +104,11 @@ const menuItems: MenuItem[] = [
     badgeType: "count",
   },
   { label: "Products", icon: <ProductsIcon />, href: "/sellerdashboard/products" },
-  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/sellerdashboard/photos-docs" },
+  { label: "Photos & Docs", icon: <PhotosDocsIcon />, href: "/sellerdashboard/photoanddoc" },
   {
     label: "Buyer Tools",
     icon: <BuyerToolsIcon />,
-    href: "/sellerdashboard/buyer-tools",
+    href: "/sellerdashboard/buyertools",
     badge: "New",
     badgeType: "new",
   },

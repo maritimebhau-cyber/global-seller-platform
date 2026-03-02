@@ -35,7 +35,9 @@ import {
   Phone,
   GraduationCap,
   ChevronRight,
-  Bell
+  Bell,
+  Shield,
+  Users
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from 'next/navigation';
@@ -125,9 +127,9 @@ export default function Navbar() {
 
   // Responsive breakpoints
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
-  const isMobile = windowWidth < 640; // sm breakpoint
-  const isTablet = windowWidth >= 640 && windowWidth < 1024; // md/lg breakpoint
-  const isDesktop = windowWidth >= 1024; // lg breakpoint
+  const isMobile = windowWidth < 640;
+  const isTablet = windowWidth >= 640 && windowWidth < 1024;
+  const isDesktop = windowWidth >= 1024;
   
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -135,7 +137,6 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Check if we're on the seller page - but branding stays consistent
   const isSellerPage = pathname?.includes('/component/seller') || pathname === '/seller';
 
   const [location, setLocation] = useState("Indore");
@@ -187,13 +188,11 @@ export default function Navbar() {
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // Refs for dropdown positioning
   const signInRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const helpRef = useRef<HTMLDivElement>(null);
   const locationRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (signInRef.current && !signInRef.current.contains(event.target as Node)) {
@@ -214,7 +213,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch countries from API
   useEffect(() => {
     const fetchCountries = async () => {
       setLoadingCountries(true);
@@ -258,7 +256,6 @@ export default function Navbar() {
     fetchCountries();
   }, []);
 
-  // On seller page, set user as signed in
   useEffect(() => {
     if (isSellerPage) {
       setIsSignedIn(true);
@@ -314,7 +311,6 @@ export default function Navbar() {
     );
   }, []);
 
-  // Enhanced hover handlers for desktop dropdowns
   const handleMouseEnter = useCallback((setter: React.Dispatch<React.SetStateAction<boolean>>) => {
     if (!isMobile && !isTablet) {
       if (hoverTimeout) clearTimeout(hoverTimeout);
@@ -332,12 +328,6 @@ export default function Navbar() {
   const handleSignInClick = () => setSignInOpen(!signInOpen);
   const handleHelpClick = () => setHelpOpen(!helpOpen);
   const handleUserMenuClick = () => setUserMenuOpen(!userMenuOpen);
-
-  const handleOpenSignInDialog = () => {
-    setSignInDialogOpen(true);
-    setSignInOpen(false);
-    if (hoverTimeout) clearTimeout(hoverTimeout);
-  };
 
   const handleCloseSignInDialog = () => {
     setSignInDialogOpen(false);
@@ -405,14 +395,21 @@ export default function Navbar() {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleMobileSearch = () => setMobileSearchOpen(!mobileSearchOpen);
 
-  // CONSISTENT BRAND LOGO COMPONENT - SMALLER WHITE BACKGROUND, BIGGER LOGO
+  // Navigation to admin/subadmin login pages
+  const navigateToAdminLogin = () => {
+    setSignInOpen(false);
+    router.push('/login/admin');
+  };
+
+  const navigateToSubadminLogin = () => {
+    setSignInOpen(false);
+    router.push('/login/subadmin');
+  };
+
   const BrandLogo = ({ className = "" }: { className?: string }) => (
     <Link href={isSellerPage ? "/dashboard/seller" : "/"} className={`flex items-center gap-2 ${className}`}>
-      {/* SMALLER WHITE BACKGROUND with BIGGER LOGO that extends beyond */}
       <div className="relative flex items-center justify-center flex-shrink-0">
-        {/* Tiny white background circle */}
         <div className="absolute w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg"></div>
-        {/* Bigger logo that pops out */}
         <img
           src={MarineMartlogo.src}
           alt="MarineMart"
@@ -429,7 +426,7 @@ export default function Navbar() {
     </Link>
   );
 
-  // Sign In Menu Component (Desktop)
+  // Sign In Menu Component (Desktop) - ADMIN/SUBADMIN AT BOTTOM
   const SignInMenuComponent = () => {
     if (!signInOpen || isMobile) return null;
     
@@ -440,9 +437,13 @@ export default function Navbar() {
         onMouseLeave={() => handleMouseLeave(setSignInOpen)}
       >
         <div className="max-h-[500px] overflow-y-auto">
+          {/* Regular Sign In Section */}
           <div className="p-4">
             <button 
-              onClick={handleOpenSignInDialog}
+              onClick={() => {
+                setSignInDialogOpen(true);
+                setSignInOpen(false);
+              }}
               className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors text-sm"
             >
               Sign In
@@ -455,6 +456,7 @@ export default function Navbar() {
             </p>
           </div>
 
+          {/* Navigation Links */}
           <nav className="border-t border-gray-200">
             <ul className="list-none p-0 m-0">
               <li>
@@ -508,12 +510,43 @@ export default function Navbar() {
               Download App
             </Link>
           </div>
+
+          {/* Admin/Subadmin Section - AT THE BOTTOM */}
+          <div className="border-t-2 border-gray-200 bg-gray-50 p-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 text-center">Staff Access</p>
+            <div className="space-y-2">
+              <button 
+                onClick={navigateToAdminLogin}
+                className="w-full flex items-center gap-3 px-3 py-2.5 bg-white hover:bg-indigo-50 border border-gray-200 hover:border-indigo-300 rounded-lg transition-all group"
+              >
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                  <Shield className="w-4 h-4 text-indigo-600" />
+                </div>
+                <div className="text-left">
+                  <span className="text-sm font-semibold text-gray-900 block">Sign in as Admin</span>
+                  <span className="text-xs text-gray-500">Management portal</span>
+                </div>
+              </button>
+              
+              <button 
+                onClick={navigateToSubadminLogin}
+                className="w-full flex items-center gap-3 px-3 py-2.5 bg-white hover:bg-teal-50 border border-gray-200 hover:border-teal-300 rounded-lg transition-all group"
+              >
+                <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center group-hover:bg-teal-200 transition-colors">
+                  <Users className="w-4 h-4 text-teal-600" />
+                </div>
+                <div className="text-left">
+                  <span className="text-sm font-semibold text-gray-900 block">Sign in as Subadmin</span>
+                  <span className="text-xs text-gray-500">Limited access portal</span>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   };
 
-  // Buyer User Menu Component (Desktop)
   const BuyerUserMenuComponent = () => {
     if (!userMenuOpen || isMobile) return null;
     
@@ -608,7 +641,6 @@ export default function Navbar() {
     );
   };
 
-  // Seller User Menu Component (Desktop)
   const SellerUserMenuComponent = () => {
     if (!userMenuOpen || isMobile) return null;
     
@@ -703,7 +735,6 @@ export default function Navbar() {
     );
   };
 
-  // Help Menu Component
   const HelpMenuComponent = () => {
     if (!helpOpen) return null;
     
@@ -718,9 +749,6 @@ export default function Navbar() {
     );
   };
 
-  // MOBILE COMPONENTS
-
-  // Mobile Search Overlay
   const MobileSearchOverlay = () => {
     if (!mobileSearchOpen || !isMobile) return null;
     
@@ -767,7 +795,7 @@ export default function Navbar() {
     );
   };
 
-  // Mobile Menu Drawer
+  // Mobile Menu Drawer - ADMIN/SUBADMIN AT BOTTOM
   const MobileMenuDrawer = () => {
     if (!mobileMenuOpen || !isMobile) return null;
 
@@ -807,7 +835,6 @@ export default function Navbar() {
         <div className="absolute left-0 top-0 h-full w-[280px] bg-white shadow-2xl transform transition-transform duration-300 ease-out animate-in slide-in-from-left">
           <div className="p-4 border-b border-gray-100 bg-indigo-900">
             <div className="flex justify-between items-center mb-4">
-              {/* MOBILE MENU LOGO - SMALLER WHITE BG, BIGGER LOGO */}
               <div className="flex items-center gap-2">
                 <div className="relative flex items-center justify-center">
                   <div className="absolute w-6 h-6 bg-white rounded-md"></div>
@@ -876,22 +903,60 @@ export default function Navbar() {
             <div className="border-t border-gray-200 mx-2 my-2"></div>
 
             {!isSignedIn ? (
-              <div className="p-3">
+              <div className="p-3 space-y-3">
                 <button 
                   onClick={() => {
                     toggleMobileMenu();
-                    handleOpenSignInDialog();
+                    setSignInDialogOpen(true);
                   }}
                   className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2.5 rounded-lg transition-colors text-sm"
                 >
                   Sign In
                 </button>
-                <p className="text-xs text-gray-600 mt-3 text-center">
+                <p className="text-xs text-gray-600 mt-2 text-center">
                   New here?{' '}
                   <Link href="/join" className="text-blue-600 font-medium">
                     Join Now
                   </Link>
                 </p>
+
+                {/* Admin/Subadmin Section - AT THE BOTTOM */}
+                <div className="border-t border-gray-200 pt-3 mt-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 text-center">Staff Access</p>
+                  <div className="space-y-2">
+                    <button 
+                      onClick={() => {
+                        toggleMobileMenu();
+                        router.push('/login/admin');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <Shield className="w-4 h-4 text-indigo-600" />
+                      </div>
+                      <div className="text-left">
+                        <span className="text-sm font-semibold text-gray-900 block">Sign in as Admin</span>
+                        <span className="text-xs text-gray-500">Management portal</span>
+                      </div>
+                    </button>
+                    
+                    <button 
+                      onClick={() => {
+                        toggleMobileMenu();
+                        router.push('/login/subadmin');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-3 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                        <Users className="w-4 h-4 text-teal-600" />
+                      </div>
+                      <div className="text-left">
+                        <span className="text-sm font-semibold text-gray-900 block">Sign in as Subadmin</span>
+                        <span className="text-xs text-gray-500">Limited access portal</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="p-3">
@@ -913,9 +978,6 @@ export default function Navbar() {
     );
   };
 
-  // TABLET COMPONENTS
-
-  // Tablet Navigation - Compact horizontal layout
   const TabletNavigation = () => {
     if (!isTablet) return null;
 
@@ -1014,7 +1076,6 @@ export default function Navbar() {
     );
   };
 
-  // Desktop Search Bar
   const DesktopSearchBar = () => (
     <div className="hidden lg:flex items-center bg-white rounded-lg flex-1 max-w-[450px] xl:max-w-[600px] h-[40px] shadow-sm">
       <div className="flex items-center min-w-[120px] xl:min-w-[140px] relative border-r border-gray-200" ref={locationRef}>
@@ -1071,7 +1132,6 @@ export default function Navbar() {
     </div>
   );
 
-  // CTA Button Component - INCREASED WIDTH
   const CTAButton = () => {
     if (isSellerPage) {
       return (
@@ -1087,7 +1147,6 @@ export default function Navbar() {
     );
   };
 
-  // Desktop Navigation Items
   const DesktopNavigation = () => {
     if (!isDesktop) return null;
 
@@ -1219,14 +1278,11 @@ export default function Navbar() {
     );
   };
 
-  // MAIN RENDER
-
   return (
     <>
       <header className="sticky top-0 z-40 bg-indigo-900 shadow-lg">
         <div className="flex justify-between items-center h-14 px-3 sm:px-4 lg:px-6 gap-2 sm:gap-3">
           
-          {/* MOBILE HEADER - SMALLER WHITE BG, BIGGER LOGO */}
           {isMobile && (
             <>
               <div className="flex items-center gap-2">
@@ -1237,7 +1293,6 @@ export default function Navbar() {
                 >
                   <Menu className="w-6 h-6" />
                 </button>
-                {/* SMALLER WHITE BACKGROUND, BIGGER LOGO */}
                 <BrandLogo />
               </div>
 
@@ -1259,7 +1314,7 @@ export default function Navbar() {
                   </button>
                 ) : (
                   <button
-                    onClick={handleOpenSignInDialog}
+                    onClick={() => setSignInDialogOpen(true)}
                     className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-medium rounded-lg transition-colors"
                   >
                     Sign In
@@ -1269,14 +1324,11 @@ export default function Navbar() {
             </>
           )}
 
-          {/* TABLET HEADER - SMALLER WHITE BG, BIGGER LOGO */}
           {isTablet && (
             <>
               <div className="flex items-center gap-3 flex-1">
-                {/* SMALLER WHITE BACKGROUND, BIGGER LOGO */}
                 <BrandLogo />
                 
-                {/* Compact Search for Tablet */}
                 <div className="flex-1 max-w-md">
                   <div className="flex items-center bg-white rounded-lg h-9 shadow-sm overflow-hidden">
                     <div className="flex items-center px-2 border-r border-gray-200">
@@ -1307,16 +1359,13 @@ export default function Navbar() {
             </>
           )}
 
-          {/* DESKTOP HEADER - SMALLER WHITE BG, BIGGER LOGO + wider CTA button */}
           {isDesktop && (
             <>
               <div className="flex items-center gap-4 flex-1">
-                {/* SMALLER WHITE BACKGROUND, BIGGER LOGO */}
                 <BrandLogo />
 
                 <DesktopSearchBar />
 
-                {/* INCREASED WIDTH CTA BUTTON */}
                 <CTAButton />
               </div>
 
@@ -1326,11 +1375,9 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Overlays */}
       <MobileSearchOverlay />
       <MobileMenuDrawer />
 
-      {/* Sign In Dialog */}
       {signInDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="relative bg-white rounded-2xl overflow-hidden w-full max-w-[420px] shadow-2xl animate-in zoom-in-95 duration-200">
@@ -1426,7 +1473,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Mobile User Menu Bottom Sheet */}
       {userMenuOpen && isMobile && (
         <div className="fixed inset-0 z-50">
           <div 

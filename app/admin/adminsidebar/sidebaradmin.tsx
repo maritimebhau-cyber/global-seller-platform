@@ -73,25 +73,25 @@ const defaultMenuItems: MenuItem[] = [
     icon: <Package size={20} />, 
     label: 'Products', 
     id: 'products', 
-    href: '/products/catalog' 
+    href: '/admin/product' 
   },
   { 
     icon: <Phone size={20} />, 
     label: 'Leads', 
     id: 'leads', 
-    href: '/leads/overview' 
+    href: '/admin/lead' 
   },
-  { 
-    icon: <Activity size={20} />, 
-    label: 'Activity Logs', 
-    id: 'activity', 
-    href: '/logs/activity' 
-  },
+  // { 
+  //   icon: <Activity size={20} />, 
+  //   label: 'Activity Logs', 
+  //   id: 'activity', 
+  //   href: '/logs/activity' 
+  // },
   { 
     icon: <Settings size={20} />, 
     label: 'System Settings', 
     id: 'settings', 
-    href: '/settings/general' 
+    href: '/admin/setting' 
   },
 ];
 
