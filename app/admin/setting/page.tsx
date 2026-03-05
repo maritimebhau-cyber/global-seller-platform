@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Shield, 
   Bell, 
@@ -101,6 +102,65 @@ interface Toast {
   type: 'success' | 'error' | 'info';
   message: string;
 }
+
+// Default settings for reset functionality
+const defaultSettings: SystemSettings = {
+  authentication: {
+    loginSystem: true,
+    signupSystem: true,
+    twoFactorAuth: false,
+    oauthProviders: {
+      google: true,
+      github: false,
+      microsoft: false,
+    },
+  },
+  notification: {
+    emailNotifications: true,
+    emailTemplate: 'default',
+    smtpServer: 'smtp.example.com',
+    smtpPort: 587,
+    senderEmail: 'noreply@example.com',
+    senderName: 'System Administrator',
+    newUserRegistration: true,
+    passwordReset: true,
+    accountStatusChanges: true,
+    loginAlerts: false,
+    securityAlerts: true,
+    marketingEmails: false,
+  },
+  security: {
+    sessionTimeout: 30,
+    maxLoginAttempts: 5,
+    lockoutDuration: 30,
+    passwordMinLength: 8,
+    passwordComplexity: 'medium',
+    requireSpecialChars: true,
+    requireNumbers: true,
+    requireUppercase: true,
+    forcePasswordChange: true,
+    passwordExpiryDays: 90,
+    ipWhitelist: [],
+    allowedDomains: [],
+  },
+  dataManagement: {
+    backupSchedule: '6hours',
+    backupTime: '02:00',
+    dataRetentionPeriod: 365,
+    autoCleanup: true,
+    compressionEnabled: true,
+    encryptionEnabled: true,
+    lastBackup: '2 hours ago',
+    nextBackup: 'in 4 hours',
+    backupHistory: [
+      { id: '1', timestamp: new Date(Date.now() - 7200000).toISOString(), size: '2.4 GB', status: 'completed', type: 'automatic' },
+      { id: '2', timestamp: new Date(Date.now() - 28800000).toISOString(), size: '2.3 GB', status: 'completed', type: 'automatic' },
+      { id: '3', timestamp: new Date(Date.now() - 86400000).toISOString(), size: '2.3 GB', status: 'completed', type: 'manual' },
+    ],
+    storageUsed: '45.2 GB',
+    storageTotal: '100 GB',
+  },
+};
 
 // Toggle Switch Component
 interface ToggleSwitchProps {
@@ -561,72 +621,59 @@ const BackupHistoryModal: React.FC<{
   );
 };
 
+// Reset Confirmation Modal Component
+interface ResetConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+const ResetConfirmationModal: React.FC<ResetConfirmationModalProps> = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-3 bg-red-50">
+          <AlertCircle className="w-6 h-6 text-red-600" />
+          <h3 className="text-lg font-bold text-gray-900">Reset All Settings?</h3>
+        </div>
+        <div className="p-6">
+          <p className="text-gray-600 mb-4">
+            Are you sure you want to reset all settings to their default values? This action cannot be undone and all your current configurations will be lost.
+          </p>
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Reset to Defaults
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Main Component
 export default function SystemSettingsPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [showBackupHistory, setShowBackupHistory] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'auth' | 'notification' | 'security' | 'data'>('all');
 
-  const [settings, setSettings] = useState<SystemSettings>({
-    authentication: {
-      loginSystem: true,
-      signupSystem: true,
-      twoFactorAuth: false,
-      oauthProviders: {
-        google: true,
-        github: false,
-        microsoft: false,
-      },
-    },
-    notification: {
-      emailNotifications: true,
-      emailTemplate: 'default',
-      smtpServer: 'smtp.example.com',
-      smtpPort: 587,
-      senderEmail: 'noreply@example.com',
-      senderName: 'System Administrator',
-      newUserRegistration: true,
-      passwordReset: true,
-      accountStatusChanges: true,
-      loginAlerts: false,
-      securityAlerts: true,
-      marketingEmails: false,
-    },
-    security: {
-      sessionTimeout: 30,
-      maxLoginAttempts: 5,
-      lockoutDuration: 30,
-      passwordMinLength: 8,
-      passwordComplexity: 'medium',
-      requireSpecialChars: true,
-      requireNumbers: true,
-      requireUppercase: true,
-      forcePasswordChange: true,
-      passwordExpiryDays: 90,
-      ipWhitelist: [],
-      allowedDomains: [],
-    },
-    dataManagement: {
-      backupSchedule: '6hours',
-      backupTime: '02:00',
-      dataRetentionPeriod: 365,
-      autoCleanup: true,
-      compressionEnabled: true,
-      encryptionEnabled: true,
-      lastBackup: '2 hours ago',
-      nextBackup: 'in 4 hours',
-      backupHistory: [
-        { id: '1', timestamp: new Date(Date.now() - 7200000).toISOString(), size: '2.4 GB', status: 'completed', type: 'automatic' },
-        { id: '2', timestamp: new Date(Date.now() - 28800000).toISOString(), size: '2.3 GB', status: 'completed', type: 'automatic' },
-        { id: '3', timestamp: new Date(Date.now() - 86400000).toISOString(), size: '2.3 GB', status: 'completed', type: 'manual' },
-      ],
-      storageUsed: '45.2 GB',
-      storageTotal: '100 GB',
-    },
-  });
+  const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
 
   // Simulate initial load
   useEffect(() => {
@@ -634,9 +681,10 @@ export default function SystemSettingsPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Track changes
+  // Track changes - compare with default to determine if changes exist
   useEffect(() => {
-    setHasChanges(true);
+    const hasAnyChanges = JSON.stringify(settings) !== JSON.stringify(defaultSettings);
+    setHasChanges(hasAnyChanges);
   }, [settings]);
 
   const addToast = useCallback((type: Toast['type'], message: string) => {
@@ -786,10 +834,19 @@ export default function SystemSettingsPage() {
     addToast('success', 'All settings saved successfully!');
   }, [addToast]);
 
-  const handleReset = useCallback(() => {
-    if (confirm('Are you sure you want to reset all settings to default?')) {
-      window.location.reload();
-    }
+  // FIXED: Proper reset handler with custom modal
+  const handleResetClick = useCallback(() => {
+    setShowResetModal(true);
+  }, []);
+
+  const handleResetConfirm = useCallback(() => {
+    setSettings(defaultSettings);
+    setShowResetModal(false);
+    addToast('success', 'Settings reset to defaults!');
+  }, [addToast]);
+
+  const handleResetCancel = useCallback(() => {
+    setShowResetModal(false);
   }, []);
 
   const testSMTPConnection = useCallback(async () => {
@@ -848,6 +905,13 @@ export default function SystemSettingsPage() {
     <div className="min-h-screen bg-gray-50">
       <ToastContainer toasts={toasts} onRemove={(id) => setToasts(prev => prev.filter(t => t.id !== id))} />
       
+      {/* Reset Confirmation Modal */}
+      <ResetConfirmationModal
+        isOpen={showResetModal}
+        onClose={handleResetCancel}
+        onConfirm={handleResetConfirm}
+      />
+      
       <BackupHistoryModal
         isOpen={showBackupHistory}
         onClose={() => setShowBackupHistory(false)}
@@ -875,7 +939,7 @@ export default function SystemSettingsPage() {
               </span>
             )}
             <button
-              onClick={handleReset}
+              onClick={handleResetClick}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Reset

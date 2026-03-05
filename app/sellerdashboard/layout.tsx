@@ -34,7 +34,7 @@ export default function DashboardLayout({
         }}
       >
         {/* CONTENT */}
-        <main style={{ padding: "16px", flexGrow: 1 }}>
+        <main style={{ flexGrow: 1 }}>
           {children}
         </main>
 

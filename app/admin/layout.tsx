@@ -19,7 +19,7 @@ export default function DashboardLayout({
       <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
         
         {/* Main Content */}
-        <main style={{ flex: 1, padding: "16px" }}>
+        <main style={{ flex: 1,  }}>
           {children}
         </main>
 

@@ -398,12 +398,12 @@ export default function Navbar() {
   // Navigation to admin/subadmin login pages
   const navigateToAdminLogin = () => {
     setSignInOpen(false);
-    router.push('/login/admin');
+    router.push('/component/adminlogin');
   };
 
   const navigateToSubadminLogin = () => {
     setSignInOpen(false);
-    router.push('/login/subadmin');
+    router.push('/component/subadminlogin');
   };
 
   const BrandLogo = ({ className = "" }: { className?: string }) => (
@@ -490,11 +490,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link href="/settings" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors text-sm">
-                  <Settings className="w-4 h-4 mr-3 text-teal-600" />
-                  <span>Settings</span>
-                  <span className="ml-2 bg-amber-400 text-black text-[10px] font-bold px-2 py-0.5 rounded">NEW</span>
-                </Link>
+           
               </li>
             </ul>
           </nav>
@@ -703,12 +699,7 @@ export default function Navbar() {
                   My Products
                 </Link>
               </li>
-              <li>
-                <Link href="/seller/finance" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors text-sm">
-                  <Landmark className="w-4 h-4 mr-3 text-teal-600" />
-                  Easy Finance
-                </Link>
-              </li>
+            
               <li>
                 <Link href="/seller/alerts" className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors text-sm">
                   <MessageCircle className="w-4 h-4 mr-3 text-teal-600" />
@@ -804,7 +795,7 @@ export default function Navbar() {
       { icon: FolderOpen, label: 'Lead Manager', href: '/seller/lead-manager' },
       { icon: Receipt, label: 'Buy Leads', href: '/seller/buy-leads' },
       { icon: Store, label: 'Products', href: '/seller/products' },
-      { icon: Landmark, label: 'Easy Finance', href: '/seller/finance' },
+      // { icon: Landmark, label: 'Easy Finance', href: '/seller/finance' },
       { icon: Bell, label: 'Alerts', href: '/seller/alerts', badge: 3 },
       { icon: HelpCircle, label: 'Help', href: '/help' },
     ] : isSignedIn ? [
@@ -927,7 +918,7 @@ export default function Navbar() {
                     <button 
                       onClick={() => {
                         toggleMobileMenu();
-                        router.push('/login/admin');
+                        router.push('/adminlogin');
                       }}
                       className="w-full flex items-center gap-3 px-3 py-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
                     >
@@ -1166,10 +1157,10 @@ export default function Navbar() {
               <Store className="w-6 h-6 text-white group-hover:scale-105 transition-transform" />
               <span className="text-xs text-white mt-1 font-medium">Products</span>
             </Link>
-            <Link href="/seller/finance" className="flex flex-col items-center px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors min-w-[85px] group">
+            {/* <Link href="/seller/finance" className="flex flex-col items-center px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors min-w-[85px] group">
               <Landmark className="w-6 h-6 text-white group-hover:scale-105 transition-transform" />
               <span className="text-xs text-white mt-1 font-medium">Easy Finance</span>
-            </Link>
+            </Link> */}
             <Link href="/seller/alerts" className="flex flex-col items-center px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors min-w-[60px] group relative">
               <div className="relative">
                 <MessageCircle className="w-6 h-6 text-white group-hover:scale-105 transition-transform" />
