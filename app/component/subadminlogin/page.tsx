@@ -11,8 +11,11 @@ import {
   Anchor,
   ArrowRight,
   CheckCircle2,
-  Users
+  Users,
+ 
 } from 'lucide-react';
+import Link from 'next/link'
+
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -276,15 +279,17 @@ export default function SubAdminLoginPage() {
               </div>
 
               {/* Submit Button */}
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="w-full"
-                isLoading={isLoading}
-              >
-                Sign In to Dashboard
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
+              <Link href="/admin/admindashboard">
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="w-full mt-5"
+                  isLoading={isLoading}
+                >
+                  Sign In to Dashboard
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
             </form>
 
             {/* Divider */}
@@ -321,7 +326,7 @@ export default function SubAdminLoginPage() {
           <div className="text-center space-y-4">
             <p className="text-sm text-gray-500">
               Need admin access?{' '}
-              <a href="/admin/login" className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+              <a href="/component/adminlogin" className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors">
                 Sign in as Admin
               </a>
             </p>

@@ -1202,7 +1202,7 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link href="/exporters" className="flex flex-col items-center px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors min-w-[60px] group">
+            <Link href="/component/buyers" className="flex flex-col items-center px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors min-w-[60px] group">
               <Globe className="w-6 h-6 text-white group-hover:scale-105 transition-transform" />
               <span className="text-xs text-white mt-1 font-medium">Buyers</span>
             </Link>

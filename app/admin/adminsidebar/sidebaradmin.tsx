@@ -16,11 +16,14 @@ import {
   LogOut,
 } from 'lucide-react';
 
+type UserRole = 'admin' | 'subadmin';
+
 interface MenuItem {
   icon: React.ReactNode;
   label: string;
   id: string;
   href: string;
+  allowedRoles: UserRole[]; // Which roles can see this menu item
 }
 
 interface UserProfile {
@@ -28,6 +31,7 @@ interface UserProfile {
   email: string;
   initials?: string;
   avatar?: string;
+  role: UserRole; // Added role field
 }
 
 interface SidebarProps {
@@ -38,60 +42,63 @@ interface SidebarProps {
   onLogout?: () => void;
 }
 
+// Default menu items with role-based access control
 const defaultMenuItems: MenuItem[] = [
   { 
     icon: <LayoutDashboard size={20} />, 
     label: 'Dashboard', 
     id: 'dashboard', 
-    href: '/admin' 
+    href: '/admin',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
   { 
     icon: <Users size={20} />, 
     label: 'Manage Admins', 
     id: 'admins', 
-    href: '/admin/manageadmin' 
+    href: '/admin/manageadmin',
+    allowedRoles: ['admin'] // Only admin can see
   },
   { 
     icon: <UserCog size={20} />, 
     label: 'Manage Sub-Admins', 
     id: 'sub-admins', 
-    href: '/admin/managesubadmin' 
+    href: '/admin/managesubadmin',
+    allowedRoles: ['admin'] // Only admin can see
   },
   { 
     icon: <ShoppingCart size={20} />, 
     label: 'Manage Buyers', 
     id: 'buyers', 
-    href: '/admin/managebuyer' 
+    href: '/admin/managebuyer',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
   { 
     icon: <User size={20} />, 
     label: 'Manage Sellers', 
     id: 'users', 
-    href: '/users/management' 
+    href: '/users/management',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
   { 
     icon: <Package size={20} />, 
     label: 'Products', 
     id: 'products', 
-    href: '/admin/product' 
+    href: '/admin/product',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
   { 
     icon: <Phone size={20} />, 
     label: 'Leads', 
     id: 'leads', 
-    href: '/admin/lead' 
+    href: '/admin/lead',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
-  // { 
-  //   icon: <Activity size={20} />, 
-  //   label: 'Activity Logs', 
-  //   id: 'activity', 
-  //   href: '/logs/activity' 
-  // },
   { 
     icon: <Settings size={20} />, 
     label: 'System Settings', 
     id: 'settings', 
-    href: '/admin/setting' 
+    href: '/admin/setting',
+    allowedRoles: ['admin', 'subadmin'] // Both can see
   },
 ];
 
@@ -103,6 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     name: 'Super Admin',
     email: 'admin@company.com',
     initials: 'SA',
+    role: 'admin', // Default to admin
   },
   onLogout,
 }) => {
@@ -120,6 +128,30 @@ const Sidebar: React.FC<SidebarProps> = ({
     return pathname.startsWith(href);
   };
 
+  // Filter menu items based on user role
+  const filteredMenuItems = menuItems.filter(item => 
+    item.allowedRoles.includes(userProfile.role)
+  );
+
+  // Dynamic colors based on role
+  const accentColor = userProfile.role === 'admin' ? 'indigo' : 'green';
+  const accentClasses = {
+    indigo: {
+      bg: 'bg-indigo-600',
+      light: 'bg-indigo-50',
+      text: 'text-indigo-600',
+      textLight: 'text-indigo-400',
+    },
+    green: {
+      bg: 'bg-green-600',
+      light: 'bg-green-50',
+      text: 'text-green-600',
+      textLight: 'text-green-400',
+    },
+  };
+
+  const colors = accentClasses[accentColor];
+
   return (
     <>
       <aside
@@ -131,12 +163,15 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* User Profile Section */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+            <div className={`w-12 h-12 ${colors.bg} rounded-full flex items-center justify-center text-white font-semibold text-lg`}>
               {userProfile.initials || userProfile.name.substring(0, 2).toUpperCase()}
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">{userProfile.name}</h3>
               <p className="text-sm text-gray-500">{userProfile.email}</p>
+              <span className={`text-xs font-medium ${colors.text} capitalize`}>
+                {userProfile.role}
+              </span>
             </div>
           </div>
 
@@ -151,7 +186,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-200px)]">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const isActive = isActiveRoute(item.href);
             
             return (
@@ -161,12 +196,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                 onClick={handleMenuClick}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors group ${
                   isActive
-                    ? 'bg-indigo-50 text-indigo-600'
+                    ? `${colors.light} ${colors.text}`
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <span className={isActive ? 'text-indigo-600' : 'text-gray-400'}>
+                  <span className={isActive ? colors.text : 'text-gray-400'}>
                     {item.icon}
                   </span>
                   <span className="font-medium">{item.label}</span>
@@ -174,7 +209,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <ChevronRight 
                   size={16} 
                   className={`transition-colors ${
-                    isActive ? 'text-indigo-400' : 'text-gray-400'
+                    isActive ? colors.textLight : 'text-gray-400'
                   }`} 
                 />
               </Link>

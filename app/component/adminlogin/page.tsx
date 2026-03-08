@@ -11,10 +11,13 @@ import {
   Waves,
   Anchor,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
+
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import Link from 'next/link'
+
 
 // Utility for cleaner tailwind classes
 function cn(...inputs: ClassValue[]) {
@@ -211,7 +214,7 @@ export default function AdminLoginPage() {
                 <Shield className="w-6 h-6 text-blue-600" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-              <p className="text-gray-500 text-sm">Sign in to access your admin dashboard</p>
+            <p className="text-gray-500 text-sm">Sign in to access your admin dashboard</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -270,17 +273,18 @@ export default function AdminLoginPage() {
                   Forgot password?
                 </a>
               </div>
-
+<Link href='/admin/admindashboard'>
               {/* Submit Button */}
               <Button 
                 type="submit" 
                 size="lg" 
-                className="w-full"
+                className="w-full mt-5"
                 isLoading={isLoading}
               >
                 Sign In to Dashboard
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
+              </Link>
             </form>
 
             {/* Divider */}
