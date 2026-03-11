@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import type { StaticImageData } from "next/image";
-import { ExternalLink, MessageSquare, ChevronUp, Search, ChevronDown } from "lucide-react";
+import { ExternalLink, MessageSquare, ChevronUp, Search, ChevronDown, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import buyertoolsbgimage from "../../../public/images/buyertoolsbgimage.jpeg";
 
@@ -416,6 +416,11 @@ export default function MarineKmartDashboard() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [serviceSearch, setServiceSearch] = useState<string>("");
   const [selectedService, setSelectedService] = useState<string>("Accounting Software");
+  
+  // Form states for Get Quotes section
+  const [productName, setProductName] = useState<string>("");
+  const [requirementDetails, setRequirementDetails] = useState<string>("");
+  const [gstNumber, setGstNumber] = useState<string>("");
 
   // Refs for scrolling to sections
   const accountingRef = useRef<HTMLDivElement>(null);
@@ -471,6 +476,12 @@ export default function MarineKmartDashboard() {
 
   const scrollToTop = (): void => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle Get Quotes form submission
+  const handleGetQuotesSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    console.log("Get Quotes submitted:", { productName, requirementDetails, gstNumber });
   };
 
   // Services for Business Growth Page - All sections in one page with scroll
@@ -786,6 +797,90 @@ export default function MarineKmartDashboard() {
           </button>
         </div>
       </div>
+
+      {/* ============================================ */}
+      {/* GET QUOTES FROM SELLERS SECTION - AT THE BOTTOM OF SERVICES FOR BUSINESS GROWTH */}
+      {/* ============================================ */}
+      <div className="w-full bg-gray-50 py-12 mt-8 border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-4">
+          {/* Header with gradient background */}
+          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-teal-600 rounded-t-lg p-4 flex items-center justify-center gap-3">
+            <div className="flex items-center gap-2 text-white">
+              <div className="flex flex-col items-end">
+                <div className="w-8 h-0.5 bg-white/60 mb-1"></div>
+                <div className="w-6 h-0.5 bg-white/60 mb-1"></div>
+                <div className="w-4 h-0.5 bg-white/60"></div>
+              </div>
+              <ShoppingCart className="w-6 h-6" />
+            </div>
+            <h2 className="text-white text-lg font-semibold">
+              Tell us what you need & Get verified suppliers instantly
+            </h2>
+          </div>
+
+          {/* Form Container */}
+          <div className="bg-white border border-gray-200 rounded-b-lg shadow-lg p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Requirement Information</h3>
+            
+            <form onSubmit={handleGetQuotesSubmit} className="space-y-6">
+              {/* Product/Service Name */}
+              <div className="flex items-center gap-4">
+                <label className="w-40 text-sm font-medium text-gray-700 text-right">
+                  Product/Service name
+                </label>
+                <input
+                  type="text"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                  placeholder="Enter Product / Service name"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                />
+              </div>
+
+              {/* Requirement Details */}
+              <div className="flex items-start gap-4">
+                <label className="w-40 text-sm font-medium text-gray-700 text-right pt-2">
+                  Requirement Details
+                </label>
+                <textarea
+                  value={requirementDetails}
+                  onChange={(e) => setRequirementDetails(e.target.value)}
+                  rows={3}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 resize-none"
+                />
+              </div>
+
+              {/* GST Number */}
+              <div className="flex items-center gap-4">
+                <label className="w-40 text-sm font-medium text-gray-700 text-right">
+                  GST Number
+                </label>
+                <input
+                  type="text"
+                  value={gstNumber}
+                  onChange={(e) => setGstNumber(e.target.value)}
+                  placeholder="Please enter GST Number to reach more sellers"
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                />
+              </div>
+            </form>
+          </div>
+
+          {/* Submit Button - Outside the white container, centered */}
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => handleGetQuotesSubmit}
+              className="bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-700 hover:to-teal-600 text-white font-semibold py-3 px-10 rounded flex items-center gap-2 transition-all shadow-md"
+            >
+              Get Quotes from Sellers
+              <span className="text-lg">›</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* ============================================ */}
+      {/* END OF GET QUOTES SECTION */}
+      {/* ============================================ */}
     </div>
   );
 
@@ -1089,7 +1184,7 @@ export default function MarineKmartDashboard() {
               </div>
             </div>
 
-            {/* Premium Brands Section with Margin Bottom */}
+            {/* Premium Brands Section */}
             <div className="w-full bg-white mt-8 py-8 mb-16">
               <div className="max-w-7xl mx-auto px-6">
                 <h2 className="text-2xl font-semibold mb-6 text-gray-800">

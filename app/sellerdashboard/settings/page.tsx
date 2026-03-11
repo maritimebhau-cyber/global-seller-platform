@@ -157,18 +157,16 @@ function buildSettingsSummary(sections: Section[]): string {
 }
 
 export default function NotificationSettings() {
-  const [activeTab, setActiveTab] = useState(3); // Start with BuyLead Preferences active
+  const [activeTab, setActiveTab] = useState(3);
   const [sections, setSections] = useState<Section[]>(INITIAL_SECTIONS);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   
-  // Account Settings state
   const [emailSyncEnabled, setEmailSyncEnabled] = useState(false);
   const [passwordLoginEnabled, setPasswordLoginEnabled] = useState(false);
   const [languages, setLanguages] = useState<Language[]>(INITIAL_LANGUAGES);
   const [languageSaved, setLanguageSaved] = useState(false);
 
-  // PNS Call Settings state
   const [foreignCallsOnly, setForeignCallsOnly] = useState(false);
   const [linkedNumbers, setLinkedNumbers] = useState<LinkedNumber[]>([
     { id: "1", number: "+91-8518900153", isPrimary: true, officeHours: true, nonOfficeHours: true },
@@ -176,7 +174,6 @@ export default function NotificationSettings() {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
   const [howPnsExpanded, setHowPnsExpanded] = useState(true);
 
-  // BuyLead Preferences state
   const [locationExpanded, setLocationExpanded] = useState(true);
   const [categoryExpanded, setCategoryExpanded] = useState(true);
   const [notPreferredExpanded, setNotPreferredExpanded] = useState(true);
@@ -260,6 +257,7 @@ export default function NotificationSettings() {
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #111827; }
+        
         .cb {
           appearance: none; -webkit-appearance: none;
           width: 17px; height: 17px;
@@ -277,17 +275,64 @@ export default function NotificationSettings() {
           border: 2px solid white; border-top: none; border-left: none;
           transform: rotate(45deg);
         }
-        .tab-btn { padding: 14px 20px; font-size: 14px; font-weight: 500; cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent; color: #6b7280; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
+        
+        .tab-btn { 
+          padding: 14px 16px; 
+          font-size: 13px; 
+          font-weight: 500; 
+          cursor: pointer; 
+          background: none; 
+          border: none; 
+          border-bottom: 2px solid transparent; 
+          color: #6b7280; 
+          transition: color 0.15s, border-color 0.15s; 
+          white-space: nowrap; 
+        }
         .tab-btn:hover { color: #374151; }
         .tab-btn.active { border-bottom-color: #3b5bdb; color: #3b5bdb; }
+        
+        @media (max-width: 640px) {
+          .tab-btn { padding: 12px 12px; font-size: 12px; }
+        }
+        
         .row-tr { border-bottom: 1px solid #f3f4f6; }
         .row-tr:hover { background: #fafafa; }
-        .action-btn { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #d1d5db; background: white; color: #374151; display: flex; align-items: center; gap: 6px; }
+        
+        .action-btn { 
+          padding: 8px 16px; 
+          border-radius: 6px; 
+          font-size: 13px; 
+          font-weight: 500; 
+          cursor: pointer; 
+          border: 1px solid #d1d5db; 
+          background: white; 
+          color: #374151; 
+          display: flex; 
+          align-items: center; 
+          gap: 6px; 
+        }
         .action-btn:hover { background: #f9fafb; }
-        .save-btn { padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: #3b5bdb; border: none; color: white; }
+        
+        @media (max-width: 640px) {
+          .action-btn { padding: 6px 12px; font-size: 12px; }
+        }
+        
+        .save-btn { 
+          padding: 8px 20px; 
+          border-radius: 6px; 
+          font-size: 13px; 
+          font-weight: 600; 
+          cursor: pointer; 
+          background: #3b5bdb; 
+          border: none; 
+          color: white; 
+        }
         .save-btn:hover { background: #3451c7; }
         
-        /* Toggle Switch */
+        @media (max-width: 640px) {
+          .save-btn { padding: 6px 16px; font-size: 12px; }
+        }
+        
         .toggle-switch {
           position: relative;
           display: inline-block;
@@ -328,14 +373,12 @@ export default function NotificationSettings() {
           transform: translateX(20px);
         }
         
-        /* Section divider */
         .section-divider {
           border: none;
           border-top: 1px solid #e5e7eb;
           margin: 24px 0;
         }
 
-        /* PNS Toggle Switch - Green */
         .pns-toggle-switch {
           position: relative;
           display: inline-block;
@@ -376,7 +419,6 @@ export default function NotificationSettings() {
           transform: translateX(16px);
         }
 
-        /* FAQ Styles */
         .faq-item {
           border-bottom: 1px solid #e5e7eb;
         }
@@ -399,7 +441,6 @@ export default function NotificationSettings() {
           line-height: 1.5;
         }
 
-        /* BuyLead Preferences Styles */
         .buylead-section {
           background: #f3f4f6;
           border: 1px solid #e5e7eb;
@@ -408,7 +449,7 @@ export default function NotificationSettings() {
           overflow: hidden;
         }
         .buylead-header {
-          padding: 16px 20px;
+          padding: 16px;
           background: #f3f4f6;
           display: flex;
           justify-content: space-between;
@@ -426,26 +467,36 @@ export default function NotificationSettings() {
           margin-top: 2px;
         }
         .buylead-content {
-          padding: 20px;
+          padding: 16px;
           background: #f3f4f6;
         }
+        
+        @media (max-width: 768px) {
+          .buylead-content { padding: 12px; }
+        }
+        
         .location-card {
           background: white;
           border: 1px solid #e5e7eb;
           border-radius: 8px;
-          padding: 24px;
+          padding: 20px;
           text-align: center;
-          min-height: 180px;
+          min-height: 160px;
           display: flex;
           flex-direction: column;
           justify-content: center;
         }
+        
+        @media (max-width: 640px) {
+          .location-card { min-height: 120px; padding: 16px; }
+        }
+        
         .location-card-title {
           font-size: 13px;
           font-weight: 600;
           color: #374151;
-          margin-bottom: 16px;
-          padding-bottom: 12px;
+          margin-bottom: 12px;
+          padding-bottom: 10px;
           border-bottom: 1px solid #f3f4f6;
           text-align: left;
         }
@@ -453,7 +504,7 @@ export default function NotificationSettings() {
           font-size: 13px;
           color: #6b7280;
           line-height: 1.5;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
         .view-buyleads-link {
           color: #00a699;
@@ -501,19 +552,24 @@ export default function NotificationSettings() {
           background: white;
           border: 1px solid #e5e7eb;
           border-radius: 8px;
-          padding: 24px;
+          padding: 20px;
           text-align: center;
-          min-height: 200px;
+          min-height: 160px;
           display: flex;
           flex-direction: column;
           justify-content: center;
         }
+        
+        @media (max-width: 768px) {
+          .category-card { min-height: auto; }
+        }
+        
         .category-card-title {
           font-size: 13px;
           font-weight: 600;
           color: #374151;
-          margin-bottom: 16px;
-          padding-bottom: 12px;
+          margin-bottom: 12px;
+          padding-bottom: 10px;
           border-bottom: 1px solid #f3f4f6;
           text-align: left;
         }
@@ -521,7 +577,7 @@ export default function NotificationSettings() {
           font-size: 13px;
           color: #6b7280;
           line-height: 1.5;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
         .preferred-label {
           font-size: 13px;
@@ -545,43 +601,167 @@ export default function NotificationSettings() {
           color: #6b7280;
           margin-bottom: 16px;
         }
+        
+        /* Responsive Grid Utilities */
+        .responsive-grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        
+        @media (max-width: 968px) {
+          .responsive-grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 640px) {
+          .responsive-grid-3 { grid-template-columns: 1fr; }
+        }
+        
+        .responsive-grid-2-1 {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 24px;
+        }
+        
+        @media (max-width: 968px) {
+          .responsive-grid-2-1 { grid-template-columns: 1fr; gap: 16px; }
+        }
+        
+        .responsive-grid-2 {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+        
+        @media (max-width: 640px) {
+          .responsive-grid-2 { grid-template-columns: 1fr; }
+        }
+        
+        .responsive-flex-row {
+          display: flex;
+          gap: 24px;
+        }
+        
+        @media (max-width: 968px) {
+          .responsive-flex-row { flex-direction: column; gap: 16px; }
+        }
+        
+        .responsive-table-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        .responsive-language-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 12px 24px;
+        }
+        
+        @media (max-width: 768px) {
+          .responsive-language-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 480px) {
+          .responsive-language-grid { grid-template-columns: 1fr; }
+        }
+        
+        .tab-scroll-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        
+        .tab-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .pns-number-row {
+          display: flex;
+          align-items: center;
+          background: #f0fdf4;
+          padding: 12px 16px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+        }
+        
+        @media (max-width: 640px) {
+          .pns-number-row { 
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 12px;
+            padding: 12px;
+          }
+        }
+        
+        .pns-number-label {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        @media (max-width: 640px) {
+          .pns-number-label { width: 100%; }
+        }
+        
+        .pns-toggle-col {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+        }
+        
+        @media (max-width: 640px) {
+          .pns-toggle-col { 
+            width: 100%; 
+            justify-content: space-between;
+            padding: 0 4px;
+          }
+          .pns-toggle-col::before {
+            content: attr(data-label);
+            font-size: 12px;
+            color: #6b7280;
+          }
+        }
       `}</style>
 
       <div style={{ minHeight: "100vh", background: "#f3f4f6" }}>
 
         {/* Tab Bar */}
         <div style={{ background: "white", borderBottom: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex" }}>
-            {TABS.map((tab, i) => (
-              <button key={tab} className={`tab-btn${activeTab === i ? " active" : ""}`} onClick={() => setActiveTab(i)}>
-                {tab}
-              </button>
-            ))}
+          <div className="tab-scroll-container" style={{ maxWidth: "100%", margin: "0 auto" }}>
+            <div style={{ display: "flex", padding: "0 16px" }}>
+              {TABS.map((tab, i) => (
+                <button key={tab} className={`tab-btn${activeTab === i ? " active" : ""}`} onClick={() => setActiveTab(i)}>
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 16px" }}>
+        <div style={{ maxWidth: "100%", margin: "0 auto", padding: "16px" }}>
           {activeTab === 0 ? (
             // Notification Settings Tab
             <div style={{ background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", overflow: "hidden" }}>
 
               {/* Toast messages */}
               {saved && (
-                <div style={{ background: "#ecfdf5", borderBottom: "1px solid #a7f3d0", padding: "10px 20px", fontSize: 13, color: "#065f46", fontWeight: 500 }}>
+                <div style={{ background: "#ecfdf5", borderBottom: "1px solid #a7f3d0", padding: "10px 16px", fontSize: 13, color: "#065f46", fontWeight: 500 }}>
                   ✓ Settings saved successfully!
                 </div>
               )}
               {copied && (
-                <div style={{ background: "#eff6ff", borderBottom: "1px solid #bfdbfe", padding: "10px 20px", fontSize: 13, color: "#1d4ed8", fontWeight: 500 }}>
+                <div style={{ background: "#eff6ff", borderBottom: "1px solid #bfdbfe", padding: "10px 16px", fontSize: 13, color: "#1d4ed8", fontWeight: 500 }}>
                   ✓ Settings copied to clipboard!
                 </div>
               )}
 
-              <div style={{ overflowX: "auto" }}>
+              <div className="responsive-table-container">
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
                   <thead>
                     <tr>
-                      <th style={{ padding: "16px 16px 16px 20px", textAlign: "left", borderBottom: "1px solid #e5e7eb", width: "40%", verticalAlign: "bottom" }}>
+                      <th style={{ padding: "16px 16px 16px 16px", textAlign: "left", borderBottom: "1px solid #e5e7eb", width: "40%", verticalAlign: "bottom" }}>
                         <div style={{ fontSize: 15, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Notification Settings</div>
                         <div style={{ fontSize: 12, fontWeight: 400, color: "#6b7280" }}>Manage Your Settings for Important Alerts</div>
                       </th>
@@ -601,7 +781,7 @@ export default function NotificationSettings() {
                     {sections.map((section) => (
                       <>
                         <tr key={section.id + "_hdr"}>
-                          <td colSpan={5} style={{ background: "#f3f4f6", padding: "9px 20px", borderTop: "1px solid #e5e7eb", borderBottom: "1px solid #e5e7eb" }}>
+                          <td colSpan={5} style={{ background: "#f3f4f6", padding: "9px 16px", borderTop: "1px solid #e5e7eb", borderBottom: "1px solid #e5e7eb" }}>
                             <span style={{ fontSize: 13, fontWeight: 700, color: "#1f2937" }}>
                               {section.title}
                             </span>
@@ -610,7 +790,7 @@ export default function NotificationSettings() {
 
                         {section.rows.map((row) => (
                           <tr key={row.id} className="row-tr">
-                            <td style={{ padding: "14px 16px 14px 20px", verticalAlign: "top", borderBottom: "1px solid #f3f4f6" }}>
+                            <td style={{ padding: "14px 16px", verticalAlign: "top", borderBottom: "1px solid #f3f4f6" }}>
                               <div style={{ fontSize: 13, fontWeight: 600, color: "#1f2937", lineHeight: 1.4 }}>{row.label}</div>
                               <div style={{ fontSize: 12, color: "#6b7280", marginTop: 3, lineHeight: 1.5 }}>{row.description}</div>
                               {row.subNote && <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 3, fontStyle: "italic" }}>{row.subNote}</div>}
@@ -638,7 +818,7 @@ export default function NotificationSettings() {
                 </table>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 10, padding: "14px 20px", borderTop: "1px solid #e5e7eb", background: "#f9fafb" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 10, padding: "14px 16px", borderTop: "1px solid #e5e7eb", background: "#f9fafb", flexWrap: "wrap" }}>
                 <button className="action-btn" onClick={() => setSections(INITIAL_SECTIONS)}>
                   Reset to Default
                 </button>
@@ -656,7 +836,7 @@ export default function NotificationSettings() {
             </div>
           ) : activeTab === 1 ? (
             // Account Settings Tab
-            <div style={{ background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px 32px" }}>
+            <div style={{ background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px 16px" }}>
               
               {/* Toast message */}
               {languageSaved && (
@@ -667,7 +847,7 @@ export default function NotificationSettings() {
 
               {/* Sync Email Section */}
               <div style={{ marginBottom: 24 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "#1f2937" }}>
                     Sync your E-mail with IndiaMART Lead Manager
                   </span>
@@ -722,7 +902,7 @@ export default function NotificationSettings() {
                 <h3 style={{ fontSize: 14, fontWeight: 600, color: "#1f2937", marginBottom: 16 }}>
                   Additional Language for Communication
                 </h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px 24px", marginBottom: 16 }}>
+                <div className="responsive-language-grid" style={{ marginBottom: 16 }}>
                   {languages.map((lang) => (
                     <label key={lang.id} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
                       <input
@@ -783,7 +963,7 @@ export default function NotificationSettings() {
 
               {/* Allow Password Login Section */}
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "#1f2937" }}>
                     Allow login through Password
                   </span>
@@ -804,9 +984,9 @@ export default function NotificationSettings() {
             </div>
           ) : activeTab === 2 ? (
             // PNS Call Settings Tab
-            <div style={{ display: "flex", gap: 24 }}>
+            <div className="responsive-flex-row">
               {/* Main Content */}
-              <div style={{ flex: 1, background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px 32px" }}>
+              <div style={{ flex: 1, background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px 16px" }}>
                 
                 {/* PNS Number Display */}
                 <div style={{ marginBottom: 24 }}>
@@ -815,7 +995,7 @@ export default function NotificationSettings() {
                 </div>
 
                 {/* Foreign Calls Toggle */}
-                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 14, color: "#374151" }}>
                     Would you like to receive calls only from foreign countries?
                   </span>
@@ -858,8 +1038,8 @@ export default function NotificationSettings() {
                   </div>
 
                   {linkedNumbers.map((num) => (
-                    <div key={num.id} style={{ display: "flex", alignItems: "center", background: "#f0fdf4", padding: "12px 16px", borderRadius: 4, marginBottom: 12 }}>
-                      <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 8 }}>
+                    <div key={num.id} className="pns-number-row">
+                      <div className="pns-number-label">
                         <input 
                           type="checkbox" 
                           className="cb" 
@@ -870,7 +1050,7 @@ export default function NotificationSettings() {
                           {num.number}{num.isPrimary && <span style={{ color: "#6b7280" }}>(Primary)</span>}
                         </span>
                       </div>
-                      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+                      <div className="pns-toggle-col" data-label="Office Hours:">
                         <label className="pns-toggle-switch">
                           <input 
                             type="checkbox" 
@@ -880,7 +1060,7 @@ export default function NotificationSettings() {
                           <span className="pns-toggle-slider"></span>
                         </label>
                       </div>
-                      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+                      <div className="pns-toggle-col" data-label="Non-office Hours:">
                         <label className="pns-toggle-switch">
                           <input 
                             type="checkbox" 
@@ -935,7 +1115,7 @@ export default function NotificationSettings() {
               </div>
 
               {/* Right Sidebar - How PNS Works */}
-              <div style={{ width: 320, background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: 20 }}>
+              <div style={{ width: "100%", maxWidth: 320, background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: 20 }}>
                 <div 
                   style={{ 
                     display: "flex", 
@@ -1041,7 +1221,7 @@ export default function NotificationSettings() {
             </div>
           ) : (
             // BuyLead Preferences Tab
-            <div style={{ background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px" }}>
+            <div style={{ background: "white", borderRadius: 8, border: "1px solid #e5e7eb", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", padding: "24px 16px" }}>
               
               {/* Page Title */}
               <h1 style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 20 }}>
@@ -1062,14 +1242,14 @@ export default function NotificationSettings() {
 
                 {categoryExpanded && (
                   <div className="buylead-content">
-                    <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 24 }}>
+                    <div className="responsive-grid-2-1">
                       
                       {/* Left Side - Preferred Categories (2 columns) */}
                       <div>
                         <div className="preferred-label">Preferred Categories</div>
                         <div className="preferred-sublabel">You prefer BuyLeads from these categories</div>
                         
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+                        <div className="responsive-grid-2" style={{ marginTop: 16 }}>
                           {/* Based on your products */}
                           <div className="category-card">
                             <div className="category-card-title">Based on your products</div>
@@ -1139,7 +1319,7 @@ export default function NotificationSettings() {
                                     display: "flex", 
                                     justifyContent: "space-between", 
                                     alignItems: "center",
-                                    padding: "10px 16px",
+                                    padding: "10px 12px",
                                     background: "#f9fafb",
                                     borderRadius: 4,
                                     border: "1px solid #e5e7eb"
@@ -1206,7 +1386,7 @@ export default function NotificationSettings() {
                       </div>
 
                       {/* Three Column Grid */}
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+                      <div className="responsive-grid-3">
                         {/* Major Cities */}
                         <div className="location-card">
                           <div className="location-card-title">Major Cities</div>
@@ -1286,7 +1466,7 @@ export default function NotificationSettings() {
                                 display: "flex", 
                                 justifyContent: "space-between", 
                                 alignItems: "center",
-                                padding: "10px 16px",
+                                padding: "10px 12px",
                                 background: "#f9fafb",
                                 borderRadius: 4,
                                 border: "1px solid #e5e7eb"

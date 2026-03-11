@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import Boat from '../../../public/images/boat.png';
 import { useState } from 'react';
+import Link from 'next/link'
+
 
 // SVG Flag Components for better desktop visibility
 const FlagIcon = ({ countryCode }: { countryCode: string }) => {
@@ -249,11 +251,12 @@ export default function HomePage() {
               )}
             </div>
           )}
-
-          <button className="w-full mt-3 bg-teal-500 hover:bg-teal-600 text-white py-2.5 rounded text-sm font-semibold flex items-center justify-center gap-2">
-            Start Selling
-            <span>→</span>
-          </button>
+<Link href="/sellerdashboard/gstverifyform">
+            <button className="w-full mt-3 bg-teal-500 hover:bg-teal-600 text-white py-2.5 rounded text-sm font-semibold flex items-center justify-center gap-2">
+              Start Selling
+              <span>→</span>
+            </button>
+          </Link>
         </div>
       </section>
 
