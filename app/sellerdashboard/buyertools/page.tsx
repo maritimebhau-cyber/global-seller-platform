@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import type { StaticImageData } from "next/image";
-import { ExternalLink, MessageSquare, ChevronUp, Search, ChevronDown, ShoppingCart } from "lucide-react";
+import { ExternalLink, MessageSquare, ChevronUp, Search, ChevronDown, ShoppingCart, MapPin, Phone, User, Star, CheckCircle, XCircle } from "lucide-react";
 import Image from "next/image";
 import buyertoolsbgimage from "../../../public/images/buyertoolsbgimage.jpeg";
 
@@ -11,6 +11,21 @@ interface Order {
   title: string;
   suppliers: number;
   date: string;
+  postedDate: string;
+  closedDate?: string;
+  description: string;
+  status: "open" | "closed";
+  suppliersList: Supplier[];
+}
+
+interface Supplier {
+  id: string;
+  name: string;
+  rating: number;
+  location: string;
+  phone: string;
+  contactPerson?: string;
+  designation?: string;
 }
 
 interface Category {
@@ -70,10 +85,45 @@ interface LoanService {
 }
 
 const orders: Order[] = [
-  { id: "1", title: "Create Seller Account", suppliers: 5, date: "28 February" },
-  { id: "2", title: "Create Seller Account", suppliers: 6, date: "19 February" },
-  { id: "3", title: "Create Seller Account", suppliers: 7, date: "12 February" },
-  { id: "4", title: "Create Seller Account", suppliers: 1, date: "09 February" },
+  { 
+    id: "1", 
+    title: "Create Seller Account", 
+    suppliers: 1, 
+    date: "10-Mar-2026",
+    postedDate: "10-Mar-2026",
+    description: "I am interested in Create Seller Account",
+    status: "open",
+    suppliersList: [
+      {
+        id: "s1",
+        name: "Bullzeye Services",
+        rating: 3.4,
+        location: "New Delhi/Delhi",
+        phone: "+(91)-8047691174,7060"
+      }
+    ]
+  },
+  { 
+    id: "2", 
+    title: "Create Seller Account", 
+    suppliers: 5, 
+    date: "28-FEB-26",
+    postedDate: "28-Feb-2026",
+    closedDate: "28-FEB-26",
+    description: "",
+    status: "closed",
+    suppliersList: [
+      {
+        id: "s2",
+        name: "Ecomm 11",
+        rating: 4.1,
+        location: "Lucknow/Uttar Pradesh",
+        phone: "+(91)-7949086795",
+        contactPerson: "Ashwani Mishra",
+        designation: "CEO"
+      }
+    ]
+  },
 ];
 
 const categories: Category[] = [
@@ -412,10 +462,12 @@ const productCategorySections: ProductCategorySection[] = [
 ];
 
 export default function MarineKmartDashboard() {
-  const [activeTab, setActiveTab] = useState<string>("Services For Business Growth");
+  const [activeTab, setActiveTab] = useState<string>("My Orders");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [serviceSearch, setServiceSearch] = useState<string>("");
   const [selectedService, setSelectedService] = useState<string>("Accounting Software");
+  const [filterBy, setFilterBy] = useState<string>("Last 50 Requirements");
+  const [expandedOrders, setExpandedOrders] = useState<string[]>(["1"]);
   
   // Form states for Get Quotes section
   const [productName, setProductName] = useState<string>("");
@@ -428,14 +480,24 @@ export default function MarineKmartDashboard() {
   const loanRef = useRef<HTMLDivElement>(null);
 
   const tabs: Tab[] = [
-    { name: "Post Buy Requirement", active: true },
+    { name: "Post Buy Requirement", active: false },
     { name: "Services For Business Growth", active: false },
-    { name: "My Orders", active: false },
+    { name: "My Orders", active: true },
     { name: "Products Of Interest", active: false },
     { name: "Recommended Categories", active: false },
     { name: "Past Searches", active: false },
     { name: "Ship With IM", active: false },
+    { name: "Loans", active: false, badge: "NEW" },
   ];
+
+  // Toggle order details expansion
+  const toggleOrderDetails = (orderId: string) => {
+    setExpandedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
 
   // Scroll to section function
   const scrollToSection = (sectionName: string) => {
@@ -483,6 +545,162 @@ export default function MarineKmartDashboard() {
     e.preventDefault();
     console.log("Get Quotes submitted:", { productName, requirementDetails, gstNumber });
   };
+
+  // My Orders Page Component
+  const MyOrdersPage = () => (
+    <div className="max-w-7xl mx-auto px-4 py-6 bg-gray-50 min-h-screen">
+      {/* Filter Bar */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <span className="text-gray-700 font-medium">Filter By:</span>
+          <div className="relative">
+            <select 
+              value={filterBy}
+              onChange={(e) => setFilterBy(e.target.value)}
+              className="appearance-none bg-white border border-gray-300 rounded px-4 py-2 pr-8 text-gray-700 focus:outline-none focus:border-blue-500 cursor-pointer"
+            >
+              <option>Last 50 Requirements</option>
+              <option>Last 30 Days</option>
+              <option>Last 90 Days</option>
+              <option>All Requirements</option>
+            </select>
+            <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" />
+          </div>
+        </div>
+        
+        <button className="flex items-center gap-2 text-blue-800 hover:text-blue-900 font-semibold transition-colors">
+          <span className="text-lg">+</span>
+          Post a New Requirement
+        </button>
+      </div>
+
+      {/* Orders List */}
+      <div className="space-y-4">
+        {orders.map((order) => (
+          <div key={order.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            {/* Order Header */}
+            <div className="bg-gray-100 px-6 py-4 flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="text-lg font-bold text-gray-900">{order.title}</h3>
+                  {order.status === "closed" && (
+                    <div className="flex items-center gap-1 text-red-600">
+                      <XCircle className="w-4 h-4" />
+                      <span className="text-sm font-semibold">Closed</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="text-sm text-gray-600 space-y-1">
+                  <p>
+                    Posted on: <span className="text-gray-500">{order.postedDate}</span>
+                    {order.closedDate && (
+                      <span className="ml-2">| Closed on : <span className="text-gray-500">{order.closedDate}</span></span>
+                    )}
+                  </p>
+                  <p className="text-gray-700">
+                    {order.suppliers} {order.suppliers === 1 ? 'Supplier' : 'Suppliers'} {order.status === "closed" ? "were" : ""} Connected
+                  </p>
+                  {order.description && (
+                    <p className="text-gray-600 italic mt-2">{order.description}</p>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                <button className="bg-blue-800 hover:bg-blue-900 text-white px-6 py-2 rounded text-sm font-semibold transition-colors min-w-[140px]">
+                  Share Feedback
+                </button>
+                {order.status === "closed" && (
+                  <button className="bg-blue-800 hover:bg-blue-900 text-white px-6 py-2 rounded text-sm font-semibold transition-colors min-w-[140px]">
+                    Re-Post Requirement
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Supplier Details */}
+            {expandedOrders.includes(order.id) && order.suppliersList.map((supplier, idx) => (
+              <div key={supplier.id} className="px-6 py-4 border-t border-gray-200">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-gray-500 font-medium w-6">{idx + 1}.</span>
+                      <h4 className="text-base font-bold text-gray-900">{supplier.name}</h4>
+                      <div className="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded">
+                        <span className="text-sm font-semibold text-gray-700">{supplier.rating}/5</span>
+                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      </div>
+                    </div>
+                    
+                    <div className="ml-9 space-y-1 text-sm">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <MapPin className="w-4 h-4 text-gray-400" />
+                        <span>{supplier.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Phone className="w-4 h-4 text-gray-400" />
+                        <span>{supplier.phone}</span>
+                      </div>
+                      {supplier.contactPerson && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <User className="w-4 h-4 text-gray-400" />
+                          <span>{supplier.contactPerson}{supplier.designation ? `, ${supplier.designation}` : ''}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-col gap-2 text-right">
+                      <button className="text-blue-600 hover:text-blue-800 text-sm font-semibold">
+                        View Catalog
+                      </button>
+                      <button className="text-blue-600 hover:text-blue-800 text-sm font-semibold">
+                        Send Message
+                      </button>
+                    </div>
+                    
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-sm text-gray-700 font-medium">Satisfied with the match?</span>
+                      <div className="flex gap-2">
+                        <button className="px-6 py-1.5 border border-red-400 text-red-600 rounded text-sm font-medium hover:bg-red-50 transition-colors">
+                          No
+                        </button>
+                        <button className="px-6 py-1.5 border border-green-500 text-green-600 rounded text-sm font-medium hover:bg-green-50 transition-colors">
+                          Yes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Hide/Show Details Button */}
+            <div className="px-6 py-2 bg-white border-t border-gray-200 flex justify-center">
+              <button 
+                onClick={() => toggleOrderDetails(order.id)}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 text-sm font-medium transition-colors"
+              >
+                {expandedOrders.includes(order.id) ? (
+                  <>
+                    <ChevronUp className="w-4 h-4" />
+                    Hide Details
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4" />
+                    Show Details
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   // Services for Business Growth Page - All sections in one page with scroll
   const ServicesForBusinessGrowthPage = () => (
@@ -798,9 +1016,7 @@ export default function MarineKmartDashboard() {
         </div>
       </div>
 
-      {/* ============================================ */}
-      {/* GET QUOTES FROM SELLERS SECTION - AT THE BOTTOM OF SERVICES FOR BUSINESS GROWTH */}
-      {/* ============================================ */}
+      {/* Get Quotes From Sellers Section */}
       <div className="w-full bg-gray-50 py-12 mt-8 border-t border-gray-200">
         <div className="max-w-5xl mx-auto px-4">
           {/* Header with gradient background */}
@@ -866,7 +1082,7 @@ export default function MarineKmartDashboard() {
             </form>
           </div>
 
-          {/* Submit Button - Outside the white container, centered */}
+          {/* Submit Button */}
           <div className="flex justify-center mt-6">
             <button
               onClick={() => handleGetQuotesSubmit}
@@ -878,9 +1094,6 @@ export default function MarineKmartDashboard() {
           </div>
         </div>
       </div>
-      {/* ============================================ */}
-      {/* END OF GET QUOTES SECTION */}
-      {/* ============================================ */}
     </div>
   );
 
@@ -912,7 +1125,9 @@ export default function MarineKmartDashboard() {
 
       {/* MAIN CONTENT */}
       <main>
-        {activeTab === "Services For Business Growth" ? (
+        {activeTab === "My Orders" ? (
+          <MyOrdersPage />
+        ) : activeTab === "Services For Business Growth" ? (
           <ServicesForBusinessGrowthPage />
         ) : activeTab === "Post Buy Requirement" ? (
           <>

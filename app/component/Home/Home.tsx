@@ -5,41 +5,62 @@ import { ChevronLeft, ChevronRight, Circle, CircleDot } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Category Data for Icon Grid
+
+// Category Data for Icon Grid - Individual size control for each icon
+// sizeClass options: 'small' (120px), 'medium' (160px), 'large' (200px), 'xlarge' (240px)
 const iconCategories = [
-  { image: '/images/categories/repairs.png', label: 'Repairs & Service' },
-  { image: '/images/categories/logistics.png', label: 'Logistics' },
-  { image: '/images/categories/contractors.png', label: 'Contractors' },
-  { image: '/images/categories/business.png', label: 'Business Needs' },
-  { image: '/images/categories/doctors.png', label: 'Doctors & Clinics' },
-  { image: '/images/categories/education.png', label: 'Education & Coaching' },
-  { image: '/images/categories/restaurant.png', label: 'Restaurants & Food' },
-  { image: '/images/categories/salon.png', label: 'Salon & Beauty' },
-  { image: '/images/categories/furniture.png', label: 'Furniture' },
-  { image: '/images/categories/travel.png', label: 'Travel & Tourism' },
-  { image: '/images/categories/electronics.png', label: 'Electronics' },
-  { image: '/images/categories/automobiles.png', label: 'Automobiles' },
-  { image: '/images/categories/finance.png', label: 'Financial Services' },
-  { image: '/images/categories/it-services.png', label: 'IT Services' },
-  { image: '/images/categories/sports.png', label: 'Sports' },
-  { image: '/images/categories/flowers.png', label: 'Flowers & Pets' },
-  { image: '/images/categories/repairs.png', label: 'Repairs & Service' },
-  { image: '/images/categories/logistics.png', label: 'Logistics' },
-  { image: '/images/categories/contractors.png', label: 'Contractors' },
-  { image: '/images/categories/business.png', label: 'Business Needs' },
-  { image: '/images/categories/doctors.png', label: 'Doctors & Clinics' },
-  { image: '/images/categories/education.png', label: 'Education & Coaching' },
-  { image: '/images/categories/restaurant.png', label: 'Restaurants & Food' },
-  { image: '/images/categories/salon.png', label: 'Salon & Beauty' },
-  { image: '/images/categories/furniture.png', label: 'Furniture' },
-  { image: '/images/categories/travel.png', label: 'Travel & Tourism' },
-  { image: '/images/categories/electronics.png', label: 'Electronics' },
-  { image: '/images/categories/automobiles.png', label: 'Automobiles' },
-  { image: '/images/categories/finance.png', label: 'Financial Services' },
-  { image: '/images/categories/it-services.png', label: 'IT Services' },
-  { image: '/images/categories/sports.png', label: 'Sports' },
-  { image: '/images/categories/flowers.png', label: 'Flowers & Pets' },
+  { image: '/icon/1.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/2.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/3.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/4.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/5.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/6.png', sizeClass: 'large' },
+  { image: '/icon/7.REE.png', sizeClass: 'xlarge' },
+  { image: '/icon/8.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/9.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/10.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/11.png', sizeClass: 'xlarge' },
+  { image: '/icon/12.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/13.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/14.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/15.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/16.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/17.RE.png', sizeClass: 'large' },
+  { image: '/icon/18.RE.png', sizeClass: 'large' },
+  { image: '/icon/19.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/20.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/21.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/22.RE.png', sizeClass: 'xlarge' },
+  { image: '/icon/23.png', sizeClass: 'xlarge' },
+  { image: '/icon/24.png', sizeClass: 'xlarge' },
+  { image: '/icon/25.png', sizeClass: 'xlarge' },
+  { image: '/icon/26.png', sizeClass: 'xlarge' },
+  { image: '/icon/27.png', sizeClass: 'xlarge' },
+  { image: '/icon/28.png', sizeClass: 'xlarge' },
+  { image: '/icon/29.png', sizeClass: 'xlarge' },
+  { image: '/icon/30.png', sizeClass: 'xlarge' },
+  { image: '/icon/31.png', sizeClass: 'xlarge' },
+  { image: '/icon/32.png', sizeClass: 'xlarge' },
+  { image: '/icon/33.png', sizeClass: 'xlarge' },
+  { image: '/icon/34.png', sizeClass: 'xlarge' },
+  { image: '/icon/35.png', sizeClass: 'xlarge' },
+  { image: '/icon/36.png', sizeClass: 'xlarge' },
+  { image: '/icon/37.png', sizeClass: 'xlarge' },
+  { image: '/icon/38.png', sizeClass: 'xlarge' },
+  { image: '/icon/39.png', sizeClass: 'xlarge' },
+  { image: '/icon/40.png', sizeClass: 'xlarge' },
+  { image: '/icon/41.png', sizeClass: 'xlarge' },
+  { image: '/icon/42.png', sizeClass: 'xlarge' },
+  { image: '/icon/generated-image.png', sizeClass: 'xlarge' }
 ];
+
+// Size mapping object
+const sizeMap = {
+  small: 'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36',    // 96-144px
+  medium: 'w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56',   // 128-224px
+  large: 'w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64',    // 160-256px
+  xlarge: 'w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72',   // 192-288px
+};
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -131,7 +152,7 @@ export default function Home() {
     clearCarouselInterval();
     intervalRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-    }, 6000); // 6 seconds per slide for slow viewing
+    }, 6000);
   }, [clearCarouselInterval, carouselItems.length]);
 
   // Handle scroll detection
@@ -142,15 +163,13 @@ export default function Home() {
       const st = window.pageYOffset || document.documentElement.scrollTop;
       
       if (st > 100 && !isUserScrolled) {
-        // User scrolled down - stop carousel
         setIsUserScrolled(true);
         setIsAutoPlaying(false);
         clearCarouselInterval();
       } else if (st < 50 && isUserScrolled) {
-        // User scrolled back to top - reset to video and start playing
         setIsUserScrolled(false);
         setIsAutoPlaying(true);
-        setCurrentSlide(0); // Reset to video slide
+        setCurrentSlide(0);
       }
       
       lastScrollTop = st <= 0 ? 0 : st;
@@ -218,7 +237,6 @@ export default function Home() {
   };
 
   const productSections = [
-    // SECTION 1
     {
       leftHeading: "Cement Varieties",
       rightHeading: "Aggregates & Sand",
@@ -235,7 +253,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 2
     {
       leftHeading: "Brick Types",
       rightHeading: "Paving Solutions",
@@ -252,7 +269,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 3
     {
       leftHeading: "TMT Bars",
       rightHeading: "Steel Sections",
@@ -269,7 +285,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 4
     {
       leftHeading: "Plywood Types",
       rightHeading: "Door Solutions",
@@ -286,7 +301,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 5
     {
       leftHeading: "Floor Tiles",
       rightHeading: "Wall Tiles",
@@ -303,7 +317,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 6
     {
       leftHeading: "Sanitaryware",
       rightHeading: "CP Fittings",
@@ -320,7 +333,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 7
     {
       leftHeading: "Paints",
       rightHeading: "Waterproofing",
@@ -337,7 +349,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 8
     {
       leftHeading: "Wires & Cables",
       rightHeading: "Switchgear",
@@ -354,7 +365,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 9
     {
       leftHeading: "Glass Solutions",
       rightHeading: "UPVC Windows",
@@ -371,7 +381,6 @@ export default function Home() {
         }
       ]
     },
-    // SECTION 10
     {
       leftHeading: "Heavy Machinery",
       rightHeading: "Scaffolding",
@@ -423,10 +432,8 @@ export default function Home() {
                 />
               )}
 
-              {/* Content Overlay */}
               <div className={`absolute top-1/2 left-1/2 md:left-[37%] transform -translate-x-1/2 md:translate-x-0 -translate-y-1/2 text-white max-w-[90%] md:max-w-[800px] w-full flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-12 text-center md:text-left ${item.hasForm ? 'md:flex-row' : 'md:flex-col'}`}>
                 
-                {/* Text Content */}
                 <div className={`${item.hasForm ? 'flex-1 max-w-[400px]' : ''}`}>
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg" style={{ textShadow: '3px 3px 6px #000' }}>
                     {item.title}
@@ -444,7 +451,6 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Form (only for third slide) */}
                 {item.hasForm && (
                   <form 
                     onSubmit={handleSubmit}
@@ -499,7 +505,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
           className="absolute top-1/2 left-4 md:left-8 -translate-y-1/2 bg-white/90 hover:bg-white w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-lg"
@@ -513,7 +518,6 @@ export default function Home() {
           <ChevronRight className="w-5 h-5 md:w-7 md:h-7 text-gray-800" />
         </button>
 
-        {/* Dots Indicator */}
         <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">
           {carouselItems.map((_, idx) => (
             <button
@@ -533,7 +537,6 @@ export default function Home() {
           </span>
         </div>
 
-        {/* Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
           <div 
             className="h-full bg-blue-600 transition-all duration-300"
@@ -542,31 +545,28 @@ export default function Home() {
         </div>
       </div>
 
-      {/* CATEGORY ICON GRID - SYMMETRICAL */}
-      <div className="px-4 sm:px-8 md:px-16 py-12 bg-white">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-blue-600">
+      {/* CATEGORY ICON GRID - INDIVIDUAL SIZE CONTROL */}
+      <div className="px-4 sm:px-6 lg:px-12 py-16 bg-white">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-blue-600">
           Browse Categories
         </h2>
         
-        {/* Symmetrical Grid - Fixed size boxes */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 max-w-[1600px] mx-auto">
+        {/* Flexbox layout for variable sizes with alignment */}
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-10 max-w-[1600px] mx-auto items-center">
           {iconCategories.map((cat, idx) => (
             <div
               key={idx}
-              onClick={() => console.log(`Category clicked: ${cat.label}`)}
-              className="group flex flex-col items-center justify-center gap-3 p-6 border border-gray-200 rounded-xl cursor-pointer transition-all hover:border-blue-600 hover:-translate-y-1 hover:shadow-lg bg-white aspect-square"
+              onClick={() => console.log(`Category clicked: ${idx + 1}`)}
+              className={`group flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl ${sizeMap[cat.sizeClass as keyof typeof sizeMap]}`}
             >
-              <div className="w-16 h-16 relative">
+              <div className="w-full h-full relative">
                 <Image
                   src={cat.image}
-                  alt={cat.label}
+                  alt={`Category ${idx + 1}`}
                   fill
                   className="object-contain"
                 />
               </div>
-              <span className="text-sm font-medium text-center line-clamp-2">
-                {cat.label}
-              </span>
             </div>
           ))}
         </div>
@@ -585,7 +585,6 @@ export default function Home() {
                     </h3>
                     
                     <div className="flex flex-col md:flex-row gap-4 h-full">
-                      {/* Big Image Card - Fixed symmetrical dimensions */}
                       <div className="w-full md:w-[60%] h-[300px] md:h-[420px] relative rounded-xl overflow-hidden group">
                         <Image
                           src={card.bigImage}
@@ -605,7 +604,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Small Product Cards - Symmetrical heights */}
                       <div className="w-full md:w-[40%] flex flex-col gap-3">
                         {card.products.map((product, i) => (
                           <div 
@@ -644,14 +642,12 @@ export default function Home() {
       <div className="bg-gray-100 p-6 md:p-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           
-          {/* LEFT CONTENT */}
           <div>
             <h2 className="text-3xl md:text-4xl font-medium leading-tight mb-8">
               Get <b>free</b> quotes from <br /> multiple sellers
             </h2>
 
             <div className="grid grid-cols-3 gap-4 mt-4">
-              {/* CARD 1 */}
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto relative">
                   <Image
@@ -665,7 +661,6 @@ export default function Home() {
                 <p className="font-semibold">You Need</p>
               </div>
 
-              {/* CARD 2 */}
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto relative">
                   <Image
@@ -679,7 +674,6 @@ export default function Home() {
                 <p className="font-semibold">from sellers</p>
               </div>
 
-              {/* CARD 3 */}
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto relative">
                   <Image
@@ -695,7 +689,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* RIGHT FORM */}
           <div>
             <h3 className="text-xl font-semibold mb-4">
               Tell us your Requirement
@@ -731,7 +724,6 @@ export default function Home() {
       {/* BRANDS & FEATURES SECTION */}
       <div className="w-full bg-white mt-8">
         
-        {/* BRANDS SECTION */}
         <div className="px-6 py-8">
           <h2 className="text-2xl font-semibold mb-6">
             Explore products from Premium Brands
@@ -753,7 +745,6 @@ export default function Home() {
 
         <div className="w-full h-0.5 bg-gray-200 my-4" />
 
-        {/* MORE FOR YOU SECTION */}
         <div className="px-6 py-8">
           <h2 className="text-2xl font-semibold mb-8">
             More for You
