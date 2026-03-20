@@ -76,7 +76,7 @@ const defaultMenuItems: MenuItem[] = [
     icon: <User size={20} />, 
     label: 'Manage Sellers', 
     id: 'users', 
-    href: '/users/management',
+    href: '/admin/manageseller',
     allowedRoles: ['admin', 'subadmin'] // Both can see
   },
   { 
