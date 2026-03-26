@@ -584,17 +584,18 @@ export default function Page() {
       <input type="file" ref={videoInputRef} className="hidden" accept="video/*" onChange={handleFileChange} />
       <input type="file" ref={pdfInputRef} className="hidden" accept=".pdf" onChange={handleFileChange} />
 
+      {/* Notification Banner - positioned relative, not fixed */}
       {isVisible && (
         <div className="w-full bg-[#FFFBF0] border border-[#E5D5B0] rounded-lg p-3 sm:p-4 relative m-2 sm:m-4 max-w-[calc(100%-1rem)] sm:max-w-[calc(100%-2rem)]">
           {showSlowNetwork && (
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#FFF3CD] border border-[#FFEAA7] text-[#856404] px-3 sm:px-4 py-2 rounded shadow-sm flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#FFF3CD] border border-[#FFEAA7] text-[#856404] px-3 sm:px-4 py-2 rounded shadow-sm flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap z-30">
               <WifiOff size={14} className="sm:size-16" />
               Slow network connection detected.
               <button onClick={() => setShowSlowNetwork(false)} className="ml-1 sm:ml-2 hover:text-[#5a3f02]"><X size={12} className="sm:size-14" /></button>
             </div>
           )}
 
-          <button onClick={() => setIsVisible(false)} className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-gray-600"><X size={18} className="sm:size-20" /></button>
+          <button onClick={() => setIsVisible(false)} className="absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-400 hover:text-gray-600 z-10"><X size={18} className="sm:size-20" /></button>
 
           <div className="flex items-start sm:items-center gap-2 mb-3 sm:mb-4">
             <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#F5A623] flex items-center justify-center flex-shrink-0 mt-0.5 sm:mt-0">
@@ -643,8 +644,8 @@ export default function Page() {
         </div>
       )}
 
-      {/* Navigation Bar - Responsive */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      {/* Page Header / Navigation - Sticky but below your main navbar */}
+      <div className="sticky top-0 bg-white border-b border-gray-200 z-30 shadow-sm">
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
@@ -796,7 +797,7 @@ export default function Page() {
         </div>
       </div>
 
-      {/* Products List - Responsive */}
+      {/* Products List */}
       <div className="p-3 sm:p-4 lg:p-6 space-y-4">
         {sortedProducts.map((product) => {
           const scores = getScoreBreakdown(product);
@@ -1228,7 +1229,7 @@ export default function Page() {
 
       {/* Help Videos Button - Responsive */}
       <button 
-        className="fixed right-0 top-1/2 transform -translate-y-1/2 bg-[#2AA9A9] text-white px-1.5 sm:px-2 py-2 sm:py-3 rounded-l-lg shadow-lg hover:bg-[#248F8F] flex flex-col items-center gap-1 z-40 cursor-pointer"
+        className="fixed right-0 top-1/2 transform -translate-y-1/2 bg-[#2AA9A9] text-white px-1.5 sm:px-2 py-2 sm:py-3 rounded-l-lg shadow-lg hover:bg-[#248F8F] flex flex-col items-center gap-1 z-30 cursor-pointer"
         style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         onClick={() => window.open('https://www.youtube.com/results?search_query=indiamart+seller+tutorial', '_blank')}
       >

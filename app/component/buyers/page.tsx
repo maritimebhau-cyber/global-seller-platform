@@ -228,7 +228,7 @@ interface HeaderProps {
 }
 
 const Header = ({ currentPage, setPage, notificationCount }: HeaderProps) => (
-  <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+  <header className="fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 shadow-sm">
     <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
       {/* Logo - Left */}
       <div 
@@ -298,7 +298,7 @@ const Navigation = ({ currentPage, setPage }: NavigationProps) => {
   ];
 
   return (
-    <nav className="bg-blue-900 text-white shadow-md">
+    <nav className="fixed top-[73px] left-0 right-0 bg-blue-900 text-white shadow-md z-40">
       <div className="max-w-7xl mx-auto px-6 flex items-center gap-1">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -1120,7 +1120,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pt-[129px]">
       <Header 
         currentPage={currentPage} 
         setPage={setPage} 

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
@@ -16,7 +16,6 @@ import {
   Search,
   Wallet,
   HelpCircle,
-  Info,
   Check,
   ChevronRight,
   Download,
@@ -35,12 +34,6 @@ import {
   MessageCircle,
   TrendingUp,
   Phone,
-  Calendar,
-  Tag,
-  ArrowRight,
-  Shield,
-  Zap,
-  Globe,
   LayoutGrid,
   SlidersHorizontal
 } from 'lucide-react';
@@ -87,7 +80,7 @@ const BuyLeadsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<'Relevant' | 'Recent'>('Relevant');
   const [recentSortOrder, setRecentSortOrder] = useState<'desc' | 'asc'>('desc');
   const [showRecentDropdown, setShowRecentDropdown] = useState(false);
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [showFilterDropdown, setShowFilterDropdown] = useState<string | false>(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [showMoreLeadsModal, setShowMoreLeadsModal] = useState(false);
@@ -513,8 +506,8 @@ const BuyLeadsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Mobile Header */}
-      <div className="lg:hidden bg-[#2e3192] text-white sticky top-0 z-40 px-4 py-3 flex items-center justify-between shadow-md">
+      {/* Mobile Header - Only visible on mobile */}
+      <div className="lg:hidden bg-[#2e3192] text-white px-4 py-3 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
           <button onClick={() => setShowMobileMenu(!showMobileMenu)} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
             <Menu size={22} />
@@ -562,8 +555,8 @@ const BuyLeadsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Unified Navigation Bar - Desktop */}
-      <div className="hidden lg:block bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+      {/* Desktop Navigation Bar - NOT FIXED, scrolls normally below website navbar */}
+      <div className="hidden lg:block bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-[1400px] mx-auto">
           {/* Top Row: Logo, Tabs, Search, User */}
           <div className="flex items-center px-4 h-16 gap-6">
