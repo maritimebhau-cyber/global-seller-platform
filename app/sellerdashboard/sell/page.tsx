@@ -16,7 +16,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Play,
-  MapPin
+  MapPin,
+  LayoutGrid,
+  HelpCircle,
+  TrendingUp as TrendingUpIcon,
+  MessageSquare,
+  PhoneIncoming
 } from 'lucide-react';
 import map from '../../../public/images/map.png';
 
@@ -25,7 +30,11 @@ export default function SellOnIndiaMART() {
   const [error, setError] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mapError, setMapError] = useState(false);
+  const [sellSlide, setSellSlide] = useState(0);
+  const [brandsSlide, setBrandsSlide] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sellScrollRef = useRef<HTMLDivElement>(null);
+  const brandsScrollRef = useRef<HTMLDivElement>(null);
 
   const handleLogin = () => {
     if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
@@ -122,6 +131,115 @@ export default function SellOnIndiaMART() {
     },
   ];
 
+  const trustedBrands = [
+    {
+      name: 'Dell',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Dell_Logo.svg/1200px-Dell_Logo.svg.png',
+      bgColor: '#007DB8',
+    },
+    {
+      name: 'StanleyBlack&Decker',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Stanley_Black_%26_Decker_logo.svg/1200px-Stanley_Black_%26_Decker_logo.svg.png',
+      bgColor: '#FFD700',
+    },
+    {
+      name: 'GE',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/General_Electric_logo.svg/1200px-General_Electric_logo.svg.png',
+      bgColor: '#FFFFFF',
+    },
+    {
+      name: 'TAFE',
+      logo: 'https://www.tafecorp.com/images/tafe-logo.png',
+      bgColor: '#FFFFFF',
+    },
+    {
+      name: 'HILTI',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hilti_logo.svg/1200px-Hilti_logo.svg.png',
+      bgColor: '#DC2626',
+    },
+    {
+      name: 'Bosch',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bosch-logo.svg/1200px-Bosch-logo.svg.png',
+      bgColor: '#FFFFFF',
+    },
+    {
+      name: 'Siemens',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Siemens-logo.svg/1200px-Siemens-logo.svg.png',
+      bgColor: '#009999',
+    },
+    {
+      name: '3M',
+      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/3M_logo.svg/1200px-3M_logo.svg.png',
+      bgColor: '#FFFFFF',
+    },
+  ];
+
+  const sellCategories = [
+    {
+      name: 'Fashion Accessories & Gear',
+      image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Herbal & Ayurvedic Product',
+      image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Security Systems & Services',
+      image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Sports Goods, Toys & Games',
+      image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Telecom Equipment & Goods',
+      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Leather Products',
+      image: 'https://images.unsplash.com/photo-1473187983305-f615310e7daa?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Electronics Components',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop',
+    },
+    {
+      name: 'Electrical Equipment',
+      image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=400&fit=crop',
+    },
+  ];
+
+  const improveBusinessFeatures = [
+    {
+      icon: <LayoutGrid className="w-10 h-10 text-cyan-600" strokeWidth={1.5} />,
+      title: 'Higher Visibility',
+      description: 'Get higher listing on IndiaMART, appear on top of search results and improve the chances of acquiring more customers.',
+    },
+    {
+      icon: <HelpCircle className="w-10 h-10 text-cyan-600" strokeWidth={1.5} />,
+      title: 'More Business Enquiries',
+      description: 'Direct enquiries for your products/services sent to you by buyers looking for them.',
+    },
+    {
+      icon: <TrendingUpIcon className="w-10 h-10 text-cyan-600" strokeWidth={1.5} />,
+      title: 'Additional Leads',
+      description: 'Choose from a list of verified orders for products/services you want to sell.',
+    },
+  ];
+
+  const productivityTools = [
+    {
+      icon: <MessageSquare className="w-10 h-10 text-cyan-600" strokeWidth={1.5} />,
+      title: 'Lead Manager (Desktop & App)',
+      description: 'A CRM solution to organise, manage and track all your leads and enquiries at one place.',
+    },
+    {
+      icon: <PhoneIncoming className="w-10 h-10 text-cyan-600" strokeWidth={1.5} />,
+      title: 'Preferred Number Service',
+      description: 'A cloud telephony service that lets you connect your 8 phone numbers, which ring simultaneously for each buyer call to ensure no call is missed.',
+    },
+  ];
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
@@ -143,31 +261,52 @@ export default function SellOnIndiaMART() {
     }
   };
 
-  // ─── Google Static Maps config ───────────────────────────────────────────────
-  // Replace the value below with your actual API key from Google Cloud Console.
-  // Enable "Maps Static API" at https://console.cloud.google.com/
-  // Then add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key to .env.local
+  const scrollSellLeft = () => {
+    if (sellScrollRef.current) {
+      sellScrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      setSellSlide(Math.max(0, sellSlide - 1));
+    }
+  };
+
+  const scrollSellRight = () => {
+    if (sellScrollRef.current) {
+      sellScrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      setSellSlide(Math.min(sellCategories.length - 5, sellSlide + 1));
+    }
+  };
+
+  const scrollBrandsLeft = () => {
+    if (brandsScrollRef.current) {
+      brandsScrollRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+      setBrandsSlide(Math.max(0, brandsSlide - 1));
+    }
+  };
+
+  const scrollBrandsRight = () => {
+    if (brandsScrollRef.current) {
+      brandsScrollRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      setBrandsSlide(Math.min(trustedBrands.length - 5, brandsSlide + 1));
+    }
+  };
+
   const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
 
   const markers = [
-    // India — large primary pin
     'size:mid|color:red|label:I|20.5937,78.9629',
-    // Secondary Indian cities
-    'size:small|color:red|28.6139,77.2090',   // Delhi
-    'size:small|color:red|19.0760,72.8777',   // Mumbai
-    'size:small|color:red|12.9716,77.5946',   // Bengaluru
-    'size:small|color:red|22.5726,88.3639',   // Kolkata
-    // Global hubs
-    'size:small|color:red|37.0902,-95.7129',  // USA
-    'size:small|color:red|51.5074,-0.1278',   // UK
-    'size:small|color:red|48.8566,2.3522',    // France
-    'size:small|color:red|25.2048,55.2708',   // UAE
-    'size:small|color:red|1.3521,103.8198',   // Singapore
-    'size:small|color:red|35.6762,139.6503',  // Japan
-    'size:small|color:red|-25.2744,133.7751', // Australia
-    'size:small|color:red|-14.2350,-51.9253', // Brazil
-    'size:small|color:red|-30.5595,22.9375',  // South Africa
-    'size:small|color:red|23.6850,90.3563',   // Bangladesh
+    'size:small|color:red|28.6139,77.2090',
+    'size:small|color:red|19.0760,72.8777',
+    'size:small|color:red|12.9716,77.5946',
+    'size:small|color:red|22.5726,88.3639',
+    'size:small|color:red|37.0902,-95.7129',
+    'size:small|color:red|51.5074,-0.1278',
+    'size:small|color:red|48.8566,2.3522',
+    'size:small|color:red|25.2048,55.2708',
+    'size:small|color:red|1.3521,103.8198',
+    'size:small|color:red|35.6762,139.6503',
+    'size:small|color:red|-25.2744,133.7751',
+    'size:small|color:red|-14.2350,-51.9253',
+    'size:small|color:red|-30.5595,22.9375',
+    'size:small|color:red|23.6850,90.3563',
   ];
 
   const markerParams = markers.map((m) => `markers=${encodeURIComponent(m)}`).join('&');
@@ -182,7 +321,6 @@ export default function SellOnIndiaMART() {
     'feature:administrative.country|element:geometry.stroke|color:0x94a3b8|weight:1',
   ].map((s) => `style=${encodeURIComponent(s)}`).join('&');
 
-  
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -561,7 +699,6 @@ export default function SellOnIndiaMART() {
                     onError={() => setMapError(true)}
                   />
                 ) : (
-                  /* Fallback: shown when no API key or request fails */
                   <div className="flex flex-col items-center justify-center gap-3 p-8 text-center" style={{ minHeight: '260px' }}>
                     <MapPin className="w-10 h-10 text-blue-300" />
                     <p className="text-sm text-gray-500 font-medium">
@@ -616,10 +753,209 @@ export default function SellOnIndiaMART() {
         </div>
       </section>
 
-      {/* Bottom Section Title */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Sell on IndiaMART</h2>
+      {/* Trusted by Global Brands Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+            Trusted by Global Brands
+          </h2>
+          
+          <div className="relative">
+            <button 
+              onClick={scrollBrandsLeft}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 w-8 h-8 bg-indigo-500 hover:bg-indigo-600 rounded-full flex items-center justify-center text-white transition-colors z-10 shadow-md"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            
+            <button 
+              onClick={scrollBrandsRight}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 w-8 h-8 bg-indigo-500 hover:bg-indigo-600 rounded-full flex items-center justify-center text-white transition-colors z-10 shadow-md"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            <div 
+              ref={brandsScrollRef}
+              className="flex items-center justify-center gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-12 py-4"
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
+              {trustedBrands.map((brand, index) => (
+                <div 
+                  key={index}
+                  className="flex-shrink-0 flex items-center justify-center"
+                  style={{ scrollSnapAlign: 'center', width: '180px', height: '80px' }}
+                >
+                  <div 
+                    className="w-full h-full rounded-lg flex items-center justify-center p-4 shadow-sm hover:shadow-md transition-shadow"
+                    style={{ backgroundColor: brand.bgColor }}
+                  >
+                    <img 
+                      src={brand.logo} 
+                      alt={brand.name}
+                      className="max-w-full max-h-full object-contain"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `<span class="text-lg font-bold text-gray-700">${brand.name}</span>`;
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What can you sell on IndiaMART Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+            What can you sell on IndiaMART?
+          </h2>
+          
+          <div className="relative">
+            <button 
+              onClick={scrollSellLeft}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 w-8 h-8 bg-indigo-500 hover:bg-indigo-600 rounded-full flex items-center justify-center text-white transition-colors z-10 shadow-md"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            
+            <button 
+              onClick={scrollSellRight}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 w-8 h-8 bg-indigo-500 hover:bg-indigo-600 rounded-full flex items-center justify-center text-white transition-colors z-10 shadow-md"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            <div 
+              ref={sellScrollRef}
+              className="flex items-start justify-center gap-8 overflow-x-auto scrollbar-hide scroll-smooth px-12 py-4"
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
+              {sellCategories.map((category, index) => (
+                <div 
+                  key={index}
+                  className="flex-shrink-0 flex flex-col items-center text-center"
+                  style={{ scrollSnapAlign: 'center', width: '160px' }}
+                >
+                  <div className="w-28 h-28 rounded-full overflow-hidden mb-4 shadow-lg hover:shadow-xl transition-shadow border-4 border-white">
+                    <img 
+                      src={category.image} 
+                      alt={category.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.src = 'https://via.placeholder.com/400?text=Category';
+                      }}
+                    />
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 leading-tight">
+                    {category.name}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* IndiaMART Advantage Program Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
+            IndiaMART Advantage Program
+          </h2>
+          
+          <p className="text-center text-gray-700 text-sm mb-10 max-w-3xl mx-auto">
+            While you get lots of benefits as a free seller, get even more. Be part of IndiaMART Advantage Program through our paid services.
+          </p>
+
+          <div className="mb-12">
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="h-px w-12 bg-cyan-600"></div>
+              <h3 className="text-lg font-medium text-cyan-600">Improve your business</h3>
+              <div className="h-px w-12 bg-cyan-600"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {improveBusinessFeatures.map((feature, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mb-4">
+                    {feature.icon}
+                  </div>
+                  <h4 className="text-lg font-semibold text-cyan-600 mb-3">
+                    {feature.title}
+                  </h4>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-10">
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="h-px w-12 bg-cyan-600"></div>
+              <h3 className="text-lg font-medium text-cyan-600">Productivity Tools</h3>
+              <div className="h-px w-12 bg-cyan-600"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {productivityTools.map((tool, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mb-4">
+                    {tool.icon}
+                  </div>
+                  <h4 className="text-lg font-semibold text-cyan-600 mb-3">
+                    {tool.title}
+                  </h4>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {tool.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center mb-6">
+            <button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded font-medium transition-colors">
+              I am interested
+            </button>
+          </div>
+
+          <p className="text-center text-sm text-gray-600">
+            For more details please contact our customer care at <span className="font-semibold">+91-9696969696</span>
+          </p>
+        </div>
+      </section>
+
+      {/* Sell on IndiaMART Footer Section - NEW */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Sell on IndiaMART
+          </h2>
+          
+          <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+            <p>
+              IndiaMART is India&apos;s largest e-commerce marketplace, catering to more than <span className="font-semibold">21.9 Crore+ Buyers</span> and <span className="font-semibold">86 Lakh+ Suppliers</span>. Whether you are a retailer or a manufacturer, IndiaMART is the leading destination for growing business online and is trusted by more than <span className="font-semibold">124 million users</span> across our desktop and mobile platforms.
+            </p>
+            
+            <p>
+              Selling on IndiaMART <span className="text-blue-600">#IndiamartAurKya</span>. Register by entering your contact details, and simply add products in your catalog.
+            </p>
+            
+            <p>
+              Whats more? Our Seller portal offers a one stop solution for all your needs. Be it handling buyer enquiries or converting leads, we have something for everything. <span className="text-blue-600 cursor-pointer hover:underline">Sign up for free here</span> and transform your way of doing business.
+            </p>
+          </div>
         </div>
       </section>
     </div>
