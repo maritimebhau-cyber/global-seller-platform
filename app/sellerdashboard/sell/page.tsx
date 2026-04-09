@@ -23,7 +23,7 @@ import {
   MessageSquare,
   PhoneIncoming
 } from 'lucide-react';
-import map from '../../../public/images/map.png';
+import Image from 'next/image';
 
 export default function SellOnIndiaMART() {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -289,45 +289,18 @@ export default function SellOnIndiaMART() {
     }
   };
 
-  const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '';
-
-  const markers = [
-    'size:mid|color:red|label:I|20.5937,78.9629',
-    'size:small|color:red|28.6139,77.2090',
-    'size:small|color:red|19.0760,72.8777',
-    'size:small|color:red|12.9716,77.5946',
-    'size:small|color:red|22.5726,88.3639',
-    'size:small|color:red|37.0902,-95.7129',
-    'size:small|color:red|51.5074,-0.1278',
-    'size:small|color:red|48.8566,2.3522',
-    'size:small|color:red|25.2048,55.2708',
-    'size:small|color:red|1.3521,103.8198',
-    'size:small|color:red|35.6762,139.6503',
-    'size:small|color:red|-25.2744,133.7751',
-    'size:small|color:red|-14.2350,-51.9253',
-    'size:small|color:red|-30.5595,22.9375',
-    'size:small|color:red|23.6850,90.3563',
-  ];
-
-  const markerParams = markers.map((m) => `markers=${encodeURIComponent(m)}`).join('&');
-
-  const mapStyles = [
-    'feature:water|element:geometry|color:0xdbeafe',
-    'feature:landscape|element:geometry|color:0xe8edf2',
-    'feature:road|visibility:off',
-    'feature:poi|visibility:off',
-    'feature:transit|visibility:off',
-    'feature:administrative|element:geometry.stroke|color:0xb0bec5|weight:0.8',
-    'feature:administrative.country|element:geometry.stroke|color:0x94a3b8|weight:1',
-  ].map((s) => `style=${encodeURIComponent(s)}`).join('&');
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="border-b border-gray-200">
+    <div 
+      className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed"
+      style={{ 
+        backgroundImage: `url('/images/backgroundimage.jpg')` 
+      }}
+    >
+      {/* Secondary Navigation - FULL WIDTH, SMALLER HEIGHT */}
+      <nav className="fixed top-14 w-full  border-b border-gray-200/50 bg-white/90 z-40 backdrop-blur-md shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-14">
-            <div className="flex items-center space-x-8 overflow-x-auto scrollbar-hide">
+          <div className="flex items-center h-10">
+            <div className="flex items-center space-x-6 overflow-x-auto scrollbar-hide">
               {navItems.map((item, index) => (
                 <a
                   key={index}
@@ -346,36 +319,16 @@ export default function SellOnIndiaMART() {
         </div>
       </nav>
 
+      {/* Spacer for both navbars - Adjusted for smaller height (14 + 10 = 24) */}
+      <div className="h-24" />
+
       {/* Hero Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative flex items-end justify-center lg:justify-start">
-              <div className="relative w-full max-w-lg">
-                <div 
-                  className="bg-gradient-to-br from-pink-50 via-white to-blue-50 rounded-lg flex items-end justify-center relative overflow-hidden"
-                  style={{ minHeight: '450px' }}
-                >
-                  <img 
-                    src="/sellers-hero.png" 
-                    alt="Professional sellers"
-                    className="absolute bottom-0 left-0 w-full h-auto object-contain"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="text-center text-gray-400">
-                      <p className="text-sm bg-white/80 px-4 py-2 rounded-full">
-                        Add your sellers image here
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-8">
+            
+            {/* Left Column - Login/Registration Form (MOVED TO LEFT) */}
+            <div className="space-y-8 bg-white/70 p-8 rounded-2xl shadow-sm backdrop-blur-sm">
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
                   Sell for free on India&apos;s largest
@@ -397,14 +350,14 @@ export default function SellOnIndiaMART() {
                   
                   <input
                     type="tel"
-                    placeholder="Enter 10 digit mobile number"
+                    placeholder="Enter mobile number"
                     value={mobileNumber}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, '').slice(0, 10);
                       setMobileNumber(val);
                       if (error) setError('');
                     }}
-                    className="flex-1 border border-gray-300 px-4 py-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 sm:border-l-0 border-t-0 sm:border-t"
+                    className="flex-1 border border-gray-300 px-4 py-3 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 sm:border-l-0 border-t-0 sm:border-t bg-white/80"
                   />
                   
                   <button
@@ -439,18 +392,23 @@ export default function SellOnIndiaMART() {
                 ))}
               </div>
             </div>
+
+            {/* Right Column - Empty for background image visibility (MOVED TO RIGHT) */}
+            <div className="hidden lg:block">
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* Statistics Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {statistics.map((stat, index) => (
               <div 
                 key={index} 
-                className="bg-white rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-shadow"
+                className="bg-white/80 rounded-lg p-8 text-center shadow-lg hover:shadow-xl transition-shadow border border-white/50 backdrop-blur-sm"
               >
                 <div className="flex justify-center mb-4">
                   {stat.icon}
@@ -474,7 +432,7 @@ export default function SellOnIndiaMART() {
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="bg-gray-50 rounded-lg p-8 text-center hover:bg-gray-100 transition-colors border border-gray-100"
+                className="bg-white/80 rounded-lg p-8 text-center hover:bg-white/90 transition-colors border border-white/50 shadow-lg backdrop-blur-sm"
               >
                 <div className="flex justify-center mb-4">
                   {feature.icon}
@@ -492,9 +450,9 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* 3 Simple Steps Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-2xl font-bold text-white text-center mb-12 drop-shadow-md">
             Get a free listing in 3 simple steps
           </h2>
           
@@ -502,10 +460,10 @@ export default function SellOnIndiaMART() {
             {steps.map((step, index) => (
               <div 
                 key={index} 
-                className="bg-white rounded-lg p-8 text-center shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+                className="bg-white/80 rounded-lg p-8 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border border-white/50 backdrop-blur-sm"
               >
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 bg-blue-50/80 rounded-full flex items-center justify-center">
                     {step.icon}
                   </div>
                 </div>
@@ -525,9 +483,9 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* CTA Banner Section */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-100">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 py-4">
+      <section className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto bg-white/90 rounded-2xl shadow-lg p-6 backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="relative">
                 <MousePointer2 className="w-12 h-12 text-blue-600 transform -rotate-12" strokeWidth={2} />
@@ -545,9 +503,9 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* Seller Success Stories Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12 drop-shadow-md">
             Seller Success Stories
           </h2>
           
@@ -577,7 +535,7 @@ export default function SellOnIndiaMART() {
               {successStories.map((story) => (
                 <div 
                   key={story.id} 
-                  className="flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] min-w-[300px] md:min-w-0"
+                  className="flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] min-w-[300px] md:min-w-0 bg-white/80 rounded-lg p-6 shadow-lg border border-white/50 backdrop-blur-sm"
                   style={{ scrollSnapAlign: 'start' }}
                 >
                   <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden mb-4 group cursor-pointer">
@@ -589,7 +547,7 @@ export default function SellOnIndiaMART() {
                       </div>
                       <div className="text-white text-xs">
                         <div className="font-semibold">Customer Story | IndiaMART |</div>
-                        <div className="text-gray-300">IndiaMART InterMESH Ltd</div>
+                        <div className="text-gray-300">Marinemart Ltd</div>
                       </div>
                     </div>
 
@@ -628,7 +586,7 @@ export default function SellOnIndiaMART() {
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={isActive ? 'w-2 h-2 rounded-full bg-gray-800 transition-colors' : 'w-2 h-2 rounded-full bg-gray-300 transition-colors'}
+                    className={isActive ? 'w-2 h-2 rounded-full bg-white transition-colors shadow-md' : 'w-2 h-2 rounded-full bg-white/50 transition-colors'}
                   />
                 );
               })}
@@ -638,13 +596,13 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* Business Happening Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-6">
+          <h2 className="text-3xl font-bold text-white text-center mb-6 drop-shadow-md">
             Business happening on IndiaMART
           </h2>
           
-          <p className="text-center text-gray-900 mb-12 max-w-4xl mx-auto text-base">
+          <p className="text-center text-white mb-12 max-w-4xl mx-auto text-base font-medium drop-shadow-md">
             Lakhs of businesses ranging from <span className="font-bold">SMEs</span> to large enterprises are using the power of our platform to grow and make an impact:
           </p>
           
@@ -652,7 +610,7 @@ export default function SellOnIndiaMART() {
             
             {/* Left Column */}
             <div className="flex flex-col gap-16">
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 bg-white/80 p-4 rounded-lg shadow-lg border border-white/50 backdrop-blur-sm">
                 <div className="relative flex-shrink-0">
                   <div className="w-28 h-20 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                     <span className="text-3xl">🏗️</span>
@@ -669,7 +627,7 @@ export default function SellOnIndiaMART() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 bg-white/80 p-4 rounded-lg shadow-lg border border-white/50 backdrop-blur-sm">
                 <div className="flex-1 text-right">
                   <h3 className="text-lg font-bold text-blue-600 mb-1">4500 Solar Panels</h3>
                   <p className="text-sm text-gray-700 leading-snug">
@@ -687,19 +645,20 @@ export default function SellOnIndiaMART() {
               </div>
             </div>
 
-            {/* Center — Google Static Map */}
+            {/* Center — Map */}
             <div className="flex justify-center items-center">
-              <div className="relative w-full max-w-lg rounded-2xl overflow-hidden shadow-md bg-blue-50">
+              <div className="relative w-full max-w-lg rounded-2xl overflow-hidden shadow-lg bg-blue-50/80 border border-white/50 backdrop-blur-sm">
                 {!mapError ? (
-                  <img
-                    src={map.src}
+                  <Image
+                    src="/images/map.png"
                     alt="Business happening across the world on IndiaMART"
+                    width={600}
+                    height={400}
                     className="w-full h-auto block"
-                    style={{ minHeight: '200px' }}
                     onError={() => setMapError(true)}
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center gap-3 p-8 text-center" style={{ minHeight: '260px' }}>
+                  <div className="flex flex-col items-center justify-center gap-3 p-8 text-center bg-white/50" style={{ minHeight: '260px' }}>
                     <MapPin className="w-10 h-10 text-blue-300" />
                     <p className="text-sm text-gray-500 font-medium">
                       Map unavailable
@@ -714,7 +673,7 @@ export default function SellOnIndiaMART() {
 
             {/* Right Column */}
             <div className="flex flex-col gap-16">
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 bg-white/80 p-4 rounded-lg shadow-lg border border-white/50 backdrop-blur-sm">
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-blue-600 mb-1">1 Lakh pharmacy instruments</h3>
                   <p className="text-sm text-gray-700 leading-snug">
@@ -731,7 +690,7 @@ export default function SellOnIndiaMART() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 bg-white/80 p-4 rounded-lg shadow-lg border border-white/50 backdrop-blur-sm">
                 <div className="relative flex-shrink-0">
                   <div className="w-28 h-20 bg-cyan-50 rounded-lg flex items-center justify-center overflow-hidden">
                     <span className="text-3xl">💧</span>
@@ -754,8 +713,8 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* Trusted by Global Brands Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto bg-white/80 rounded-2xl p-8 shadow-lg border border-white/50 backdrop-blur-sm">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
             Trusted by Global Brands
           </h2>
@@ -787,9 +746,10 @@ export default function SellOnIndiaMART() {
                   style={{ scrollSnapAlign: 'center', width: '180px', height: '80px' }}
                 >
                   <div 
-                    className="w-full h-full rounded-lg flex items-center justify-center p-4 shadow-sm hover:shadow-md transition-shadow"
+                    className="w-full h-full rounded-lg flex items-center justify-center p-4 shadow-md hover:shadow-lg transition-shadow"
                     style={{ backgroundColor: brand.bgColor }}
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src={brand.logo} 
                       alt={brand.name}
@@ -812,8 +772,8 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* What can you sell on IndiaMART Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto bg-white/80 rounded-2xl p-8 shadow-lg border border-white/50 backdrop-blur-sm">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
             What can you sell on IndiaMART?
           </h2>
@@ -845,6 +805,7 @@ export default function SellOnIndiaMART() {
                   style={{ scrollSnapAlign: 'center', width: '160px' }}
                 >
                   <div className="w-28 h-28 rounded-full overflow-hidden mb-4 shadow-lg hover:shadow-xl transition-shadow border-4 border-white">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src={category.image} 
                       alt={category.name}
@@ -866,8 +827,8 @@ export default function SellOnIndiaMART() {
       </section>
 
       {/* IndiaMART Advantage Program Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto bg-white/80 rounded-2xl p-8 shadow-lg border border-white/50 backdrop-blur-sm">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
             IndiaMART Advantage Program
           </h2>
@@ -885,7 +846,7 @@ export default function SellOnIndiaMART() {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {improveBusinessFeatures.map((feature, index) => (
-                <div key={index} className="text-center">
+                <div key={index} className="text-center bg-white/60 rounded-lg p-6 shadow-md border border-white/50 backdrop-blur-sm">
                   <div className="flex justify-center mb-4">
                     {feature.icon}
                   </div>
@@ -909,7 +870,7 @@ export default function SellOnIndiaMART() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {productivityTools.map((tool, index) => (
-                <div key={index} className="text-center">
+                <div key={index} className="text-center bg-white/60 rounded-lg p-6 shadow-md border border-white/50 backdrop-blur-sm">
                   <div className="flex justify-center mb-4">
                     {tool.icon}
                   </div>
@@ -936,9 +897,9 @@ export default function SellOnIndiaMART() {
         </div>
       </section>
 
-      {/* Sell on IndiaMART Footer Section - NEW */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-200">
-        <div className="max-w-5xl mx-auto text-center">
+      {/* Sell on IndiaMART Footer Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto text-center bg-white/80 rounded-2xl p-8 shadow-lg border border-white/50 backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             Sell on IndiaMART
           </h2>
